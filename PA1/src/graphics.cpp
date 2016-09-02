@@ -56,14 +56,14 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER))
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, "GL_VERTEX_SHADER.vert" ))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER))
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, "GL_FRAGMENT_SHADER.frag"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
