@@ -80,7 +80,9 @@ Object::~Object()
 void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/1000;
-  model = glm::translate (glm::mat4(1.0f), glm::vec3(cos (angle), 0.0f, sin (angle)));
+  // move the model in a circle
+  // The multiplication makes it go in a wider circle
+  model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (angle), 0.0f , 8*sin (angle)));
   model = glm::rotate(model, (angle), glm::vec3(0.0, 1.0, 0.0));
 }
 
