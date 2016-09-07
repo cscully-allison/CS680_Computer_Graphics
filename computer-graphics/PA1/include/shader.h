@@ -21,6 +21,7 @@ class Shader
   private:
     GLuint m_shaderProg;    
     std::vector<GLuint> m_shaderObjList;
+    std::string loadShader(std::string path);
 };
 
 #endif  /* SHADER_H */
