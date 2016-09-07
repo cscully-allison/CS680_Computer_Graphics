@@ -163,3 +163,19 @@ GLint Shader::GetUniformLocation(const char* pUniformName)
 
     return Location;
 }
+
+std::string loadShader(std::string path){
+    std::ifstream fin;
+    std::string buffer;
+    
+    
+    fin.open(path);
+    if(!fin.good()){
+        printf(stderr, "File Not Found");
+    }
+    
+    while(!fin.eof()){
+        fin >> buffer;
+    }
+}
+
