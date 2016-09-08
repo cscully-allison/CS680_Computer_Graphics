@@ -39,38 +39,11 @@ bool Shader::AddShader(GLenum ShaderType)
 
   if(ShaderType == GL_VERTEX_SHADER)
   {
-    s = "#version 330\n \
-          \
-          layout (location = 0) in vec3 v_position; \
-          layout (location = 1) in vec3 v_color; \
-          \
-          smooth out vec3 color; \
-          \
-          uniform mat4 projectionMatrix; \
-          uniform mat4 viewMatrix; \
-          uniform mat4 modelMatrix; \
-          \
-          void main(void) \
-          { \
-            vec4 v = vec4(v_position, 1.0); \
-            gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v; \
-            color = v_color; \
-          } \
-          ";
+    s = loadShader("../shaders/vertex_shad.glsl");
   }
   else if(ShaderType == GL_FRAGMENT_SHADER)
   {
-    s = "#version 330\n \
-          \
-          smooth in vec3 color; \
-          \
-          out vec4 frag_color; \
-          \
-          void main(void) \
-          { \
-             frag_color = vec4(color.rgb, 1.0); \
-          } \
-          ";
+    s = loadShader("../shaders/fragment_shad.glsl");
   }
 
   GLuint ShaderObj = glCreateShader(ShaderType);
@@ -163,3 +136,31 @@ GLint Shader::GetUniformLocation(const char* pUniformName)
 
     return Location;
 }
+
+
+/**
+  * Name: loadShader
+  * Arg1: path to shader file
+  * Return: formatted shader string
+  * Helper function loads the shader
+  */
+std::string Shader::loadShader(std::string path){
+    std::ifstream fin;
+    std::string buffer;
+    std::string shader;
+    
+    
+    fin.open(path);
+    if(!fin.good()){
+        fprintf(stderr, "File Not Found");
+	return "";
+    }
+    
+    while(!fin.eof()){
+        std::getline(fin, buffer);
+	shader += (buffer + "\n");
+    }
+
+    return shader;
+}
+
