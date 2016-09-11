@@ -103,10 +103,29 @@ void Object::Update(unsigned int dt,unsigned int pressedKey)
      // rotates square clockwise
       case 115:
           direction.x = 1;
+          break;
+     // right key press
+     // pauses sqaure rotation
+      case 1:
+          if (pause.x)
+            pause.x = false;
+          else
+            pause.x = true;
+          break;
+     // left key press
+     // pauses square translation     
+      case 3:
+          if (pause.y)
+            pause.y = false;
+          else
+            pause.y = true;
+          break;
     }
-    if (direction.z)
+    
+    if (pause.x)
         rotateAngle += direction.x * dt * M_PI/1000;
-    if (direction.w)
+    
+    if (pause.y)
         translateAngle += direction.y * dt * M_PI/1000;
 
     model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (translateAngle), 0.0f , 8*sin (translateAngle)));
