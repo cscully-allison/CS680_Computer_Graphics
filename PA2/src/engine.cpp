@@ -90,6 +90,12 @@ int Engine::Keyboard()
         return m_event.key.keysym.sym;
     break;
       case SDL_MOUSEBUTTONDOWN:
+        switch (m_event.button){
+            case SDL_BUTTON_LEFT:
+                std::cout << "hello";
+                break;
+            
+        }
     break;
   }
 }

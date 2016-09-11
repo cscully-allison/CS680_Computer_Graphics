@@ -21,7 +21,9 @@ class Object
     GLuint VB;
     GLuint IB;
 
-    float angle;
+    float rotateAngle;
+    float translateAngle;
+    glm::mediump_vec4 direction = {1,1,1,1};
 };
 
 #endif /* OBJECT_H */

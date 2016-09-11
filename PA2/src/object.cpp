@@ -60,7 +60,8 @@ Object::Object()
     Indices[i] = Indices[i] - 1;
   }
 
-  angle = 0.0f;
+  rotateAngle = 0.0f;
+  translateAngle = 0.0f;
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -79,45 +80,37 @@ Object::~Object()
 
 void Object::Update(unsigned int dt,unsigned int pressedKey)
 {
-
+  std::cout << pressedKey << std::endl;
   // move the model in a circle
   // The multiplication makes it go in a wider circle
   switch (pressedKey){
-      // left
-      case 97: 
-         angle += dt * M_PI/5000;
-          std::cout << "left: " << pressedKey << std::endl;
-             model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (angle), 0.0f , 8*sin (angle)));
-            model *= glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
+      // A
+      // translates the square counter clockwise
+      case 97:
+          direction.y = -1;
           break;
-     // right
-     // rotates square counter clockwise
+     // D
+     // translates the square clockwise
       case 100:
-        angle -= dt * M_PI/5000;
-        std::cout << "right: " << pressedKey << std::endl;
-        model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (angle), 0.0f , 8*sin (angle)));
-        model *= glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
-
+          direction.y = 1;
         break;
+     // W
+     // rotates square counter clockwise
       case 119:
-          angle += dt * M_PI/5000;
-          std::cout << "up: " << pressedKey << std::endl;
+          direction.x = -1;
           break;
+     // S
+     // rotates square clockwise
       case 115:
-          angle += dt * M_PI/5000;
-          std::cout << "down: " << pressedKey << std::endl;
-          break;
-      case 32:
-          std::cout << "down: " << pressedKey << std::endl;
-            model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (angle), 0.0f , 8*sin (angle)));
-            model = glm::rotate(model, (angle), glm::vec3(0.0, 1.0, 0.0));
-          break;
-      default:
-            angle += dt * M_PI/5000;
-            model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (angle), 0.0f , 8*sin (angle)));
-            model *= glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
-          break;
+          direction.x = 1;
     }
+    if (direction.z)
+        rotateAngle += direction.x * dt * M_PI/1000;
+    if (direction.w)
+        translateAngle += direction.y * dt * M_PI/1000;
+
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (translateAngle), 0.0f , 8*sin (translateAngle)));
+    model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
