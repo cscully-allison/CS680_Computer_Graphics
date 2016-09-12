@@ -78,9 +78,8 @@ Object::~Object()
   Indices.clear();
 }
 
-void Object::Update(unsigned int dt,unsigned int pressedKey)
+void Object::Update(unsigned int dt, unsigned int pressedKey)
 {
-  std::cout << pressedKey << std::endl;
   // move the model in a circle
   // The multiplication makes it go in a wider circle
   switch (pressedKey){
@@ -97,36 +96,35 @@ void Object::Update(unsigned int dt,unsigned int pressedKey)
      // W
      // rotates square counter clockwise
       case 119:
-          direction.x = -1;
+            direction.x = -1;
           break;
      // S
      // rotates square clockwise
       case 115:
-          direction.x = 1;
-          break;
-     // right key press
-     // pauses sqaure rotation
-      case 1:
-          if (pause.x)
-            pause.x = false;
-          else
-            pause.x = true;
+            direction.x = 1;
           break;
      // left key press
-     // pauses square translation     
-      case 3:
-          if (pause.y)
-            pause.y = false;
+     // un/pauses sqaure rotation
+      case 1:
+          if (direction.x == 0)
+              direction.x = 1;
           else
-            pause.y = true;
+            direction.x = 0;
           break;
+     // right key press
+     // un/pauses square translation     
+      case 3:
+          if (direction.y == 0)
+              direction.y = 1;
+          else
+            direction.y = 0;
+          break;
+      default:
+      break;
     }
     
-    if (pause.x)
-        rotateAngle += direction.x * dt * M_PI/1000;
-    
-    if (pause.y)
-        translateAngle += direction.y * dt * M_PI/1000;
+    rotateAngle += direction.x * dt * M_PI/1000;
+    translateAngle += direction.y * dt * M_PI/1000;
 
     model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (translateAngle), 0.0f , 8*sin (translateAngle)));
     model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));

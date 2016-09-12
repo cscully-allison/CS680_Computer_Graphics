@@ -24,7 +24,6 @@ class Object
     float rotateAngle;
     float translateAngle;
     glm::mediump_vec2 direction = {1,1};
-    glm:: tvec2 <bool> pause = {true,true};
 };
 
 #endif /* OBJECT_H */

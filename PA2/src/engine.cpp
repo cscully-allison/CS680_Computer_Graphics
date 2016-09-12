@@ -52,7 +52,8 @@ bool Engine::Initialize()
 
 void Engine::Run()
 {
-  unsigned int pressedKey;
+  // the key type
+  unsigned int pressedKey = 0;
   m_running = true;
 
   while(m_running)
@@ -63,11 +64,13 @@ void Engine::Run()
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {
-      pressedKey = Keyboard();
+            pressedKey = Keyboard();
     }
 
     // Update and render the graphics
     m_graphics->Update(m_DT, pressedKey);
+    // reset the key
+    pressedKey = 0;
     m_graphics->Render();
 
     // Swap to the Window
@@ -80,19 +83,21 @@ int Engine::Keyboard()
   switch (m_event.type){
       case SDL_QUIT:
        m_running = false;
-    break;
+      break;
       case SDL_KEYDOWN:
             if (m_event.key.keysym.sym == SDLK_ESCAPE){
                 m_running = false;
             }
-    break;
+      break;
+      // grabs key on release
       case SDL_KEYUP:
-        return m_event.key.keysym.sym;
-    break;
-      case SDL_MOUSEBUTTONUP:
+         return m_event.key.keysym.sym;
+      break;
+     // grabs mouse button when pushed 
+      case SDL_MOUSEBUTTONDOWN:
         return m_event.button.button;
-    break;
-  }
+        break;
+ }
 }
 
 unsigned int Engine::getDT()
