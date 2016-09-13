@@ -1,4 +1,4 @@
-# PA1: Spinning Cube
+# PA2: Interaction
 
 # Dependencies, Building, and Running
 
@@ -12,15 +12,36 @@ This project uses OpenGL 3.3. Some computers, such as virtual machines in the EC
 The project will work using either CMake or the make instructions
 
 ### CMake Instructions
+```
+mkdir build
 cd build
 cmake ..
 make
 ./Tutorial
+```
 
 ### Makefile Instructions 
+```
+mkdir build
 cd build
 cp ../makefile .
 make
 ./Tutorial
+```
+
+## Controller Instructions
+
+Keyboard:
+```
+W: rotate cube clockwise
+S: rotate cube conter clockwise
+D: translate cube clockwise
+A: translate cube counter clockwise
+```
+
+Mouse:
+```
+Left Click: Pause/Unpause cube rotation
+Right Click: Pause/Unpause cube translation
 ```
 
