@@ -25,7 +25,7 @@ class Object
     int coef, coef_r;
     int transDirection;
 
-    bool paused;
+    bool paused, t_pause, r_pause;
 };
 
 #endif /* OBJECT_H */

@@ -46,7 +46,7 @@ bool Engine::Initialize()
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
-  //se paused state to false
+  //set paused state to false
   m_paused = false;
 
   // No errors
@@ -72,7 +72,7 @@ void Engine::Run()
       Keyboard();
     }
 
-    m_graphics->Update(m_DT, m_event.key.keysym.sym);
+    m_graphics->Update(m_DT, user_input);
     m_graphics->Render();
 
 
@@ -94,13 +94,48 @@ void Engine::Keyboard()
     {
       m_running = false;
     } 
-  }
-  else if (m_event.type == SDL_KEYUP){ 
-    //global pause enabled with spacebar
-    if (m_event.key.keysym.sym == 32){
-       m_paused = !m_paused;	
+
+    else if (m_event.key.keysym.sym == 32){
+
+	m_paused = !m_paused;
+
+	if(m_paused){
+           user_input = 999;
+	}else{
+	   user_input = 32;
+	}
+        
+    }
+
+    else{
+        user_input = m_event.key.keysym.sym;
     }
   }
+/**
+  * Functionality for mouse buttons forks for a few moments
+  * and then crashes the computer
+  *
+  else if(m_event.type == SDL_MOUSEBUTTONDOWN){
+	if(m_event.button.button == SDL_BUTTON_LEFT){
+		lmbpause = !lmbpause;
+		
+		if(!lmbpause){
+		   user_input = 200;
+		}else{
+		   user_input = 201;
+		}
+	}
+	else if(m_event.button.button == SDL_BUTTON_RIGHT){
+		rmbpause = !rmbpause;
+		
+		if(!rmbpause){
+		    user_input = 202;
+		}else{
+		    user_input = 203;
+		}
+	}
+  }
+*/
 }
 
 unsigned int Engine::getDT()

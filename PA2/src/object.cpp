@@ -90,10 +90,12 @@ void Object::Update(unsigned int dt, int key_press_val)
 
       switch(key_press_val){
         case 32: //spacebar
-            angle += 0;
-	    angle_r += 0;
-	    //make a toggle somehow!!
+	    paused = true;
             break;
+
+	case 999: //unpause
+	    paused = false;
+	    break;
 
         case 100: //"d"
             transDirection = 0;
@@ -110,28 +112,50 @@ void Object::Update(unsigned int dt, int key_press_val)
 	case 115: //"s"
 	    coef_r = -1;
 	    break;
-      }
 
-     if(!paused){
+/**************************
+	LMB and RMB pause translation and
+	rotation respectively
+	causes computer to crash
+***************************
+
+
+	case 200:
+	    t_pause = true;
+	    break;
+
+	case 201:
+	    t_pause = false;
+	    break;
+
+	case 202:
+	    r_pause = true;
+	    break;
+
+        case 203:
+            r_pause = false;
+            break;
+*/
+    }
+      
+     //only update the angle if not paused
+     if(!paused && !t_pause){
      	if(transDirection == 0){ 
      		angle += dt * M_PI/1000;
      	}
      	else{
      		angle -= dt * M_PI/1000;
      	}
-	
+     }
+
+     if(!paused && !r_pause){
 	angle_r += dt * M_PI/600;
-    }
+     }
     
     //translate model first
     //then rotate
     model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
     model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
-
-    
-    std::cout << key_press_val << std::endl;
-
-
 
 
 }

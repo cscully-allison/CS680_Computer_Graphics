@@ -33,7 +33,7 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    bool m_paused;
+    bool m_paused, rmbpause, lmbpause;
     int user_input;
 };
 
