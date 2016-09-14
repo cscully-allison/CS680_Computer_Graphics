@@ -86,7 +86,7 @@ void Engine::Keyboard()
     if (m_event.key.keysym.sym == SDLK_ESCAPE)
     {
       m_running = false;
-    }
+    } 
   }
 }
 

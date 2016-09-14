@@ -77,7 +77,7 @@ Object::~Object()
   Indices.clear();
 }
 
-void Object::Update(unsigned int dt)
+void Object::Update(unsigned int dt, SDL_Event m_event)
 {
   angle += dt * M_PI/1000;
   //translate model first
