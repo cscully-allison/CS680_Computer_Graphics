@@ -21,7 +21,11 @@ class Object
     GLuint VB;
     GLuint IB;
 
-    float angle;
+    float angle, angle_r;
+    int coef, coef_r;
+    int transDirection;
+
+    bool paused;
 };
 
 #endif /* OBJECT_H */

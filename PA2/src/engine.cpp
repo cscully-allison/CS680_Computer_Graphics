@@ -72,9 +72,9 @@ void Engine::Run()
       Keyboard();
     }
 
-    // Update and render the graphics
     m_graphics->Update(m_DT, m_event.key.keysym.sym);
     m_graphics->Render();
+
 
     // Swap to the Window
     m_window->Swap();
@@ -98,7 +98,7 @@ void Engine::Keyboard()
   else if (m_event.type == SDL_KEYUP){ 
     //global pause enabled with spacebar
     if (m_event.key.keysym.sym == 32){
-      m_paused = !m_paused;
+       m_paused = !m_paused;	
     }
   }
 }

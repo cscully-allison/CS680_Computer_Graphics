@@ -61,6 +61,13 @@ Object::Object()
   }
 
   angle = 0.0f;
+  angle_r = 0.0f; //inlcuded for rotation angle
+
+  coef = coef_r = 1;
+
+  transDirection = 0;
+
+  paused = false;
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -79,41 +86,54 @@ Object::~Object()
 
 void Object::Update(unsigned int dt, int key_press_val)
 {
+     int scalar = 8;
 
-    switch(key_press_val){
-        case 32:
+      switch(key_press_val){
+        case 32: //spacebar
             angle += 0;
+	    angle_r += 0;
+	    //make a toggle somehow!!
             break;
 
-        case 100:
-            angle -= dt * M_PI/1000;
+        case 100: //"d"
+            transDirection = 0;
             break;
             
-        case 97:
-            angle += dt * M_PI/1000;
+        case 97: //"a"
+	    transDirection = 1;
             break;
+	
+	case 119: //"w"
+	    coef_r = 1;
+	    break;
 
-        default:
-            angle += dt * M_PI/1000;
-            break;
-            
+	case 115: //"s"
+	    coef_r = -1;
+	    break;
+      }
+
+     if(!paused){
+     	if(transDirection == 0){ 
+     		angle += dt * M_PI/1000;
+     	}
+     	else{
+     		angle -= dt * M_PI/1000;
+     	}
+	
+	angle_r += dt * M_PI/600;
     }
+    
     //translate model first
     //then rotate
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*8, 0, glm::sin(angle)*8));
-    model = glm::rotate(model, -(angle*3), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
+    model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
+
     
     std::cout << key_press_val << std::endl;
 
 
 
-//  angle += dt * M_PI/1000;
-  //translate model first
-  //then rotate
-//  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*8, 0, glm::sin(angle)*8));
-//  model = glm::rotate(model, -(angle*3), glm::vec3(0.0, 1.0, 0.0));
 
- // std::cout << key_press_val << std::endl;
 }
 
 glm::mat4 Object::GetModel()

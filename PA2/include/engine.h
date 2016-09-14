@@ -34,6 +34,7 @@ class Engine
     bool m_running;
 
     bool m_paused;
+    int user_input;
 };
 
 #endif // ENGINE_H
