@@ -77,13 +77,43 @@ Object::~Object()
   Indices.clear();
 }
 
-void Object::Update(unsigned int dt, SDL_Event m_event)
+void Object::Update(unsigned int dt, int key_press_val)
 {
-  angle += dt * M_PI/1000;
+
+    switch(key_press_val){
+        case 32:
+            angle += 0;
+            break;
+
+        case 100:
+            angle -= dt * M_PI/1000;
+            break;
+            
+        case 97:
+            angle += dt * M_PI/1000;
+            break;
+
+        default:
+            angle += dt * M_PI/1000;
+            break;
+            
+    }
+    //translate model first
+    //then rotate
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*8, 0, glm::sin(angle)*8));
+    model = glm::rotate(model, -(angle*3), glm::vec3(0.0, 1.0, 0.0));
+    
+    std::cout << key_press_val << std::endl;
+
+
+
+//  angle += dt * M_PI/1000;
   //translate model first
   //then rotate
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*8, 0, glm::sin(angle)*8));
-  model = glm::rotate(model, -(angle*3), glm::vec3(0.0, 1.0, 0.0));
+//  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*8, 0, glm::sin(angle)*8));
+//  model = glm::rotate(model, -(angle*3), glm::vec3(0.0, 1.0, 0.0));
+
+ // std::cout << key_press_val << std::endl;
 }
 
 glm::mat4 Object::GetModel()

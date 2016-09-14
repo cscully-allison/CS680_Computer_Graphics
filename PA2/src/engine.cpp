@@ -46,6 +46,9 @@ bool Engine::Initialize()
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
+  //se paused state to false
+  m_paused = false;
+
   // No errors
   return true;
 }
@@ -56,8 +59,12 @@ void Engine::Run()
 
   while(m_running)
   {
-    // Update the DT
-    m_DT = getDT();
+
+    //update the DT only when pause is not pressed last
+    if(!m_paused){ 
+        // Update the DT
+        m_DT = getDT();
+    }
 
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
@@ -66,7 +73,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, m_event.key.keysym.sym);
     m_graphics->Render();
 
     // Swap to the Window
@@ -87,6 +94,12 @@ void Engine::Keyboard()
     {
       m_running = false;
     } 
+  }
+  else if (m_event.type == SDL_KEYUP){ 
+    //global pause enabled with spacebar
+    if (m_event.key.keysym.sym == 32){
+      m_paused = !m_paused;
+    }
   }
 }
 
