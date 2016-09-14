@@ -113,13 +113,6 @@ void Object::Update(unsigned int dt, int key_press_val)
 	    coef_r = -1;
 	    break;
 
-/**************************
-	LMB and RMB pause translation and
-	rotation respectively
-	causes computer to crash
-***************************
-
-
 	case 200:
 	    t_pause = true;
 	    break;
@@ -135,7 +128,6 @@ void Object::Update(unsigned int dt, int key_press_val)
         case 203:
             r_pause = false;
             break;
-*/
     }
       
      //only update the angle if not paused

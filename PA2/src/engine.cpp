@@ -111,10 +111,6 @@ void Engine::Keyboard()
         user_input = m_event.key.keysym.sym;
     }
   }
-/**
-  * Functionality for mouse buttons forks for a few moments
-  * and then crashes the computer
-  *
   else if(m_event.type == SDL_MOUSEBUTTONDOWN){
 	if(m_event.button.button == SDL_BUTTON_LEFT){
 		lmbpause = !lmbpause;
@@ -135,7 +131,7 @@ void Engine::Keyboard()
 		}
 	}
   }
-*/
+
 }
 
 unsigned int Engine::getDT()
