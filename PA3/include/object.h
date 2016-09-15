@@ -24,7 +24,6 @@ class Object
 
     float rotateAngle;
     float translateAngle;
-    float moonAngle;
     glm::mediump_vec2 direction = {1,1};
 };
 

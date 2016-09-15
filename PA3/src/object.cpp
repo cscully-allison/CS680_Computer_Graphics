@@ -130,9 +130,9 @@ void Object::Update(unsigned int dt, unsigned int pressedKey)
 
 void Object::Update(unsigned int dt, glm::mat4 planet)
 {
-   moonAngle +=  dt * M_PI/1000;
-    model = glm::translate (planet, glm::vec3(8*cos (moonAngle), 0.0f , 8*sin (moonAngle)));
-   //model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));
+   rotateAngle +=  dt * M_PI/1000;
+   model = glm::translate (planet, glm::vec3(6*cos (rotateAngle), 0.0f , 6*sin (rotateAngle)));
+   model = glm::rotate(model, (rotateAngle), glm::vec3(1.0, 0.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
