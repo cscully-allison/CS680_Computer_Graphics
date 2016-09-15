@@ -10,7 +10,7 @@ class Object
     Object();
     ~Object();
     void Update(unsigned int dt, unsigned int pressedKey);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, glm::mat4 planet);
     void Render();
 
     glm::mat4 GetModel();
@@ -24,6 +24,7 @@ class Object
 
     float rotateAngle;
     float translateAngle;
+    float moonAngle;
     glm::mediump_vec2 direction = {1,1};
 };
 
