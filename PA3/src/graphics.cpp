@@ -46,6 +46,8 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_cube = new Object();
+  //create moon
+  m_moon = new Object();
 
   // Set up the shaders
   m_shader = new Shader();
@@ -99,6 +101,32 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
+  
+  //shade the moon
+    // Locate the projection matrix in the shader
+  m_moonProjectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
+  if (m_moonProjectionMatrix == INVALID_UNIFORM_LOCATION) 
+  {
+    printf("m_projectionMatrix not found\n");
+    return false;
+  }
+
+  // Locate the view matrix in the shader
+  m_moonViewMatrix = m_shader->GetUniformLocation("viewMatrix");
+  if (m_moonViewMatrix == INVALID_UNIFORM_LOCATION) 
+  {
+    printf("m_viewMatrix not found\n");
+    return false;
+  }
+
+  // Locate the model matrix in the shader
+  m_moonModelMatrix = m_shader->GetUniformLocation("modelMatrix");
+  if (m_moonModelMatrix == INVALID_UNIFORM_LOCATION) 
+  {
+    printf("m_modelMatrix not found\n");
+    return false;
+  }
+
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -111,6 +139,8 @@ void Graphics::Update(unsigned int dt, unsigned int pressedKey)
 {
   // Update the object
   m_cube->Update(dt, pressedKey);
+  // update moon
+  m_moon->Update(dt);
 }
 
 void Graphics::Render()
@@ -129,7 +159,16 @@ void Graphics::Render()
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
   m_cube->Render();
-
+  
+  // Render Moon
+  glUniformMatrix4fv(m_moonModelMatrix, 1, GL_FALSE, glm::value_ptr(m_moon->GetModel()));
+  m_moon->Render();
+  
+  
+  // Send in the moon projection and view to the shader
+  glUniformMatrix4fv(m_moonProjectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
+  glUniformMatrix4fv(m_moonViewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+  
   // Get any errors from OpenGL
   auto error = glGetError();
   if ( error != GL_NO_ERROR )

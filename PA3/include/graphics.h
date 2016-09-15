@@ -29,6 +29,12 @@ class Graphics
     GLint m_modelMatrix;
 
     Object *m_cube;
+    
+    // create the moon object
+    GLint m_moonProjectionMatrix;
+    GLint m_moonViewMatrix;
+    GLint m_moonModelMatrix;
+    Object *m_moon;
 };
 
 #endif /* GRAPHICS_H */
