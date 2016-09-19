@@ -1,5 +1,4 @@
 #include "object.h"
-#include <GL/glut.h>
 
 Object::Object()
 {  
