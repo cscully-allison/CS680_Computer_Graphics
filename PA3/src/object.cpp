@@ -86,44 +86,49 @@ Object::~Object()
 
 void Object::Update(unsigned int dt, int key_press_val)
 {
+    Update(dt, key_press_val, glm::mat4(1.0));
+}
+
+void Object::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt)
+{
      int scalar = 8;
 
       switch(key_press_val){
         case 32: //spacebar
-	    paused = true;
+            paused = true;
             break;
 
-	case 999: //unpause
-	    paused = false;
-	    break;
+        case 999: //unpause
+            paused = false;
+            break;
 
         case 100: //"d"
             transDirection = 0;
             break;
             
         case 97: //"a"
-	    transDirection = 1;
+            transDirection = 1;
             break;
-	
-	case 119: //"w"
-	    coef_r = 1;
-	    break;
+        
+        case 119: //"w"
+            coef_r = 1;
+            break;
 
-	case 115: //"s"
-	    coef_r = -1;
-	    break;
+        case 115: //"s"
+            coef_r = -1;
+            break;
 
-	case 200:
-	    t_pause = true;
-	    break;
+        case 200:
+            t_pause = true;
+            break;
 
-	case 201:
-	    t_pause = false;
-	    break;
+        case 201:
+            t_pause = false;
+            break;
 
-	case 202:
-	    r_pause = true;
-	    break;
+        case 202:
+            r_pause = true;
+            break;
 
         case 203:
             r_pause = false;
@@ -132,25 +137,26 @@ void Object::Update(unsigned int dt, int key_press_val)
       
      //only update the angle if not paused
      if(!paused && !t_pause){
-     	if(transDirection == 0){ 
-     		angle += dt * M_PI/1000;
-     	}
-     	else{
-     		angle -= dt * M_PI/1000;
-     	}
+      if(transDirection == 0){ 
+        angle += dt * M_PI/1000;
+      }
+      else{
+        angle -= dt * M_PI/1000;
+      }
      }
 
      if(!paused && !r_pause){
-	angle_r += dt * M_PI/600;
+  angle_r += dt * M_PI/600;
      }
     
     //translate model first
     //then rotate
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
+    model = glm::translate(ptOfOrbt, glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
     model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
 
 
 }
+
 
 glm::mat4 Object::GetModel()
 {
@@ -174,3 +180,34 @@ void Object::Render()
   glDisableVertexAttribArray(1);
 }
 
+
+
+/*Moon Object-------------------
+--------------------------------
+--------------------------------*/
+
+/**
+  * Polymorphic update function sets particular orbit of the moon
+  * 
+  */
+void Moon::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt){
+
+    int scalar = 6;
+    angle += dt * M_PI/400;
+    angle_r += dt * M_PI/600;
+    coef_r = 1;
+ 
+    //perform necessary reductions
+    //to unbind rotation from position of moon
+    glm::vec4 staticPos = ptOfOrbt * glm::vec4(1.0, 1.0, 1.0, 1.0);
+    ptOfOrbt = glm::mat4(1.0);
+    ptOfOrbt[3] = staticPos;
+
+    //translate model first
+    //then rotate
+    model = glm::translate(ptOfOrbt, glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
+    model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
+    model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+
+}

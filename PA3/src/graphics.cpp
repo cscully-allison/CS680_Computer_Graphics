@@ -46,7 +46,7 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_cube = new Object();
-  sat_cube = new Object();
+  sat_cube = new Moon();
 
 
   // Set up the shaders
@@ -112,8 +112,8 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, int key_press_val)
 {
   // Update the objects
+  sat_cube->Update(dt, key_press_val, m_cube->model);
   m_cube->Update(dt, key_press_val);
-  sat_cube->Update(dt, 32);
 }
 
 void Graphics::Render()
@@ -132,6 +132,7 @@ void Graphics::Render()
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
   m_cube->Render();
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(sat_cube->GetModel()));
   sat_cube->Render();
 

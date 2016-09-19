@@ -9,18 +9,18 @@ class Object
   public:
     Object();
     ~Object();
-    void Update(unsigned int dt, int key_press_val);
+    virtual void Update(unsigned int dt, int key_press_val);
+    virtual void Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt);
     void Render();
 
     glm::mat4 GetModel();
 
-  private:
+  public:
     glm::mat4 model;
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-
     float angle, angle_r;
     int coef, coef_r;
     int transDirection;
@@ -28,4 +28,11 @@ class Object
     bool paused, t_pause, r_pause;
 };
 
+
+class Moon: public Object
+{
+    public:
+    Moon():Object(){};
+	void Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt);
+};
 #endif /* OBJECT_H */
