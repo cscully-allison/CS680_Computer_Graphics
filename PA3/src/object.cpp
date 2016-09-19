@@ -1,4 +1,5 @@
 #include "object.h"
+#include <GL/glut.h>
 
 Object::Object()
 {  
@@ -178,9 +179,10 @@ void Object::Update(unsigned int dt, unsigned int pressedKey)
       break;
     }
     
+    
     rotateAngle += direction.x * dt * M_PI/1000;
     translateAngle += direction.y * dt * M_PI/1000;
-
+    
     model = glm::translate (glm::mat4(1.0f), glm::vec3(8*cos (translateAngle), 0.0f , 8*sin (translateAngle)));
     model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));
 }

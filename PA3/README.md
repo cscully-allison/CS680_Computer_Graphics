@@ -9,7 +9,8 @@ This project uses OpenGL 3.3. Some computers, such as virtual machines in the EC
 
 
 ## Building and Running
-The project will work using either CMake or the make instructions
+The project will work using CMake instructions
+
 
 ### CMake Instructions
 ```
@@ -17,31 +18,37 @@ mkdir build
 cd build
 cmake ..
 make
-./Tutorial
-```
-
-### Makefile Instructions 
-```
-mkdir build
-cd build
-cp ../makefile .
-make
-./Tutorial
+./PA3
 ```
 
 ## Controller Instructions
 
+
+Moon Instructions:
+```
 Keyboard:
 ```
-W: rotate cube clockwise
-S: rotate cube conter clockwise
-D: translate cube clockwise
-A: translate cube counter clockwise
+W: rotate moon clockwise
+S: rotate moon conter clockwise
+D: translate moon clockwise
+A: translate moon counter clockwise
+```
 ```
 
+Planet Instructions:
+```
+Keyboard:
+```
+Up Arrow: rotate moon clockwise
+Down Arrow: rotate moon conter clockwise
+Right Arrow: translate moon clockwise
+Left Arrow: translate moon counter clockwise
+```
 Mouse:
 ```
 Left Click: Pause/Unpause cube rotation
 Right Click: Pause/Unpause cube translation
+```
+
 ```
 
