@@ -15,7 +15,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, unsigned int pressedKey);
+    void Update(unsigned int dt, unsigned int cubeKey);
     void Render();
 
   private:
@@ -30,7 +30,8 @@ class Graphics
 
     Object *m_cube;
     
-    // create the moon object
+    // get cube object and matrix
+    GLint m_moonModelMatrix;
     Object *m_moon;
 };
 

@@ -46,7 +46,8 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_cube = new Object();
-  //create moon
+  
+  // Create moon object
   m_moon = new Object();
 
   // Set up the shaders
@@ -101,6 +102,15 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
+  
+  // Locate the moon model matrix in the shader
+  m_moonModelMatrix = m_shader->GetUniformLocation("modelMatrix");
+  if (m_moonModelMatrix == INVALID_UNIFORM_LOCATION) 
+  {
+    printf("m_modelMatrix not found\n");
+    return false;
+  }
+
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -111,11 +121,9 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, unsigned int pressedKey)
 {
-      // update moon
-  m_moon->Update(dt, m_cube->GetModel());
   // Update the object
   m_cube->Update(dt, pressedKey);
-
+  m_moon->Update(dt, pressedKey, m_cube->GetModel());
 }
 
 void Graphics::Render()
@@ -135,10 +143,10 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
   m_cube->Render();
   
-  // Render Moon
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_moon->GetModel()));
+  // Render the moon object
+  glUniformMatrix4fv(m_moonModelMatrix, 1, GL_FALSE, glm::value_ptr(m_moon->GetModel()));
   m_moon->Render();
-  
+
   // Get any errors from OpenGL
   auto error = glGetError();
   if ( error != GL_NO_ERROR )

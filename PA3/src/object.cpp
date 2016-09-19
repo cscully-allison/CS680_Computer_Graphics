@@ -78,7 +78,7 @@ Object::~Object()
   Indices.clear();
 }
 
-void Object::Update(unsigned int dt, unsigned int pressedKey)
+void Object::Update(unsigned int dt, unsigned int pressedKey, glm::mat4 planet)
 {
   // move the model in a circle
   // The multiplication makes it go in a wider circle
@@ -103,6 +103,61 @@ void Object::Update(unsigned int dt, unsigned int pressedKey)
       case 115:
             direction.x = 1;
           break;
+// moon does not pause
+//       case 1:
+//           if (direction.x == 0)
+//               direction.x = 1;
+//           else
+//             direction.x = 0;
+//           break;   
+//       case 3:
+//           if (direction.y == 0)
+//               direction.y = 1;
+//           else
+//             direction.y = 0;
+//           break;
+//       default:
+//       break;
+    }
+    
+    rotateAngle += direction.x * dt * M_PI/500;
+    translateAngle += direction.y * dt * M_PI/500;
+    
+    glm::vec4 position = planet * glm::vec4 (1.0,1.0,1.0,1.0);
+    glm::mat4 planetModel = glm::mat4( 1.0 );
+    planetModel[3] = position;
+
+    model = glm::translate (planetModel, glm::vec3(5*cos (translateAngle), 0.0f , 5*sin (translateAngle)));
+    model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::scale (model, glm::vec3(0.5, 0.5, 0.5));
+}
+
+
+void Object::Update(unsigned int dt, unsigned int pressedKey)
+{
+  // move the model in a circle
+  // The multiplication makes it go in a wider circle
+  switch (pressedKey){
+      // SDLK_LEFT
+      // translates the square counter clockwise
+      case 1073741904:
+          direction.y = -1;
+          break;
+     // SDLK_RIGHT
+     // translates the square clockwise
+      case 1073741903:
+          direction.y = 1;
+        break;
+     // SDLK_UP
+     // rotates square counter clockwise
+      case 1073741906:
+            direction.x = -1;
+          break;
+     // SDLK_DOWN
+     // rotates square clockwise
+      case 1073741905:
+            direction.x = 1;
+          break;
      // left key press
      // un/pauses sqaure rotation
       case 1:
@@ -119,6 +174,8 @@ void Object::Update(unsigned int dt, unsigned int pressedKey)
           else
             direction.y = 0;
           break;
+      default:
+      break;
     }
     
     rotateAngle += direction.x * dt * M_PI/1000;
@@ -128,12 +185,6 @@ void Object::Update(unsigned int dt, unsigned int pressedKey)
     model = glm::rotate(model, (rotateAngle), glm::vec3(0.0, 1.0, 0.0));
 }
 
-void Object::Update(unsigned int dt, glm::mat4 planet)
-{
-   rotateAngle +=  dt * M_PI/1000;
-   model = glm::translate (planet, glm::vec3(6*cos (rotateAngle), 0.0f , 6*sin (rotateAngle)));
-   model = glm::rotate(model, (rotateAngle), glm::vec3(1.0, 0.0, 0.0));
-}
 
 glm::mat4 Object::GetModel()
 {

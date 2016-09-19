@@ -80,6 +80,7 @@ void Engine::Run()
 
 int Engine::Keyboard()
 {
+
   switch (m_event.type){
       case SDL_QUIT:
        m_running = false;
@@ -91,23 +92,21 @@ int Engine::Keyboard()
       break;
       // grabs key on release
       case SDL_KEYUP:
-        switch (m_event.key.keysym.sym){
-            case SDLK_LEFT:
-                return 97;
-            break;
-            case SDLK_RIGHT:
-                return 100;
-            break;
-            case SDLK_UP:
-                return 119;
-            break;
-            case SDLK_DOWN:
-                return 115;
-            break;
-            default:
+//             case SDLK_LEFT:
+//                 return 97;
+//             break;
+//             case SDLK_RIGHT:
+//                 return 100;
+//             break;
+//             case SDLK_UP:
+//                 return 119;
+//             break;
+//             case SDLK_DOWN:
+//                 return 115;
+//             break;
+//             default:
                 return m_event.key.keysym.sym;
             break;
-        }
       break;
      // grabs mouse button when pushed 
       case SDL_MOUSEBUTTONDOWN:

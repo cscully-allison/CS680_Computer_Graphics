@@ -10,7 +10,7 @@ class Object
     Object();
     ~Object();
     void Update(unsigned int dt, unsigned int pressedKey);
-    void Update(unsigned int dt, glm::mat4 planet);
+    void Update(unsigned int dt, unsigned int pressedKey, glm::mat4 planet);
     void Render();
 
     glm::mat4 GetModel();
