@@ -23,9 +23,8 @@ make
 
 ## Controller Instructions
 
+#Moon Instructions:
 
-Moon Instructions:
-```
 Keyboard:
 ```
 W: rotate moon clockwise
@@ -33,10 +32,9 @@ S: rotate moon conter clockwise
 D: translate moon clockwise
 A: translate moon counter clockwise
 ```
-```
 
-Planet Instructions:
-```
+# Planet Instructions:
+
 Keyboard:
 ```
 Up Arrow: rotate moon clockwise
@@ -50,5 +48,5 @@ Left Click: Pause/Unpause cube rotation
 Right Click: Pause/Unpause cube translation
 ```
 
-```
+
 
