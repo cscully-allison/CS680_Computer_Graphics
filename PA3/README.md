@@ -23,7 +23,7 @@ make
 
 ## Controller Instructions
 
-#Moon Instructions:
+### Moon Instructions:
 
 Keyboard:
 ```
@@ -33,7 +33,7 @@ D: translate moon clockwise
 A: translate moon counter clockwise
 ```
 
-# Planet Instructions:
+### Planet Instructions:
 
 Keyboard:
 ```
