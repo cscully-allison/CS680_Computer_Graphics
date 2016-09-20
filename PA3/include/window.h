@@ -13,8 +13,11 @@ class Window
     bool Initialize(const string &name, int* width, int* height);
     void Swap();
 
-  private:
+    ////RTEURN TO PRIVATE LATER/////
     SDL_Window* gWindow;
+
+
+  private:
     SDL_GLContext gContext;
 };
 

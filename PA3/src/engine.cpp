@@ -35,6 +35,49 @@ bool Engine::Initialize()
     return false;
   }
 
+
+  //TTF Things---------------------
+
+  SDL_Surface* display = SDL_GetWindowSurface(m_window->gWindow);
+
+
+  if(TTF_Init() != 0){
+    std::cerr << "TTF_Init() failed:" << TTF_GetError() << std::endl;
+    return false;
+  }
+
+  TTF_Font *font;
+   font = TTF_OpenFont("../fonts/FreeSans.ttf", 24);
+   if (font == NULL)
+   {
+      cerr << "TTF_OpenFont() Failed: " << TTF_GetError() << endl;
+      TTF_Quit();
+      return false;
+   }
+
+   SDL_Surface *text;
+   SDL_Color text_color = {255, 255, 255};
+   text = TTF_RenderText_Solid(font,
+   "A journey of a thousand miles begins with a single step.",
+   text_color);
+   if (SDL_FillRect(display, 
+                       NULL,
+                       SDL_MapRGB( display->format, 0,0,0))
+                       != 0)
+      {
+         cerr << "SDL_FillRect() Failed: " << SDL_GetError() << endl;
+         return false;
+      }
+
+
+  if (SDL_BlitSurface(text, NULL, display, NULL) != 0)
+      {
+         cerr << "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
+      }
+
+  
+   //---------------------------------------
+
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT))
