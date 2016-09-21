@@ -194,29 +194,33 @@ void Object::Render()
 void Moon::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt){
 
     int scalar = 6;
-    
-    coef_r = 1;
-    angle += dt * M_PI/400;
-    angle_r += dt * M_PI/600;
-/*
+
      switch(key_press_val){
-        case 32: //spacebar
-            paused = true;
-            break;
-
-        case 999: //unpause
-            paused = false;
-            break;
-
-        case 100: //"d"
+      case 106: //"J"
             transDirection = 0;
             break;
             
-        case 97: //"a"
+        case 108: //"L"
             transDirection = 1;
             break;
+        
+        case 107: //"k"
+            coef_r = 1;
+            break;
+
+        case 105: //"I"
+            coef_r = -1;
+            break;
     }
-*/
+
+    if(transDirection == 0){
+      angle += dt * M_PI/400;
+    }else{
+      angle -= dt * M_PI/400;
+    }
+
+    angle_r += dt * M_PI/600;
+
 
  
     //perform necessary reductions

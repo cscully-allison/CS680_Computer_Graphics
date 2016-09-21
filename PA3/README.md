@@ -1,17 +1,23 @@
-# PA2: Controllable Spinning Cube
+# PA3: Orbiting Moon 
 
 ## Connor Scully-Allison
 
 # Building and Running
 
-1)Navigate to /PA2/build
+In the PA3 Directory type in the following order:
 
-2)Type make
-
-3)./CSA\_orbit to run
+```   
+   cp makefile build/
+   cd build/
+   make
+   ./CSA\_orbit
+```
 
 # Controls
 
+##Planet
+
+```
 A - Counter Clockwise Translation
 
 D - Clockwise Translation
@@ -25,8 +31,11 @@ Spacebar - Global Pause
 LMB - Pause Translation
 
 RMB - Pause Rotation
+```
 
-----------NOTE-----------
-LMB and RMB work momentarily but end up crashing the
-OS. It is for this reason I have commented thier functionality
-out.
+##Moon
+
+```
+J,L - Clockwise, Counterclockwise Orbit
+I,K - Clockwise, Counterclockwise Rotation
+```
