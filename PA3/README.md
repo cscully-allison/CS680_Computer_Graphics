@@ -6,7 +6,8 @@
 
 In the PA3 Directory type in the following order:
 
-```   
+```
+   mkdir build
    cp makefile build/
    cd build/
    make
