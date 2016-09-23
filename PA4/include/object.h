@@ -1,4 +1,4 @@
-#ifndef OBJECT_H
+#ifndef OBJECT_HIn
 #define OBJECT_H
 
 #include <vector>
@@ -13,6 +13,7 @@ class Object
     void Update(unsigned int dt, unsigned int pressedKey);
     void Update(unsigned int dt, unsigned int pressedKey, glm::mat4 planet);
     void Render();
+    bool loadOBJ (std::string file);
 
     glm::mat4 GetModel();
 

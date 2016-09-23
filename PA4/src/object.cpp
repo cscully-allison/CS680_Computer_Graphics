@@ -28,8 +28,35 @@ Object::Object(std::string file)
     f 3 7 4
     f 5 1 8
   */
-  std::string s;
+
+  if (loadOBJ (file)){
   
+    // The index works at a 0th index
+    for(unsigned int i = 0; i < Indices.size(); i++)
+    {
+        Indices[i] = Indices[i] - 1;
+    }
+
+    rotateAngle = 0.0f;
+    translateAngle = 0.0f;
+
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  }
+}
+
+Object::~Object()
+{
+  Vertices.clear();
+  Indices.clear();
+}
+
+bool Object::loadOBJ (std::string file){
   // open Object file
   std::ifstream fin("../objects/" + file);
   char temp;  
@@ -38,7 +65,6 @@ Object::Object(std::string file)
   // read in code til end of file. 
   if (fin){
       while (!fin.eof()){
-
           fin >> temp;
           // comment, ignore
           if (temp == '#'){
@@ -71,10 +97,11 @@ Object::Object(std::string file)
             Vertex temp (vertex,color);
             Vertices.push_back (temp);   
           }
-          // idk what s does
+          // idk what to do with the smoothing int
           else if (temp == 's'){
             std::string line;
             std::getline (fin, line);
+            std::cout << line;
           }
           // get Indices
           else if (temp == 'f'){
@@ -85,7 +112,8 @@ Object::Object(std::string file)
             Indices.push_back (z);
           }
           // material library
-          else if (temp = 'm'){            
+          else if (temp = 'm'){
+            
             std::string line;
             std::getline (fin, line);
           }
@@ -95,46 +123,20 @@ Object::Object(std::string file)
             std::string line;
             std::getline (fin, line);
           }  
-          else
-            std:: cout << temp;
 
       }
-      std::cout << std::endl;
+      return true;
   }
   
     // if file is unable to open, output error
   else{
     std::cerr << "Error opening object file" << file << std::endl;
+    return false;
   }
     
   // close the file  
   fin.close();
-  
-  
-  // The index works at a 0th index
-  for(unsigned int i = 0; i < Indices.size(); i++)
-  {
-    Indices[i] = Indices[i] - 1;
-  }
-
-  rotateAngle = 0.0f;
-  translateAngle = 0.0f;
-
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 }
-
-Object::~Object()
-{
-  Vertices.clear();
-  Indices.clear();
-}
-
 
 void Object::Update(unsigned int dt, unsigned int pressedKey, glm::mat4 planet)
 {
