@@ -59,20 +59,16 @@ Object::~Object()
 bool Object::loadOBJ (std::string file){
   // open Object file
   std::ifstream fin("../objects/" + file);
-  char temp;  
+  char temp;
+  std::string materialTitle;  
   fin >> temp;
 
   // read in code til end of file. 
   if (fin){
       while (!fin.eof()){
           fin >> temp;
-          // comment, ignore
-          if (temp == '#'){
-                std::string line;
-                std::getline (fin, line);
-          }
           // There should currently be only 1 object per file, so ignore
-          else if (temp == 'o'){
+          if (temp == 'o'){
             std::string line;
             std::getline (fin, line);
           }
@@ -101,7 +97,6 @@ bool Object::loadOBJ (std::string file){
           else if (temp == 's'){
             std::string line;
             std::getline (fin, line);
-            std::cout << line;
           }
           // get Indices
           else if (temp == 'f'){
@@ -112,14 +107,16 @@ bool Object::loadOBJ (std::string file){
             Indices.push_back (z);
           }
           // material library
-          else if (temp = 'm'){
+          else if (temp == 'm'){
             
             std::string line;
+            fin >> line;
+            fin >> materialTitle;
             std::getline (fin, line);
           }
           
          // material name
-         else if (temp = 'u'){            
+         else {       
             std::string line;
             std::getline (fin, line);
           }  
@@ -135,7 +132,29 @@ bool Object::loadOBJ (std::string file){
   }
     
   // close the file  
-  fin.close();
+//   fin.close();
+//     fin("../objects/" + materialTitle);
+//       if (fin){
+//         while (!fin.eof()){
+//          fin >> temp;
+//           // comment, ignore
+//           if (temp == '#'){
+//                 std::string line;
+//                 std::getline (fin, line);
+//           }
+//           else{
+//              std::string line;
+//              std::getline (fin, line);
+//           }
+//         }
+//         return true;
+//       }
+//     // if file is unable to open, output error
+//     else{
+//         std::cerr << "Error opening material file" << file << std::endl;
+//         return false;
+//     }  
+//     fin.close(); 
 }
 
 void Object::Update(unsigned int dt, unsigned int pressedKey, glm::mat4 planet)
