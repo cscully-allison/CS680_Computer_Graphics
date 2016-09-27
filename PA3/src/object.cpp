@@ -92,10 +92,11 @@ void Object::Update(unsigned int dt, int key_press_val)
 void Object::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt)
 {
      int scalar = 8;
-
+     std::cout << key_press_val << std::endl;
       switch(key_press_val){
         case 32: //spacebar
             paused = true;
+            key_press_val = 0;
             break;
 
         case 999: //unpause
@@ -146,7 +147,7 @@ void Object::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt)
      }
 
      if(!paused && !r_pause){
-  angle_r += dt * M_PI/600;
+        angle_r += dt * M_PI/600;
      }
     
     //translate model first
@@ -193,9 +194,34 @@ void Object::Render()
 void Moon::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt){
 
     int scalar = 6;
-    angle += dt * M_PI/400;
+
+     switch(key_press_val){
+      case 106: //"J"
+            transDirection = 0;
+            break;
+            
+        case 108: //"L"
+            transDirection = 1;
+            break;
+        
+        case 107: //"k"
+            coef_r = 1;
+            break;
+
+        case 105: //"I"
+            coef_r = -1;
+            break;
+    }
+
+    if(transDirection == 0){
+      angle += dt * M_PI/400;
+    }else{
+      angle -= dt * M_PI/400;
+    }
+
     angle_r += dt * M_PI/600;
-    coef_r = 1;
+
+
  
     //perform necessary reductions
     //to unbind rotation from position of moon

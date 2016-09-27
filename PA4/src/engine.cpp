@@ -46,9 +46,6 @@ bool Engine::Initialize()
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
-  //set paused state to false
-  m_paused = false;
-
   // No errors
   return true;
 }
@@ -59,7 +56,7 @@ void Engine::Run()
 
   while(m_running)
   {
-
+    // Update the DT
     m_DT = getDT();
 
     // Check the keyboard input
@@ -68,14 +65,12 @@ void Engine::Run()
       Keyboard();
     }
 
-    m_graphics->Update(m_DT, user_input);
+    // Update and render the graphics
+    m_graphics->Update(m_DT);
     m_graphics->Render();
-
-
 
     // Swap to the Window
     m_window->Swap();
-
   }
 }
 
@@ -91,45 +86,8 @@ void Engine::Keyboard()
     if (m_event.key.keysym.sym == SDLK_ESCAPE)
     {
       m_running = false;
-    } 
-
-    else if (m_event.key.keysym.sym == 32){
-
-	     m_paused = !m_paused;
-
-    	if(m_paused){
-        user_input = 32;
-    	}else{
-    	  user_input = 999;
-    	}
-        
-    }
-
-    else{
-        user_input = m_event.key.keysym.sym;
     }
   }
-  else if(m_event.type == SDL_MOUSEBUTTONDOWN){
-	if(m_event.button.button == SDL_BUTTON_LEFT){
-		lmbpause = !lmbpause;
-		
-		if(!lmbpause){
-		   user_input = 200;
-		}else{
-		   user_input = 201;
-		}
-	}
-	else if(m_event.button.button == SDL_BUTTON_RIGHT){
-		rmbpause = !rmbpause;
-		
-		if(!rmbpause){
-		    user_input = 202;
-		}else{
-		    user_input = 203;
-		}
-	}
-  }
-
 }
 
 unsigned int Engine::getDT()
