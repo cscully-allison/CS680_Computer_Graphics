@@ -75,7 +75,8 @@ bool Engine::Initialize()
          cerr << "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
       }
 
-  
+  SDL_RenderPresent();
+ 
    //---------------------------------------
 
   // Start the graphics
