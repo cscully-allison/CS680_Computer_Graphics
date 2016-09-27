@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include <vector>
+#include <stdio.h>
 #include "graphics_headers.h"
 
 class Object
@@ -13,6 +14,7 @@ class Object
     void Render();
 
     glm::mat4 GetModel();
+    void loadTexture(std::string filePath, std::vector<Vertex> *geometry);
     
   private:
     glm::mat4 model;
@@ -20,8 +22,9 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-
     float angle;
+
+
 };
 
 #endif /* OBJECT_H */

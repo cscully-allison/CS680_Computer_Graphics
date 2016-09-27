@@ -1,5 +1,6 @@
 #include "object.h"
 
+
 Object::Object()
 {  
   /*
@@ -28,6 +29,7 @@ Object::Object()
     f 5 1 8
   */
 
+/*
   Vertices = {
     {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
     {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
@@ -38,9 +40,9 @@ Object::Object()
     {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
     {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
   };
-
+*/
   Indices = {
-    2, 3, 4,
+    2, 3, 4, 
     8, 7, 6,
     1, 5, 6,
     2, 6, 7,
@@ -54,8 +56,7 @@ Object::Object()
     5, 1, 8
   };
 
-  //load verticies and indicies from obj file
-  
+  loadTexture("../assets/box2.obj", &Vertices);
 
   // The index works at a 0th index
   for(unsigned int i = 0; i < Indices.size(); i++)
@@ -109,3 +110,54 @@ void Object::Render()
   glDisableVertexAttribArray(1);
 }
 
+void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
+  std::FILE* fin = fopen(filePath.c_str(), "r");
+
+  glm::vec3 vertexPoint;
+  glm::vec2 uv;
+  glm::vec3 normal;
+
+  Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.5f));
+
+  char leadingCode[200];
+  char garbageStr[200];
+  char mtlFilePath[200];
+  int status;
+
+  if(fin == NULL){
+    std::cout << "Texture File Not Found" << std::endl;
+    return;
+  }
+
+  
+
+  status = fscanf(fin, "%s", leadingCode);
+
+  while(status != EOF){
+    if(strcmp(leadingCode, "#") == 0){
+      //ignore this string
+      fscanf(fin, "%s\n", garbageStr);
+    }else if(strcmp(leadingCode, "v") == 0){
+
+       fscanf(fin, "%f %f %f\n", &vertexPoint.x, &vertexPoint.y, &vertexPoint.z);
+
+       fullVertex->vertex = vertexPoint;
+
+       geometry->push_back(*fullVertex);
+
+    }else if(strcmp(leadingCode, "vn") == 0){
+
+    }else if(strcmp(leadingCode, "f") == 0){
+
+    }else{
+
+    }
+    status = fscanf(fin, "%s", leadingCode);
+  }
+
+
+
+
+
+  return;
+}
