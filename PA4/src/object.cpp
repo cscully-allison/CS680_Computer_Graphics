@@ -41,6 +41,7 @@ Object::Object()
     {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
   };
 */
+/*
   Indices = {
     2, 3, 4, 
     8, 7, 6,
@@ -55,8 +56,9 @@ Object::Object()
     3, 7, 4,
     5, 1, 8
   };
+*/
 
-  loadTexture("../assets/box2.obj", &Vertices);
+  loadTexture("../assets/dragon.obj", &Vertices);
 
   // The index works at a 0th index
   for(unsigned int i = 0; i < Indices.size(); i++)
@@ -83,9 +85,9 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  angle += dt * M_PI/1000;
+  angle += dt * M_PI/10000;
 
-  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 1.0, 0.0));
+  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.5, 1.0, 0.5));
 }
 
 glm::mat4 Object::GetModel()
@@ -113,45 +115,110 @@ void Object::Render()
 void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
   std::FILE* fin = fopen(filePath.c_str(), "r");
 
+
   glm::vec3 vertexPoint;
   glm::vec2 uv;
   glm::vec3 normal;
 
-  Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.5f));
+  Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.5f, 0.35f, .10f));
 
   char leadingCode[200];
   char garbageStr[200];
   char mtlFilePath[200];
   int status;
 
+  int indicesFormatFlag = 0;  
+        
+
   if(fin == NULL){
     std::cout << "Texture File Not Found" << std::endl;
     return;
   }
 
-  
-
   status = fscanf(fin, "%s", leadingCode);
 
   while(status != EOF){
     if(strcmp(leadingCode, "#") == 0){
-      //ignore this string
-      fscanf(fin, "%s\n", garbageStr);
-    }else if(strcmp(leadingCode, "v") == 0){
+
+      fscanf(fin, "%s\n", garbageStr); 
+
+    }
+    
+    else if(strcmp(leadingCode, "v") == 0){
 
        fscanf(fin, "%f %f %f\n", &vertexPoint.x, &vertexPoint.y, &vertexPoint.z);
 
+
        fullVertex->vertex = vertexPoint;
+       fullVertex->color = glm::vec3(0.0f, ( float(rand()) / float(RAND_MAX)), 0.0f );
 
        geometry->push_back(*fullVertex);
 
-    }else if(strcmp(leadingCode, "vn") == 0){
+    }
+    
+    else if(strcmp(leadingCode, "vn") == 0){
 
-    }else if(strcmp(leadingCode, "f") == 0){
-
-    }else{
+        fscanf(fin, "%s\n", garbageStr);
 
     }
+    
+    else if(strcmp(leadingCode, "f") == 0){
+        int tempIndexHolder;        
+
+        int vertexIndices[3];
+        int uvIndices[3];
+        int normalIndices[3];
+        
+        //use a three state flag to indicate
+        if(indicesFormatFlag == 1){
+            
+            fscanf(fin, "%d//%d %d//%d %d//%d\n", &vertexIndices[0] , &normalIndices[0], &vertexIndices[1],  &normalIndices[1], &vertexIndices[2], &normalIndices[2]);
+            
+        } 
+        else if(indicesFormatFlag == 2){    
+            
+            fscanf(fin, "%d %d %d\n", &vertexIndices[0], &vertexIndices[1], &vertexIndices[2]);
+
+        }
+        else if(indicesFormatFlag == 0){
+          
+            char seperator;
+
+            fscanf(fin, "%d", &tempIndexHolder);
+            seperator = fgetc(fin);            
+
+            if(seperator == '/'){
+
+                std::cout << "is called";                
+
+                indicesFormatFlag = 1;
+                vertexIndices[0] = tempIndexHolder;
+                fscanf(fin, "/%d %d//%d %d//%d\n",  &normalIndices[0], &vertexIndices[1],  &normalIndices[1], &vertexIndices[2], &normalIndices[2]);
+
+            } 
+            else{
+                
+
+                indicesFormatFlag = 2;
+                vertexIndices[0] = tempIndexHolder;
+                fscanf(fin, "%d %d\n", &vertexIndices[1], &vertexIndices[2]);
+
+            }
+
+        } 
+        
+
+        
+        for(int ndx = 0; ndx < 3; ndx++){
+            Indices.push_back(vertexIndices[ndx]);
+        } 
+
+    }
+    
+    else if(strcmp(leadingCode, "mtllib") == 0){
+        fscanf(fin, "%s", mtlFilePath);    
+    }
+
     status = fscanf(fin, "%s", leadingCode);
   }
 
