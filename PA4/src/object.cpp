@@ -3,62 +3,15 @@
 
 Object::Object()
 {  
-  /*
-    # Blender File for a Cube
-    o Cube
-    v 1.000000 -1.000000 -1.000000
-    v 1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 -1.000000
-    v 1.000000 1.000000 -0.999999
-    v 0.999999 1.000000 1.000001
-    v -1.000000 1.000000 1.000000
-    v -1.000000 1.000000 -1.000000
-    s off
-    f 2 3 4
-    f 8 7 6
-    f 1 5 6
-    f 2 6 7
-    f 7 8 4
-    f 1 4 8
-    f 1 2 4
-    f 5 8 6
-    f 2 1 6
-    f 3 2 7
-    f 3 7 4
-    f 5 1 8
-  */
+  std::string texturePath;
 
-/*
-  Vertices = {
-    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
-  };
-*/
-/*
-  Indices = {
-    2, 3, 4, 
-    8, 7, 6,
-    1, 5, 6,
-    2, 6, 7,
-    7, 8, 4,
-    1, 4, 8,
-    1, 2, 4,
-    5, 8, 6,
-    2, 1, 6,
-    3, 2, 7,
-    3, 7, 4,
-    5, 1, 8
-  };
-*/
 
-  loadTexture("../assets/dragon.obj", &Vertices);
+  std::cout << "Please input only the filename object you would like loaded (make sure it's in the \"assets\" folder) : ";
+  std::cin >> texturePath;
+
+  texturePath = "../assets/" + texturePath;
+
+  loadTexture(texturePath, &Vertices);
 
   // The index works at a 0th index
   for(unsigned int i = 0; i < Indices.size(); i++)
@@ -87,7 +40,7 @@ void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/10000;
 
-  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.5, 1.0, 0.5));
+  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0, 1.0, -1.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -116,14 +69,14 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
 
   glm::vec3 vertexPoint;
 
-  Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.5f, 0.35f, .10f));
+  Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
-  //use map to hold color info
-  //std::map<>
+  std::map<std::string, glm::vec3> colorMap;
 
   char leadingCode[200];
   char garbageStr[200];
   char mtlFilePath[200];
+  char currentMtl[200];
   int status;
 
   
@@ -208,8 +161,9 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
 
         
         //apply color to vertex at index
-        (*geometry)[vertexIndices[0]].color = glm::vec3(0.64, 0.64, 0.64);
-
+        (*geometry)[vertexIndices[0]].color = colorMap[currentMtl];
+        (*geometry)[vertexIndices[1]].color = colorMap[currentMtl];
+        (*geometry)[vertexIndices[2]].color = colorMap[currentMtl];
 
         for(int ndx = 0; ndx < 3; ndx++){
 
@@ -220,17 +174,56 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
     
     else if(strcmp(leadingCode, "mtllib") == 0){
         fscanf(fin, "%s", mtlFilePath);
+        fetchMaterial(mtlFilePath, &colorMap);
     }
    
-    else if(strcmp(leadingCode, "useMtl")){
-        
+    else if(strcmp(leadingCode, "usemtl") == 0){
+        fscanf(fin, "%s", currentMtl);
     }
 
-    else if(strcmp(leadingCode,))
 
     status = fscanf(fin, "%s", leadingCode);
   }
 
 
+  fclose(fin);  
+  return;
+}
+
+void Object::fetchMaterial(std::string filePath, std::map<std::string, glm::vec3> *materials){
+  std::ifstream fin;
+  std::string leadingCode, tempKey;
+  float r, g, b;
+
+  filePath = "../assets/" + filePath;
+
+  fin.open(filePath);
+
+  if(!fin.good()){
+    std::cout << "Error Opening Material File: Please make sure it is in the same folder as the obj file." << std::endl;
+    return;
+  }
+
+  fin >> leadingCode;
+
+
+  while(fin.good()){
+    if(leadingCode == "#"){
+      fin.ignore(1000, '\n');
+    }
+    else if(leadingCode == "newmtl"){
+      fin >> tempKey;
+    }
+    else if(leadingCode == "Kd"){
+      fin >> r  >> g >> b;
+      (*materials)[tempKey] = glm::vec3(r,g,b);
+    } else {
+      fin.ignore(1000, '\n');
+    }
+
+    fin >> leadingCode;
+  }
+
+  fin.close();
   return;
 }

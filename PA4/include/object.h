@@ -2,7 +2,8 @@
 #define OBJECT_H
 
 #include <vector>
-#include <stdio.h>
+#include <map>
+#include <fstream>
 #include "graphics_headers.h"
 
 class Object
@@ -14,7 +15,9 @@ class Object
     void Render();
 
     glm::mat4 GetModel();
+
     void loadTexture(std::string filePath, std::vector<Vertex> *geometry);
+    void fetchMaterial(std::string filePath, std::map<std::string,glm::vec3> *materials);
     
   private:
     glm::mat4 model;
