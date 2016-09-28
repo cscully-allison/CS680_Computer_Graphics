@@ -40,7 +40,7 @@ void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/10000;
 
-  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0, 1.0, -1.0));
+  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0, 0.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -157,17 +157,18 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
             }
 
         } 
-        
+      
 
-        
-        //apply color to vertex at index
+        // (*geometry)[normalIndices[0]].color = colorMap[currentMtl];
+        // (*geometry)[normalIndices[1]].color = colorMap[currentMtl];
+        // (*geometry)[normalIndices[2]].color = colorMap[currentMtl];
+
         (*geometry)[vertexIndices[0]].color = colorMap[currentMtl];
         (*geometry)[vertexIndices[1]].color = colorMap[currentMtl];
         (*geometry)[vertexIndices[2]].color = colorMap[currentMtl];
 
         for(int ndx = 0; ndx < 3; ndx++){
-
-            Indices.push_back(vertexIndices[ndx]);
+          Indices.push_back(vertexIndices[ndx]);
         } 
 
     }
