@@ -113,22 +113,24 @@ void Object::Render()
 }
 
 void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
-  std::FILE* fin = fopen(filePath.c_str(), "r");
-
 
   glm::vec3 vertexPoint;
-  glm::vec2 uv;
-  glm::vec3 normal;
 
   Vertex* fullVertex = new Vertex(glm::vec3(0.0f), glm::vec3(0.5f, 0.35f, .10f));
+
+  //use map to hold color info
+  //std::map<>
 
   char leadingCode[200];
   char garbageStr[200];
   char mtlFilePath[200];
   int status;
 
+  
+
   int indicesFormatFlag = 0;  
-        
+
+  std::FILE* fin = fopen(filePath.c_str(), "r");
 
   if(fin == NULL){
     std::cout << "Texture File Not Found" << std::endl;
@@ -150,7 +152,6 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
 
 
        fullVertex->vertex = vertexPoint;
-       fullVertex->color = glm::vec3(0.0f, ( float(rand()) / float(RAND_MAX)), 0.0f );
 
        geometry->push_back(*fullVertex);
 
@@ -166,7 +167,6 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
         int tempIndexHolder;        
 
         int vertexIndices[3];
-        int uvIndices[3];
         int normalIndices[3];
         
         //use a three state flag to indicate
@@ -189,8 +189,6 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
 
             if(seperator == '/'){
 
-                std::cout << "is called";                
-
                 indicesFormatFlag = 1;
                 vertexIndices[0] = tempIndexHolder;
                 fscanf(fin, "/%d %d//%d %d//%d\n",  &normalIndices[0], &vertexIndices[1],  &normalIndices[1], &vertexIndices[2], &normalIndices[2]);
@@ -209,6 +207,10 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
         
 
         
+        //apply color to vertex at index
+        (*geometry)[vertexIndices[0]].color = glm::vec3(0.64, 0.64, 0.64);
+
+
         for(int ndx = 0; ndx < 3; ndx++){
             Indices.push_back(vertexIndices[ndx]);
         } 
@@ -216,14 +218,15 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
     }
     
     else if(strcmp(leadingCode, "mtllib") == 0){
-        fscanf(fin, "%s", mtlFilePath);    
+        fscanf(fin, "%s", mtlFilePath);
+    }
+   
+    else if(strcmp(leadingCode, "useMtl")){
+        
     }
 
     status = fscanf(fin, "%s", leadingCode);
   }
-
-
-
 
 
   return;
