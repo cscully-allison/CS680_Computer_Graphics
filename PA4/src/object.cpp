@@ -210,6 +210,7 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
 
         
         for(int ndx = 0; ndx < 3; ndx++){
+
             Indices.push_back(vertexIndices[ndx]);
         } 
 
@@ -218,6 +219,8 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
     else if(strcmp(leadingCode, "mtllib") == 0){
         fscanf(fin, "%s", mtlFilePath);    
     }
+
+    else if(strcmp(leadingCode,))
 
     status = fscanf(fin, "%s", leadingCode);
   }
