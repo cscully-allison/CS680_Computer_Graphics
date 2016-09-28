@@ -12,8 +12,8 @@ Object::Object()
   texturePath = "../assets/" + texturePath;
 
   loadTexture(texturePath, &Vertices);
-
-  // The index works at a 0th index
+  
+    // The index works at a 0th index
   for(unsigned int i = 0; i < Indices.size(); i++)
   {
     Indices[i] = Indices[i] - 1;
@@ -168,7 +168,7 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
         (*geometry)[vertexIndices[2]].color = colorMap[currentMtl];
 
         for(int ndx = 0; ndx < 3; ndx++){
-          Indices.push_back(vertexIndices[ndx]);
+          Indices.push_back((vertexIndices[ndx]-1));
         } 
 
     }
