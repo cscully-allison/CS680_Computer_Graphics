@@ -29,6 +29,9 @@ class Object
     GLuint IB;
     float angle;
 
+    Assimp::Importer importer;
+    Assimp::aiScene scene;
+
 };
 
 #endif /* OBJECT_H */

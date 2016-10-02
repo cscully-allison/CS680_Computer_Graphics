@@ -5,7 +5,7 @@ Object::Object()
 {  
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-
+  scene = importer.ReadFile("../assets/pinballbox.obj", aiProcess_Triangulate);
 
 
   // The index works at a 0th index
@@ -18,7 +18,7 @@ Object::Object()
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mMeshes.mNumVertices, &mMeshes.mVertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
