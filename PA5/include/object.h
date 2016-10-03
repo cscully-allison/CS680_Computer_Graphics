@@ -30,7 +30,7 @@ class Object
     float angle;
 
     Assimp::Importer importer;
-    Assimp::aiScene scene;
+    const aiScene* scene;
 
 };
 

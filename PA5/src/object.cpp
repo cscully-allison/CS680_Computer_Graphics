@@ -7,22 +7,39 @@ Object::Object()
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/pinballbox.obj", aiProcess_Triangulate);
 
+  std::cout << scene->mNumMeshes << std::endl;
+  
+  for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
-  // The index works at a 0th index
-  for(unsigned int i = 0; i < Indices.size(); i++)
-  {
-    Indices[i] = Indices[i] - 1;
+
+  for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
+    Vertices.push_back(Vertex(
+                          glm::vec3(scene->mMeshes[meshNums]->mVertices[vertex].x, 
+                                    scene->mMeshes[meshNums]->mVertices[vertex].y, 
+                                    scene->mMeshes[meshNums]->mVertices[vertex].z), glm::vec3((float)vertex/scene->mMeshes[meshNums]->mNumVertices)));
+
   }
 
+  for(unsigned int index = 0; index < scene->mMeshes[meshNums]->mNumFaces; index++){
+    Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[0]);
+    Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[1]);
+    Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[2]);
+
+  }
+
+
+}
   angle = 0.0f;
+  if(scene->HasMeshes()){
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
 
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mMeshes.mNumVertices, &mMeshes.mVertices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  }
 }
 
 Object::~Object()
@@ -35,7 +52,7 @@ void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/10000;
 
-  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0, 0.0, 0.0));
+  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
