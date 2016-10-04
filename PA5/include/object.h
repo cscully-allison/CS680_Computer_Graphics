@@ -28,6 +28,7 @@ class Object
     GLuint VB;
     GLuint IB;
     float angle;
+    unsigned int meshNumber;
 
     Assimp::Importer importer;
     const aiScene* scene;
