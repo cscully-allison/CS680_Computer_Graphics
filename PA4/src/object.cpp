@@ -13,11 +13,6 @@ Object::Object()
 
   loadTexture(texturePath, &Vertices);
   
-    // The index works at a 0th index
-  for(unsigned int i = 0; i < Indices.size(); i++)
-  {
-    Indices[i] = Indices[i] - 1;
-  }
 
   angle = 0.0f;
 
@@ -163,9 +158,9 @@ void Object::loadTexture(std::string filePath, std::vector<Vertex> *geometry){
         // (*geometry)[normalIndices[1]].color = colorMap[currentMtl];
         // (*geometry)[normalIndices[2]].color = colorMap[currentMtl];
 
-        (*geometry)[vertexIndices[0]].color = colorMap[currentMtl];
-        (*geometry)[vertexIndices[1]].color = colorMap[currentMtl];
-        (*geometry)[vertexIndices[2]].color = colorMap[currentMtl];
+        (*geometry)[vertexIndices[0]-1].color = glm::vec3(1.0); //colorMap[currentMtl];
+        (*geometry)[vertexIndices[1]-1].color = glm::vec3(1.0); //colorMap[currentMtl];
+        (*geometry)[vertexIndices[2]-1].color = glm::vec3(1.0); //colorMap[currentMtl];
 
         for(int ndx = 0; ndx < 3; ndx++){
           Indices.push_back((vertexIndices[ndx]-1));
