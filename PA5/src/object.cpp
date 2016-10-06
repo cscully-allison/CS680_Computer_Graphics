@@ -5,7 +5,10 @@ Object::Object()
 {  
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/pinball.obj", aiProcess_Triangulate);
+  std::string filename;
+  std::cout << "Object File Name: " <<std::endl;
+  std::cin >> filename;
+  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes;
   aiColor3D color (0.0f,0.0f, 0.0f);
   
