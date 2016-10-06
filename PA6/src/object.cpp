@@ -4,14 +4,16 @@
 Object::Object()
 {  
   //Verticies and indicies needs to be initilized for run
-  //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/pinball.obj", aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes;
-  aiColor3D color (0.0f,0.0f, 0.0f);
+    
   
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){
-
-
+    
+    //i dont think we need something like this but
+    //I'll leave in just in case
+    //pretty sure it gets replaced by whatever we do with
+    //imagemagick
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 
     for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
@@ -20,7 +22,8 @@ Object::Object()
                         glm::vec3(scene->mMeshes[meshNums]->mVertices[vertex].x, 
                                   scene->mMeshes[meshNums]->mVertices[vertex].y, 
                                   scene->mMeshes[meshNums]->mVertices[vertex].z),
-                        glm::vec2(0.0f)
+                        glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[vertex].y)
                     )
         );
 
