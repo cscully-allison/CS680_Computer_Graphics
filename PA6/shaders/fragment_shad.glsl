@@ -8,5 +8,5 @@
 
           void main(void)
           { 
-             frag_color = texture2D(gSampler, texture.st);
+             frag_color = texture2D(gSampler, texture.xy);
           } 

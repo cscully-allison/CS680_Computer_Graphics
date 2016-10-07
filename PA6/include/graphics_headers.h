@@ -28,6 +28,7 @@ struct Vertex
   glm::vec2 texture;
 
   Vertex(glm::vec3 v, glm::vec2 c): vertex(v), texture(c) {}
+  Vertex(glm::vec3 v): vertex(v) {}
 };
 
 #endif /* GRAPHICS_HEADERS_H */
