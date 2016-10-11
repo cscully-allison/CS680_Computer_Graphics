@@ -1,17 +1,30 @@
-# PA4: Texture Loader
+# PA6: Texture Loader
 
 ## Connor Scully-Allison
+## Hannah Munoz
+## Kurt Andersen
+
+# Dependencies, Building, and Running
+
+## Dependency Instructions
+For both of the operating systems to run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), and [SDL2](https://wiki.libsdl.org/Tutorials).
+
+This project uses OpenGL 3.3. Some computers, such as virtual machines in the ECC, can not run this version. In in order to run OpenGL 2.7 follow the instructions at [Using OpenGL 2.7](https://github.com/HPC-Vis/computer-graphics/wiki/Using-OpenGL-2.7)
+
+This project uses Assimp 3.2. Instructions for downloading and running Assimp can be found at [Main Downloads](http://www.assimp.org/main_downloads.html) 
+
+This project uses ImagicMagick 6.8.9-9. Instructions for downloading and running ImageMagick can be found at [Install Source](http://www.imagemagick.org/script/install-source.php)
 
 # Building and Running
 
-In the PA4 Directory type in the following order:
+In the PA6 Directory type in the following order:
 
 ```
-   mkdir build
-   cp makefile build/
-   cd build/
-   make
-   ./texture_loader 
+mkdir build
+cd build
+cmake ..
+make
+./Texture_loader
 ```
 
 # Operation Instructions
@@ -21,7 +34,7 @@ In the PA4 Directory type in the following order:
 ```
 	1) Make sure that any .obj files you intend to load are placed in the asset folder
 	2) Ensure that thier .mtl files are located in the asset folder as well
-	3) A .obj has been uploaded to the github for quick testing (pinballbox.obj)
+	3) A .obj has been uploaded to the github for quick testing (capsule.obj)
 ```
 
 ## Upon Running
@@ -32,17 +45,6 @@ In the PA4 Directory type in the following order:
 3) The program will continue normally upon input
 ```
 
-#Misc Notes
+# Misc Notes
 
-## The .mtl loader
-
-Presently the program sucessfully retrieves all the colors in the MTL file.
-Unfortunately I have only been able to sucessfully map 1 color to a given rendered object.
-
-When I comment out some of my mappings (lines 162 - 169 in object.cpp) the
-blue is visible on the bottom in clipped triangular lines. 
-
-I suspect that any mappings I'm making to a specific vertex are being overwritten as color
-is re-ascribed to it later for a different face. I was unable to solve this problem, however
-all other aspects of the .mtl loader work.
 
