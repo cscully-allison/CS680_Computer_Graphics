@@ -40,7 +40,6 @@ Object::Object()
         );
         
     }
-    oldSize = scene->mMeshes[meshNums]->mNumVertices;
 
 
     for(unsigned int index = 0; index < scene->mMeshes[meshNums]->mNumFaces; index++){
@@ -59,6 +58,7 @@ Object::Object()
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
+
       for (int i=0; i<meshNums; i++)
       {
         glGenTextures(1, &TB);
@@ -69,6 +69,7 @@ Object::Object()
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       }
+      
 
 }
   angle = 0.0f;
@@ -95,7 +96,6 @@ glm::mat4 Object::GetModel()
 void Object::Render()
 {
   glActiveTexture(GL_TEXTURE0);
-  //glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, TB);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);

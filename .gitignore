@@ -2,8 +2,15 @@
 *.slo
 *.lo
 *.o
+<<<<<<< HEAD
+*.obj
+=======
 
+<<<<<<< HEAD
+=======
+>>>>>>> 2e625079670d33e78063274bba65265eb5317880
 
+>>>>>>> d4e63d7b810b2e922e1b780e7e05e6c5a8fcae15
 # Precompiled Headers
 *.gch
 *.pch
