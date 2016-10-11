@@ -4,18 +4,16 @@
 Object::Object()
 {  
   std::string objectname;
-  unsigned int oldSize = 0;
-
   aiString texturename;
-  aiVector3D uv;
+  int oldSize=0;
+  std::vector <Magick::Image> m_image;
+  
   //Verticies and indicies needs to be initilized for run
   std::cout << "Object name?: " << std::endl;
   std::cin >> objectname;
   scene = importer.ReadFile("../assets/" + objectname, aiProcess_Triangulate);
 
-  meshNumber = scene->mNumMeshes;
-
-  for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){
+  for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
  
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
 
@@ -23,12 +21,12 @@ Object::Object()
     aiString filePath;
     filePath.Append("../assets/");
     filePath.Append(texturename.C_Str()); 
-    Magick::Image* m_image = new Magick::Image(filePath.C_Str());
+    
+    m_image.push_back (Magick::Image(filePath.C_Str()));
     std::cout << filePath.C_Str() << std::endl;
-    m_image->write(&m_blob, "RGBA");
-
-    // glActiveTexture(TextureUnit);
-    // glBindTexture(GL_TEXTURE_2D, TB);
+    Magick::Blob temp;
+    m_image[meshNums].write(&temp, "RGBA");
+    m_blob.push_back(temp);
 
     std::cout << scene->mMeshes[meshNums]->mNumVertices << std::endl;
     for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
@@ -36,33 +34,27 @@ Object::Object()
                     Vertex(
                         glm::vec3(scene->mMeshes[meshNums]->mVertices[vertex].x, 
                                   scene->mMeshes[meshNums]->mVertices[vertex].y, 
-                                  scene->mMeshes[meshNums]->mVertices[vertex].z))
+                                  scene->mMeshes[meshNums]->mVertices[vertex].z),
+                        glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y))
         );
 
                         // glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[vertex].x,
                         //           scene->mMeshes[meshNums]->mTextureCoords[vertex].y)
         
     }
-    std::cout << Vertices.size() <<" " <<  AI_MAX_NUMBER_OF_TEXTURECOORDS << std::endl;
-    // std::cout << "oldsize: " << oldSize << std::endl;
-    // for (oldSize; oldSize < Vertices.size(); oldSize++)
-    //     {
-    //     if (oldSize > 300000)
-    //     {
-    //       std::cout << "ass" << std::endl;
-    //     }
-    //     uv =scene->mMeshes[meshNums]->mTextureCoords[0][oldSize];
+    // for (unsigned int  i = 0; i < scene->mMeshes[meshNums]->mNumVertices; i++){
+    //     aiVector3D uv = scene->mMeshes[meshNums]->mTextureCoords[0][i];
     //     //std::cout << uv.x << "  " << uv.y << std::endl;
-    //     Vertices[oldSize].texture = glm::vec2 (uv.x, uv.y);
-    //     }
+    //     Vertices[i+oldSize].texture = glm::vec2 (uv.x, uv.y);
+    // }
+   // oldSize = scene->mMeshes[meshNums]->mNumVertices;
 
 
     for(unsigned int index = 0; index < scene->mMeshes[meshNums]->mNumFaces; index++){
       Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[0]);
       Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[1]);
       Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[2]);
-
-
     }
 
     
@@ -73,10 +65,11 @@ Object::Object()
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
+      
       glGenTextures(1, &TB);
+      glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, TB);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image->columns(), m_image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob.data());
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[meshNums].columns(), m_image[meshNums].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[meshNums].data());
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -103,6 +96,8 @@ glm::mat4 Object::GetModel()
 
 void Object::Render()
 {
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, TB);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
