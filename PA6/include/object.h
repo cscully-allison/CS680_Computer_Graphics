@@ -27,7 +27,7 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-    GLuint TB;
+    std::vector<GLuint> TB;
     std::vector<Magick::Blob> m_blob;
     float angle;
     unsigned int meshNumber;
