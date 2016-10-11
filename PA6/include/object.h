@@ -28,7 +28,7 @@ class Object
     GLuint VB;
     GLuint IB;
     GLuint TB;
-    Magick::Blob m_blob;
+    std::vector<Magick::Blob> m_blob;
     float angle;
     unsigned int meshNumber;
 
