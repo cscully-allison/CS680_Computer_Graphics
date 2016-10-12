@@ -1,0 +1,7 @@
+planet name
+planet scale to earth
+number of moons
+orbit radius
+orbit speed
+moon orbit speed
+number of rings
