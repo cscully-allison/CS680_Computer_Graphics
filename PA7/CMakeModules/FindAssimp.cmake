@@ -14,6 +14,7 @@ FIND_PATH(ASSIMP_INCLUDE_DIR NAMES assimp/ai_assert.h
   /usr/local/include
   /opt/local/include
   /usr/share/doc/
+  /usr/lib/x86_64-linux-gnu/
   /usr/lib/i386-linux-gnu/
   NO_DEFAULT_PATH
 )
@@ -28,6 +29,7 @@ FIND_LIBRARY(LIBASSIMP
   /usr/local/lib
   /opt/local/lib
   /usr/share/doc/
+  /usr/lib/x86_64-linux-gnu/
   /usr/lib/i386-linux-gnu/
   NO_DEFAULT_PATH
 )

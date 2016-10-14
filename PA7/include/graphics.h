@@ -32,7 +32,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, int userInput);
     void Render();
     void FileReader (const xmlpp::Node* node, int planet);
 

@@ -65,8 +65,9 @@ void Engine::Run()
       Keyboard();
     }
 
+
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, usrInput);
     m_graphics->Render();
 
     // Swap to the Window
@@ -87,7 +88,20 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
+
+    usrInput = m_event.key.keysym.sym;
   }
+  else if (m_event.type == SDL_KEYUP || m_event.type == SDL_MOUSEBUTTONUP){
+    usrInput = 0;
+  }
+  else if(m_event.type == SDL_MOUSEBUTTONDOWN){
+    usrInput = m_event.button.button;
+  }
+  else if(m_event.type == SDL_MOUSEMOTION){
+  //  if(m_event.motion.yrel != 0)
+  //    usrInput = m_event.motion.yrel;
+  }
+
 }
 
 unsigned int Engine::getDT()

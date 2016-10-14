@@ -37,4 +37,35 @@ glm::mat4 Camera::GetView()
   return view;
 }
 
+bool Camera::Update(int userInput){
+  std::cout << userInput << std::endl;
+  switch(userInput){
+    case FORWARD: //w
+      //view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.5, 0.0, 0.0));
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,-0.5));
+      break;
+    case BACK: //s
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,0.5));
+      break;
+    case RIGHT: //a
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.5,0.0,0.0));
+      break;
+    case LEFT: //d
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(-0.5,0.0,0.0));
+      break;
+    case UP: //LMB
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,-0.1,0.0));
+      break;
+    case DOWN: //RMB
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.1,0.0));
+      break;
+  /*  case ROTATELEFT: //q
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, -5.0, 0.0));
+      break;
+    case ROTATERIGHT: //e
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 5.0, 0.0));
+      break;*/
+  }
+
+}
 

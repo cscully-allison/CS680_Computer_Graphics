@@ -118,8 +118,11 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
-void Graphics::Update(unsigned int dt)
+void Graphics::Update(unsigned int dt, int userInput)
 {
+
+  m_camera->Update(userInput);
+
   // Update the object
   for (int i=0; i<10; i++)
   {
@@ -216,7 +219,7 @@ void Graphics::FileReader (const xmlpp::Node* node, int planet){
   //     FileReader(*iter, planet); //recursive
 
       
-    }
+  // }
 
 
 }
