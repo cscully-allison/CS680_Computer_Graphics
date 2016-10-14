@@ -9,6 +9,21 @@ using namespace std;
 #include "shader.h"
 #include "object.h"
 
+struct Planet
+{
+    string name;
+    Object *planet;
+    Object *moon[4];
+    float proportionToEarth;
+    float rotationRadius;
+    float rotationSpeed;
+    float orbitSpeedRatio;
+    bool hasRings;
+    float numRings;
+    bool hasMoons;
+    float numMoons;
+};
+
 class Graphics
 {
   public:
@@ -28,7 +43,9 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    Object *m_cube;
+
+    Planet solarSystem[10];
+
 };
 
 #endif /* GRAPHICS_H */

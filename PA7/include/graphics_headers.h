@@ -31,4 +31,7 @@ struct Vertex
   Vertex(glm::vec3 v): vertex(v) {}
 };
 
+
 #endif /* GRAPHICS_HEADERS_H */
+
+

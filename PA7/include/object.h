@@ -16,9 +16,7 @@ class Object
   public:
     Object();
     ~Object();
-    void buildPlanet(glm::mat4 planet, std::string planetName);
-    void buildMoon(glm::mat4 moon);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, int modifier);
     void Render();
 
     glm::mat4 GetModel();

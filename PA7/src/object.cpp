@@ -67,8 +67,8 @@ Object::Object()
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       
 
-}
-  angle = 0.0f;
+  }
+
 }
 
 Object::~Object()
@@ -78,21 +78,15 @@ Object::~Object()
 }
 
 
-void Object::buildPlanet(glm::mat4 planet, std::string planetName)
-{
 
-}
-
-void Object::buildMoon(glm::mat4 moon)
-{
-  
-}
-
-void Object::Update(unsigned int dt)
+void Object::Update(unsigned int dt, int modifier)
 {
   angle += dt * M_PI/10000;
 
-  model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 0.0, 1.0));
+  
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*modifier*4, 0, glm::sin(angle)*modifier*4));
+  model *= glm::rotate(glm::mat4(1.0f), 1.5f, glm::vec3(0.0, 0.0, 1.0));
+  model *= glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -124,4 +118,5 @@ void Object::Render()
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  
 }
