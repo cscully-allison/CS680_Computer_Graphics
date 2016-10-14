@@ -10,11 +10,12 @@ SET(ASSIMP "assimp")
 
 FIND_PATH(ASSIMP_INCLUDE_DIR NAMES assimp/ai_assert.h
   PATHS
-  /usr/include
-  /usr/local/include
-  /opt/local/include
+  /usr/include/
+  /usr/local/include/
+  /opt/local/include/
   /usr/share/doc/
   /usr/lib/i386-linux-gnu/
+  /usr/lib/x86_64-linux-gnu/
   NO_DEFAULT_PATH
 )
  
@@ -23,12 +24,13 @@ FIND_LIBRARY(LIBASSIMP
   NAMES 
   ${ASSIMP}
   PATHS
-  /usr/lib
+  /usr/lib/
   /usr/include/
-  /usr/local/lib
-  /opt/local/lib
+  /usr/local/lib/
+  /opt/local/lib/
   /usr/share/doc/
   /usr/lib/i386-linux-gnu/
+  /usr/lib/x86_64-linux-gnu/
   NO_DEFAULT_PATH
 )
 
