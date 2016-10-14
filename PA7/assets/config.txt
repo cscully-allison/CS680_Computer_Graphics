@@ -1,0 +1,79 @@
+planet: sun.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: mercury.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: venus.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: earth.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: mars.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: jupiter.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: saturn.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: uranus.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: neptune.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0
+
+planet: pluto.obj
+proportionToEarth: 0
+rotationRadius: 0
+rotationSpeed: 0
+orbitSpeedRatio: 0
+numRings: 0
+numMoons: 0

@@ -16,10 +16,10 @@
 		<orbit>0</orbit>
 		<rotation></rotation>
 		<moon>
-		<orbit></orbit>
-				<number></number>
-				<speed></speed>
-				<size></size>
+			<orbit></orbit>
+			<number></number>
+			<speed></speed>
+			<size></size>
 		</moon>
 		<speed></speed>
 		<rings></rings>

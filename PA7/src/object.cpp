@@ -2,16 +2,13 @@
 #include <sstream>
 
 
-Object::Object()
+Object::Object(std::string objectname)
 {  
-  std::string objectname;
   aiString texturename;
   int oldSize=0;
   Magick::Image m_image;
-  
+
   //Verticies and indicies needs to be initilized for run
-  std::cout << "Object name?: " << std::endl;
-  std::cin >> objectname;
   scene = importer.ReadFile("../assets/" + objectname, aiProcess_Triangulate);
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
