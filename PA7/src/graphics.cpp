@@ -1,5 +1,5 @@
 #include "graphics.h"
-
+#include <libxml++/libxml++.h>
 Graphics::Graphics()
 {
 
@@ -42,6 +42,14 @@ bool Graphics::Initialize(int width, int height)
   {
     printf("Camera Failed to Initialize\n");
     return false;
+  }
+
+  xmlpp::DomParser parser;
+  parser.set_validate();
+  parser.set_substitute_entities();
+  parser.parse_file ("../assets/dataConfig.xml");
+  if (parser){
+    FileReader (parser.get_document()->get_root_node(),0);
   }
 
   // Create the object
@@ -180,3 +188,35 @@ std::string Graphics::ErrorString(GLenum error)
   }
 }
 
+void Graphics::FileReader (const xmlpp::Node* node, int planet){
+  const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
+
+  if (!nodeText && !node->get_name().empty()){
+    //planet++;
+    if (node->get_name() == "planet"){
+      std::cout << "Node name = " << node->get_name() << std::endl;
+      planet = planet+1;
+      std::cout << planet << std::endl;
+    }
+
+  }
+  if(nodeText && !nodeText->is_white_space ())
+  {
+
+    //std::cout << node->get_name();
+  //  if (node->get_name() == "name"){
+       std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
+     //}
+  }
+
+    xmlpp::Node::NodeList list = node->get_children();
+    for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+
+      FileReader(*iter, planet); //recursive
+
+      
+    }
+
+
+}

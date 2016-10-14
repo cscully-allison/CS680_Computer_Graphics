@@ -2,6 +2,8 @@
 #define GRAPHICS_H
 
 #include <iostream>
+#include <libxml++/libxml++.h>
+
 using namespace std;
 
 #include "graphics_headers.h"
@@ -32,6 +34,7 @@ class Graphics
     bool Initialize(int width, int height);
     void Update(unsigned int dt);
     void Render();
+    void FileReader (const xmlpp::Node* node, int planet);
 
   private:
     std::string ErrorString(GLenum error);

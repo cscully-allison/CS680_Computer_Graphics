@@ -1,6 +1,7 @@
 #include "object.h"
 #include <sstream>
 
+
 Object::Object()
 {  
   std::string objectname;
