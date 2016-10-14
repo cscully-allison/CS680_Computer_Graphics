@@ -1,4 +1,5 @@
 #include <iostream>
+#include <libxml++/libxml++.h>
 
 #include "engine.h"
 

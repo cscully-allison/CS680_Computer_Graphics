@@ -1,0 +1,25 @@
+<SolarSystem>
+	<planet>
+		<name>Mercury</name>
+		<orbit></orbit>
+		<rotation></rotation>
+		<moons>
+			<orbit></orbit>
+			<number></number>
+			<speed></speed>
+			<size></size>
+		</moons>
+		<speed></speed>
+		<rings></rings>
+		<size></size>	
+	</planet>
+</SolarSystem>
+
+
+<!-- planet name
+planet scale to earth
+number of moons
+orbit radius
+orbit speed
+moon orbit speed
+number of rings -->

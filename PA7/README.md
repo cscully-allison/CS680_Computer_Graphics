@@ -15,7 +15,8 @@ This project uses Assimp 3.2. Instructions for downloading and running Assimp ca
 
 This project uses ImagicMagick 6.8.9-9. Instructions for downloading and running ImageMagick can be found at [Install Source](http://www.imagemagick.org/script/install-source.php)
 
-This project uses Libxml++ 2.6. Instructions for downloading and running libxml++ can be found at [Manual](http://libxmlplusplus.sourceforge.net/docs/manual/html/) 
+This project uses libxml++ 2.6. Instructions for downloading and running libxml++ can be found at [Manual](http://libxmlplusplus.sourceforge.net/docs/manual/html/) 
+libxml++ uses gtkmm which can be downloaded at [Download](http://www.gtkmm.org/en/download.html)
 
 # Building and Running
 
@@ -26,7 +27,7 @@ mkdir build
 cd build
 cmake ..
 make
-./SolaySystem
+./SolarSystem
 ```
 
 # Operation Instructions
