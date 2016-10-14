@@ -189,31 +189,31 @@ std::string Graphics::ErrorString(GLenum error)
 }
 
 void Graphics::FileReader (const xmlpp::Node* node, int planet){
-  const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
+  // const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
 
-  if (!nodeText && !node->get_name().empty()){
-    //planet++;
-    if (node->get_name() == "planet"){
-      std::cout << "Node name = " << node->get_name() << std::endl;
-      planet = planet+1;
-      std::cout << planet << std::endl;
-    }
+  // if (!nodeText && !node->get_name().empty()){
+  //   //planet++;
+  //   if (node->get_name() == "planet"){
+  //     std::cout << "Node name = " << node->get_name() << std::endl;
+  //     planet = planet+1;
+  //     std::cout << planet << std::endl;
+  //   }
+  //    std::cout << "Node name = " << node->get_name() << std::endl;
+  // }
+  // else if(nodeText && !nodeText->is_white_space ())
+  // {
 
-  }
-  if(nodeText && !nodeText->is_white_space ())
-  {
+  //   //std::cout << node->get_name();
+  // //  if (node->get_name() == "name"){
+  //      std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
+  //    //}
+  // }
 
-    //std::cout << node->get_name();
-  //  if (node->get_name() == "name"){
-       std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
-     //}
-  }
+  //   xmlpp::Node::NodeList list = node->get_children();
+  //   for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
+  //   {
 
-    xmlpp::Node::NodeList list = node->get_children();
-    for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
-    {
-
-      FileReader(*iter, planet); //recursive
+  //     FileReader(*iter, planet); //recursive
 
       
     }
