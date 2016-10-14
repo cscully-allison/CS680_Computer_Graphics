@@ -6,8 +6,7 @@ Object::Object()
   std::string objectname;
   aiString texturename;
   int oldSize=0;
-  GLuint tempTB;
-  std::vector <Magick::Image> m_image;
+  Magick::Image m_image;
   
   //Verticies and indicies needs to be initilized for run
   std::cout << "Object name?: " << std::endl;
@@ -23,10 +22,10 @@ Object::Object()
     filePath.Append("../assets/");
     filePath.Append(texturename.C_Str()); 
     
-    m_image.push_back (Magick::Image(filePath.C_Str()));
+    m_image = Magick::Image(filePath.C_Str());
     Magick::Blob temp;
-    m_image[meshNums].write(&temp, "RGBA");
-    m_blob.push_back(temp);
+    m_image.write(&m_blob, "RGBA");
+
 
     for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
         Vertices.push_back(
@@ -57,14 +56,13 @@ Object::Object()
       
 
 
-        glGenTextures(1, &tempTB);
-        TB.push_back(tempTB);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glGenTextures(1, &TB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.columns(), m_image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob.data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       
 
   }
@@ -85,8 +83,8 @@ void Object::Update(unsigned int dt, int modifier)
 
   
   model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*modifier*4, 0, glm::sin(angle)*modifier*4));
-  model *= glm::rotate(glm::mat4(1.0f), 1.5f, glm::vec3(0.0, 0.0, 1.0));
-  model *= glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 1.0, 0.0));
+  //model *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(0.0, 0.0, 0.0));
+  model *= glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 0.0, 1.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -96,11 +94,10 @@ glm::mat4 Object::GetModel()
 
 void Object::Render()
 {
-  for (int i=0; i<TB.size(); i++)
-  {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, TB[i]);
-  }
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, TB);
+
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
