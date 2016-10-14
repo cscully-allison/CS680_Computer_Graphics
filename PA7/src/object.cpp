@@ -75,14 +75,14 @@ Object::~Object()
 
 
 
-void Object::Update(unsigned int dt, int modifier)
+void Object::Update(unsigned int dt, int modifier, float scale)
 {
   angle += dt * M_PI/10000;
 
-  
   model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*modifier*4, 0, glm::sin(angle)*modifier*4));
   //model *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(0.0, 0.0, 0.0));
   model *= glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 0.0, 1.0));
+  model = glm::scale (model, glm::vec3(scale, scale, scale));
 }
 
 glm::mat4 Object::GetModel()

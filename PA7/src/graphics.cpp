@@ -126,7 +126,7 @@ void Graphics::Update(unsigned int dt)
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, i);
+    solarSystem[i].planet->Update(dt, i, solarSystem[i].proportionToEarth);
   }
 }
 
@@ -224,6 +224,7 @@ void Graphics::FileReader (){
     fin.open("../assets/config.txt");
     for (int i = 0; i < 10; i++){
       getline(fin, trash, ' ');
+
       fin >> solarSystem[i].name;
       getline(fin, trash, ' ');
       fin >> solarSystem[i].proportionToEarth;
