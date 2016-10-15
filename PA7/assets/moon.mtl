@@ -1,8 +1,8 @@
 # Blender MTL File: 'None'
 # Material Count: 1
 
-newmtl SailorMoon
-Ns 94.117647
+newmtl SailorMoon.001
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.000000 0.000000 0.000000
