@@ -14,9 +14,9 @@
 class Object
 {
   public:
-    Object();
+    Object(std::string objectname);
     ~Object();
-    void Update(unsigned int dt, int modifier);
+    void Update(unsigned int dt, int modifier, float scale );
     void Render();
 
     glm::mat4 GetModel();

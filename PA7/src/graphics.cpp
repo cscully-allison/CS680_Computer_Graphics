@@ -1,5 +1,7 @@
 #include "graphics.h"
 #include <libxml++/libxml++.h>
+#include <fstream>
+
 Graphics::Graphics()
 {
 
@@ -44,18 +46,19 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
-  xmlpp::DomParser parser;
-  parser.set_validate();
-  parser.set_substitute_entities();
-  parser.parse_file ("../assets/dataConfig.xml");
-  if (parser){
-    FileReader (parser.get_document()->get_root_node(),0);
-  }
+  // xmlpp::DomParser parser;
+  // parser.set_validate();
+  // parser.set_substitute_entities();
+  // parser.parse_file ("../assets/dataConfig.xml");
+  // if (parser){
+  //   FileReader (parser.get_document()->get_root_node(),0);
+  // }
+  FileReader ();
 
   // Create the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet = new Object();
+    solarSystem[i].planet = new Object(solarSystem[i].name);
   }
 
   // Set up the shaders
@@ -126,7 +129,7 @@ void Graphics::Update(unsigned int dt, int userInput)
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, i);
+    solarSystem[i].planet->Update(dt, i, solarSystem[i].proportionToEarth);
   }
 }
 
@@ -191,35 +194,55 @@ std::string Graphics::ErrorString(GLenum error)
   }
 }
 
-void Graphics::FileReader (const xmlpp::Node* node, int planet){
-  // const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
 
-  // if (!nodeText && !node->get_name().empty()){
-  //   //planet++;
-  //   if (node->get_name() == "planet"){
-  //     std::cout << "Node name = " << node->get_name() << std::endl;
-  //     planet = planet+1;
-  //     std::cout << planet << std::endl;
-  //   }
-  //    std::cout << "Node name = " << node->get_name() << std::endl;
-  // }
-  // else if(nodeText && !nodeText->is_white_space ())
-  // {
+// void Graphics::FileReader (const xmlpp::Node* node, int planet){
+//   const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
 
-  //   //std::cout << node->get_name();
-  // //  if (node->get_name() == "name"){
-  //      std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
-  //    //}
-  // }
+//   if (!nodeText && !node->get_name().empty()){
+//     if (node->get_name() == "planet"){
+//       std::cout << "Node name = " << node->get_name() << node->name <<std::endl;
+//     }
 
-  //   xmlpp::Node::NodeList list = node->get_children();
-  //   for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
-  //   {
+//   }
+//   if(nodeText && !nodeText->is_white_space ())
+//   {
 
-  //     FileReader(*iter, planet); //recursive
+//     //std::cout << node->get_name();
+//   //  if (node->get_name() == "name"){
+//        std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
+//      //}
+//   }
 
-      
-  // }
+//     xmlpp::Node::NodeList list = node->get_children();
+//     for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
+//     {
+//       FileReader(*iter, planet); //recursive
+//     }
 
 
-}
+// }
+
+void Graphics::FileReader (){
+  std::string trash;
+    ifstream fin;
+    fin.open("../assets/config.txt");
+    for (int i = 0; i < 10; i++){
+      getline(fin, trash, ' ');
+
+      fin >> solarSystem[i].name;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].proportionToEarth;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].rotationRadius;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].rotationSpeed;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].orbitSpeedRatio;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].numRings;
+      getline(fin, trash, ' ');
+      fin >> solarSystem[i].numMoons;
+    }  
+    fin.close();
+  }
+

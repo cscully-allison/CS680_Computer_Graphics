@@ -34,7 +34,8 @@ class Graphics
     bool Initialize(int width, int height);
     void Update(unsigned int dt, int userInput);
     void Render();
-    void FileReader (const xmlpp::Node* node, int planet);
+    // void FileReader (const xmlpp::Node* node, int planet);
+    void FileReader ();
 
   private:
     std::string ErrorString(GLenum error);
