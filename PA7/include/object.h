@@ -16,7 +16,7 @@ class Object
   public:
     Object(std::string objectname);
     ~Object();
-    void Update(unsigned int dt, int modifier, float scale );
+    void Update(unsigned int dt, float rotationRadius, float rotationSpeed, float orbitSpeed, float scale );
     void Render();
 
     glm::mat4 GetModel();

@@ -2,7 +2,6 @@
 #define GRAPHICS_H
 
 #include <iostream>
-#include <libxml++/libxml++.h>
 
 using namespace std;
 

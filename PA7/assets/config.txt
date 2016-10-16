@@ -1,7 +1,7 @@
 planet: sun.obj
 proportionToEarth: 109
 rotationRadius: 0
-rotationSpeed: 0
+rotationSpeed: 0.294
 orbitSpeedRatio: 0
 numRings: 0
 numMoons: 0

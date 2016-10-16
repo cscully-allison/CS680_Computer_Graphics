@@ -1,5 +1,4 @@
 #include "graphics.h"
-#include <libxml++/libxml++.h>
 #include <fstream>
 
 Graphics::Graphics()
@@ -129,7 +128,7 @@ void Graphics::Update(unsigned int dt, int userInput)
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, i, solarSystem[i].proportionToEarth);
+    solarSystem[i].planet->Update(dt, solarSystem[i].rotationRadius,solarSystem[i].rotationSpeed, solarSystem[i].orbitSpeedRatio, solarSystem[i].proportionToEarth);
   }
 }
 
