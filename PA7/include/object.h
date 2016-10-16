@@ -17,6 +17,7 @@ class Object
     Object(std::string objectname);
     ~Object();
     void Update(unsigned int dt, float rotationRadius, float rotationSpeed, float orbitSpeed, float scale );
+    void Update(unsigned int dt,  glm::mat4 planet);
     void Render();
 
     glm::mat4 GetModel();

@@ -85,8 +85,18 @@ void Object::Update(unsigned int dt, float rotationRadius, float rotationSpeed,f
   model *= glm::rotate(glm::mat4(1.0f), angle*rotationSpeed, glm::vec3(0.0, 0.0, 1.0));
   model += glm::scale (model, glm::vec3(scale, scale, scale));
 
+}
 
+void Object::Update(unsigned int dt,  glm::mat4 planet){
+  angle += dt * M_PI/100000;
+    
+  glm::vec4 position = planet * glm::vec4 (1.0,1.0,1.0,1.0);
+  glm::mat4 planetModel = glm::mat4( 1.0 );
+  planetModel[3] = position;
 
+  model = glm::translate (planetModel, glm::vec3(5*cos (angle), 0.0f , 5*sin (angle)));
+  model = glm::rotate(model, (angle), glm::vec3(0.0, 1.0, 0.0));
+  model = glm::scale (model, glm::vec3(0.5, 0.5, 0.5));	
 }
 
 glm::mat4 Object::GetModel()

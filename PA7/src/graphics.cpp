@@ -58,6 +58,9 @@ bool Graphics::Initialize(int width, int height)
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
+    for (int j =0; j < solarSystem[i].numMoons; j++){
+	  solarSystem[i].moon[j] = new Object("moon.obj");  
+	}
   }
 
   // Set up the shaders
@@ -112,6 +115,7 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
+  
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -167,6 +171,9 @@ void Graphics::Update(unsigned int dt, int userInput)
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet->Update(dt, solarSystem[i].rotationRadius,solarSystem[i].rotationSpeed, solarSystem[i].orbitSpeedRatio, solarSystem[i].proportionToEarth);
+        for (int j =0; j < solarSystem[i].numMoons; j++){
+	  solarSystem[i].moon[j]->Update(dt, solarSystem[i].planet->GetModel());  
+	}
   }
 }
 
@@ -188,6 +195,10 @@ void Graphics::Render()
   {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].planet->GetModel()));
     solarSystem[i].planet->Render();
+    for (int j =0; j < solarSystem[i].numMoons; j++){
+ 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
+	solarSystem[i].moon[j]->Render();
+	}
   }
 
   // Get any errors from OpenGL
