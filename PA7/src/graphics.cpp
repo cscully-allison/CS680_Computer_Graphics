@@ -163,6 +163,19 @@ void Graphics::Update(unsigned int dt, int userInput)
 			solarSystem[chosenPlanet].orbitSpeedRatio -0.01;
 		}		
 	}
+	//actual data
+	else if (userInput == 44){
+		for (int i = 0; i < 10; i++){
+			solarSystem[i].rotationRadius = storedValues[i];
+		}
+	}
+	//scaled
+	else if (userInput == 46){
+		for (int i = 1; i < 10; i++){
+			
+			solarSystem[i].rotationRadius = float (i/2);
+		}
+	}
 	else{
 		m_camera->Update(userInput);
 	}
@@ -282,6 +295,7 @@ void Graphics::FileReader (){
       fin >> solarSystem[i].proportionToEarth;
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationRadius;
+      storedValues[i] = solarSystem[i].rotationRadius;
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationSpeed;
       getline(fin, trash, ' ');
