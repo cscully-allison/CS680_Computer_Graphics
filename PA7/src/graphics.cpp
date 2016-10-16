@@ -122,9 +122,47 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, int userInput)
 {
-
-  m_camera->Update(userInput);
-
+	if (userInput >= 48 && userInput <= 57){
+		chosenPlanet = userInput%48;
+	}
+	// l for length
+// 	else if (userInput == 108){
+// 		type = 'l';
+// 	}
+	// r for rotation
+	else if (userInput == 114){
+		type = 'r';
+	}
+	// o for orbit
+	else if (userInput == 111){
+		type = 'o'; 
+	}
+	else if (userInput == 2){
+// 		if (type == 'l' && chosenPlanet != 0){
+// 			solarSystem[chosenPlanet].rotationRadius++;
+// 		}
+		else if (type == 'r'){
+			solarSystem[chosenPlanet].rotationSpeed ++;
+		}
+		else if (type == 'o'){
+			solarSystem[chosenPlanet].orbitSpeedRatio ++;
+		}		
+	}
+	else if (userInput == -2){
+// 		if (type == 'l' && chosenPlanet != 0){
+// 			solarSystem[chosenPlanet].rotationRadius--;
+// 		}
+		else if (type == 'r'){
+			solarSystem[chosenPlanet].rotationSpeed --;
+		}
+		else if (type == 'o'){
+			solarSystem[chosenPlanet].orbitSpeedRatio --;
+		}		
+	}
+	else{
+		m_camera->Update(userInput);
+	}
+	
   // Update the object
   for (int i=0; i<10; i++)
   {

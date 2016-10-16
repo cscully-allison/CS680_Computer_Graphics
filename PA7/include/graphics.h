@@ -48,6 +48,8 @@ class Graphics
 
 
     Planet solarSystem[10];
+    int chosenPlanet = 0;
+    char type = 'o';
 
 };
 

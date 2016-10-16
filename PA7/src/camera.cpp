@@ -38,7 +38,7 @@ glm::mat4 Camera::GetView()
 }
 
 bool Camera::Update(int userInput){
-  std::cout << userInput << std::endl;
+  //std::cout << userInput << std::endl;
   switch(userInput){
     case FORWARD: //w
       //view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.5, 0.0, 0.0));

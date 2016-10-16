@@ -33,7 +33,7 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    int usrInput;
+    unsigned int usrInput;
 };
 
 #endif // ENGINE_H
