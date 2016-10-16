@@ -126,9 +126,9 @@ void Graphics::Update(unsigned int dt, int userInput)
 		chosenPlanet = userInput%48;
 	}
 	// l for length
-// 	else if (userInput == 108){
-// 		type = 'l';
-// 	}
+	else if (userInput == 108){
+		type = 'l';
+	}
 	// r for rotation
 	else if (userInput == 114){
 		type = 'r';
@@ -138,25 +138,25 @@ void Graphics::Update(unsigned int dt, int userInput)
 		type = 'o'; 
 	}
 	else if (userInput == 2){
-// 		if (type == 'l' && chosenPlanet != 0){
-// 			solarSystem[chosenPlanet].rotationRadius++;
-// 		}
+		if (type == 'l' && chosenPlanet != 0){
+			solarSystem[chosenPlanet].rotationRadius +=0.01;
+		}
 		else if (type == 'r'){
-			solarSystem[chosenPlanet].rotationSpeed ++;
+			solarSystem[chosenPlanet].rotationSpeed +=0.01;
 		}
 		else if (type == 'o'){
-			solarSystem[chosenPlanet].orbitSpeedRatio ++;
+			solarSystem[chosenPlanet].orbitSpeedRatio +=0.01;
 		}		
 	}
 	else if (userInput == -2){
-// 		if (type == 'l' && chosenPlanet != 0){
-// 			solarSystem[chosenPlanet].rotationRadius--;
-// 		}
+		if (type == 'l' && chosenPlanet != 0){
+			solarSystem[chosenPlanet].rotationRadius -=0.01;
+		}
 		else if (type == 'r'){
-			solarSystem[chosenPlanet].rotationSpeed --;
+			solarSystem[chosenPlanet].rotationSpeed -=0.01;
 		}
 		else if (type == 'o'){
-			solarSystem[chosenPlanet].orbitSpeedRatio --;
+			solarSystem[chosenPlanet].orbitSpeedRatio -0.01;
 		}		
 	}
 	else{
