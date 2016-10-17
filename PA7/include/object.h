@@ -20,8 +20,8 @@ class Object
   public:
     Object(std::string objectname);
     ~Object();
-    void Update(unsigned int dt, Planet current);
-    void UpdateMoon(unsigned int dt,  glm::mat4 planet);
+    void Update(unsigned int dt, Planet current, float scalar);
+    void UpdateMoon(unsigned int dt,  glm::mat4 planet, float scalar);
     void Render();
 
     glm::mat4 GetModel();

@@ -33,6 +33,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
+    float scalar;
 
     Planet solarSystem[10];
     int chosenPlanet = 0;

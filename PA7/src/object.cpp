@@ -76,9 +76,9 @@ Object::~Object()
 
 
 
-void Object::Update(unsigned int dt, Planet current)
+void Object::Update(unsigned int dt, Planet current, float scalar)
 {
-  angle += dt * M_PI/10000 * current.orbitSpeedRatio;
+  angle += (dt * M_PI/10000 * current.orbitSpeedRatio)*scalar;
 
   model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*current.rotationRadius*160, 
                                                     glm::sin(angle)*current.rotationRadius*160,
@@ -89,7 +89,7 @@ void Object::Update(unsigned int dt, Planet current)
 
 }
 
-void Object::UpdateMoon(unsigned int dt,  glm::mat4 planet){
+void Object::UpdateMoon(unsigned int dt,  glm::mat4 planet, float scalar){
   angle += dt * M_PI/10000;
     
   glm::vec4 position = planet * glm::vec4 (1.0,1.0,1.0,1.0);
