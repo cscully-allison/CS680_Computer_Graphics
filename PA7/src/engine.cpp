@@ -101,7 +101,9 @@ void Engine::Keyboard()
   //  if(m_event.motion.yrel != 0)
   //    usrInput = m_event.motion.yrel;
   }
-
+ else if (m_event.type == SDL_MOUSEWHEEL){
+	usrInput = m_event.button.x*2;
+  }	
 }
 
 unsigned int Engine::getDT()

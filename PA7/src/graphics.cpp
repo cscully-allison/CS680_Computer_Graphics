@@ -1,5 +1,4 @@
 #include "graphics.h"
-#include <libxml++/libxml++.h>
 #include <fstream>
 
 Graphics::Graphics()
@@ -59,6 +58,9 @@ bool Graphics::Initialize(int width, int height)
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
+    for (int j =0; j < solarSystem[i].numMoons; j++){
+	  solarSystem[i].moon[j] = new Object("moon.obj");  
+	}
   }
 
   // Set up the shaders
@@ -113,6 +115,7 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
+  
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -123,13 +126,67 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, int userInput)
 {
-
-  m_camera->Update(userInput);
-
+	if (userInput >= 48 && userInput <= 57){
+		chosenPlanet = userInput%48;
+	}
+	// l for length
+	else if (userInput == 108){
+		type = 'l';
+	}
+	// r for rotation
+	else if (userInput == 114){
+		type = 'r';
+	}
+	// o for orbit
+	else if (userInput == 111){
+		type = 'o'; 
+	}
+	else if (userInput == 2){
+		if (type == 'l' && chosenPlanet != 0){
+			solarSystem[chosenPlanet].rotationRadius +=0.01;
+		}
+		else if (type == 'r'){
+			solarSystem[chosenPlanet].rotationSpeed +=0.01;
+		}
+		else if (type == 'o'){
+			solarSystem[chosenPlanet].orbitSpeedRatio +=0.01;
+		}		
+	}
+	else if (userInput == -2){
+		if (type == 'l' && chosenPlanet != 0){
+			solarSystem[chosenPlanet].rotationRadius -=0.01;
+		}
+		else if (type == 'r'){
+			solarSystem[chosenPlanet].rotationSpeed -=0.01;
+		}
+		else if (type == 'o'){
+			solarSystem[chosenPlanet].orbitSpeedRatio -0.01;
+		}		
+	}
+	//actual data
+	else if (userInput == 44){
+		for (int i = 0; i < 10; i++){
+			solarSystem[i].rotationRadius = storedValues[i];
+		}
+	}
+	//scaled
+	else if (userInput == 46){
+		for (int i = 1; i < 10; i++){
+			
+			solarSystem[i].rotationRadius = float (i/2);
+		}
+	}
+	else{
+		m_camera->Update(userInput);
+	}
+	
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, i, solarSystem[i].proportionToEarth);
+    solarSystem[i].planet->Update(dt, solarSystem[i].rotationRadius,solarSystem[i].rotationSpeed, solarSystem[i].orbitSpeedRatio, solarSystem[i].proportionToEarth);
+        for (int j =0; j < solarSystem[i].numMoons; j++){
+	  solarSystem[i].moon[j]->Update(dt, solarSystem[i].planet->GetModel());  
+	}
   }
 }
 
@@ -151,6 +208,10 @@ void Graphics::Render()
   {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].planet->GetModel()));
     solarSystem[i].planet->Render();
+    for (int j =0; j < solarSystem[i].numMoons; j++){
+ 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
+	solarSystem[i].moon[j]->Render();
+	}
   }
 
   // Get any errors from OpenGL
@@ -234,6 +295,7 @@ void Graphics::FileReader (){
       fin >> solarSystem[i].proportionToEarth;
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationRadius;
+      storedValues[i] = solarSystem[i].rotationRadius;
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationSpeed;
       getline(fin, trash, ' ');

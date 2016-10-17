@@ -2,7 +2,6 @@
 #define GRAPHICS_H
 
 #include <iostream>
-#include <libxml++/libxml++.h>
 
 using namespace std;
 
@@ -49,6 +48,9 @@ class Graphics
 
 
     Planet solarSystem[10];
+    int chosenPlanet = 0;
+    char type = 'o';
+    float storedValues [10];
 
 };
 
