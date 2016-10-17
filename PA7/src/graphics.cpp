@@ -59,8 +59,8 @@ bool Graphics::Initialize(int width, int height)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
     for (int j =0; j < solarSystem[i].numMoons; j++){
-	  solarSystem[i].moon[j] = new Object("moon.obj");  
-	}
+	   solarSystem[i].moon[j] = new Object("moon.obj");  
+	  }
   }
 
   // Set up the shaders
@@ -183,9 +183,9 @@ void Graphics::Update(unsigned int dt, int userInput)
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, solarSystem[i].rotationRadius,solarSystem[i].rotationSpeed, solarSystem[i].orbitSpeedRatio, solarSystem[i].proportionToEarth);
+    solarSystem[i].planet->Update(dt, solarSystem[i]);
         for (int j =0; j < solarSystem[i].numMoons; j++){
-	  solarSystem[i].moon[j]->Update(dt, solarSystem[i].planet->GetModel());  
+	  solarSystem[i].moon[j]->UpdateMoon(dt, solarSystem[i].planet->GetModel());  
 	}
   }
 }
@@ -286,7 +286,7 @@ std::string Graphics::ErrorString(GLenum error)
 void Graphics::FileReader (){
   std::string trash;
     ifstream fin;
-    fin.open("../assets/config.txt");
+    fin.open("../assets/config2.txt");
     for (int i = 0; i < 10; i++){
       getline(fin, trash, ' ');
 

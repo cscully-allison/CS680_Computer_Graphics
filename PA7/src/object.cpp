@@ -76,19 +76,21 @@ Object::~Object()
 
 
 
-void Object::Update(unsigned int dt, float rotationRadius, float rotationSpeed,float orbitSpeed, float scale)
+void Object::Update(unsigned int dt, Planet current)
 {
-  angle += dt * M_PI/100000 * orbitSpeed;
+  angle += dt * M_PI/10000 * current.orbitSpeedRatio;
 
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*rotationRadius*160, glm::sin(angle)*rotationRadius*160, 0.0f));
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(glm::cos(angle)*current.rotationRadius*160, 
+                                                    glm::sin(angle)*current.rotationRadius*160,
+                                                    0.0f));
   model *= glm::rotate(glm::mat4(1.0f), 0.05f, glm::vec3(0.0, 1.0, 0.0));
-  model *= glm::rotate(glm::mat4(1.0f), angle*rotationSpeed, glm::vec3(0.0, 0.0, 1.0));
-  model += glm::scale (model, glm::vec3(scale, scale, scale));
+  model *= glm::rotate(glm::mat4(1.0f), angle*current.rotationSpeed*100, glm::vec3(0.0, 0.0, 1.0));
+  model += glm::scale (model, glm::vec3(current.proportionToEarth, current.proportionToEarth, current.proportionToEarth));
 
 }
 
-void Object::Update(unsigned int dt,  glm::mat4 planet){
-  angle += dt * M_PI/100000;
+void Object::UpdateMoon(unsigned int dt,  glm::mat4 planet){
+  angle += dt * M_PI/10000;
     
   glm::vec4 position = planet * glm::vec4 (1.0,1.0,1.0,1.0);
   glm::mat4 planetModel = glm::mat4( 1.0 );
