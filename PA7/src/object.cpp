@@ -90,11 +90,7 @@ void Object::Update(unsigned int dt, Planet current, float scalar)
 }
 
 void Object::UpdateMoon(unsigned int dt,  glm::mat4 planet, float scalar){
-  angle += dt * M_PI/1000;
-    
-  glm::vec4 position = planet * glm::vec4 (1.0,1.0,1.0,1.0);
-  glm::mat4 planetModel = glm::mat4( 1.0 );
-  planetModel[3] = position;
+  angle += (dt * M_PI/1000)*scalar;
 
   model = glm::translate (planet, glm::vec3(5*glm::cos(angle), 5*glm::sin(angle), 0.0f));
   model *= glm::rotate(glm::mat4(1.0f), (angle)*20, glm::vec3(0.0, 1.0, 0.0));
