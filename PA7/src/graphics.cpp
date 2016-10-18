@@ -44,20 +44,15 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-
-  // xmlpp::DomParser parser;
-  // parser.set_validate();
-  // parser.set_substitute_entities();
-  // parser.parse_file ("../assets/dataConfig.xml");
-  // if (parser){
-  //   FileReader (parser.get_document()->get_root_node(),0);
-  // }
+        
+  // read in config file
   FileReader ();
 
   // Create the object
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
+    // create moons for planet
     for (int j =0; j < solarSystem[i].numMoons; j++){
 	   solarSystem[i].moon[j] = new Object("moon.obj");  
 	  }
@@ -72,14 +67,14 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER))
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, "vertex_shad.glsl"))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER))
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, "fragment_shad.glsl"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
@@ -92,11 +87,28 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
-  // Locate the projection matrix in the shader
+  // create ring for saturn
+  solarSystem[6].ring = new Object();  
+
+  //   // Add the vertex shader
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, "vertex_color_shad.glsl"))
+  {
+    printf("Vertex Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Add the fragment shader
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, "fragment_color_shad.glsl"))
+  {
+    printf("Fragment Shader failed to Initialize\n");
+    return false;
+  }
+
+     // Locate the projection matrix in the shader
   m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
   if (m_projectionMatrix == INVALID_UNIFORM_LOCATION) 
   {
-    printf("m_projectionMatrix not found\n");
+    printf("n_projectionMatrix not found\n");
     return false;
   }
 
@@ -104,7 +116,7 @@ bool Graphics::Initialize(int width, int height)
   m_viewMatrix = m_shader->GetUniformLocation("viewMatrix");
   if (m_viewMatrix == INVALID_UNIFORM_LOCATION) 
   {
-    printf("m_viewMatrix not found\n");
+    printf("n_viewMatrix not found\n");
     return false;
   }
 
@@ -112,10 +124,11 @@ bool Graphics::Initialize(int width, int height)
   m_modelMatrix = m_shader->GetUniformLocation("modelMatrix");
   if (m_modelMatrix == INVALID_UNIFORM_LOCATION) 
   {
-    printf("m_modelMatrix not found\n");
+    printf("n_modelMatrix not found\n");
     return false;
   }
-  
+   
+
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -126,46 +139,8 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, int userInput)
 {
-	if (userInput >= 48 && userInput <= 57){
-		chosenPlanet = userInput%48;
-	}
-	// l for length
-	else if (userInput == 108){
-		type = 'l';
-	}
-	// r for rotation
-	else if (userInput == 114){
-		type = 'r';
-	}
-	// o for orbit
-	else if (userInput == 111){
-		type = 'o'; 
-	}
-	else if (userInput == 2){
-		if (type == 'l' && chosenPlanet != 0){
-			solarSystem[chosenPlanet].rotationRadius +=0.01;
-		}
-		else if (type == 'r'){
-			solarSystem[chosenPlanet].rotationSpeed +=0.01;
-		}
-		else if (type == 'o'){
-			solarSystem[chosenPlanet].orbitSpeedRatio +=0.01;
-		}		
-	}
-	else if (userInput == -2){
-		if (type == 'l' && chosenPlanet != 0){
-			solarSystem[chosenPlanet].rotationRadius -=0.01;
-		}
-		else if (type == 'r'){
-			solarSystem[chosenPlanet].rotationSpeed -=0.01;
-		}
-		else if (type == 'o'){
-			solarSystem[chosenPlanet].orbitSpeedRatio -0.01;
-		}		
-	}
-
-  //numpad -
-  else if (userInput == 1073741910)
+  //numpad - (decrease system speed)
+  if (userInput == 1073741910)
   {
     if (scalar > 0)
     {
@@ -177,19 +152,21 @@ void Graphics::Update(unsigned int dt, int userInput)
     }
   }
 
-  //numpad +
+  //numpad + (decrease increase speed)
   else if (userInput == 1073741911)
   {
     scalar += 0.1;
   }
-	//actual data
-	else if (userInput == 44){
+
+	//numpad  / (scaled)
+	else if (userInput == 1073741908){
 		for (int i = 0; i < 10; i++){
 			solarSystem[i].rotationRadius = storedValues[i];
 		}
 	}
-	//scaled
-	else if (userInput == 46){
+
+	// numpad  * (actual)
+	else if (userInput == 1073741909){
 		for (int i = 1; i < 10; i++){
 			
 			solarSystem[i].rotationRadius = float (i/2);
@@ -206,6 +183,9 @@ void Graphics::Update(unsigned int dt, int userInput)
         for (int j =0; j < solarSystem[i].numMoons; j++){
 	  solarSystem[i].moon[j]->UpdateMoon(dt, solarSystem[i].planet->GetModel(), scalar);  
 	}
+	if (i ==6){
+	        solarSystem[i].ring->UpdateMoon (dt*2, solarSystem[i].planet->GetModel(), scalar); 
+	        }
   }
 }
 
@@ -225,12 +205,18 @@ void Graphics::Render()
   // Render the objects
   for (int i=0; i<10; i++)
   {
+  // render planets
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].planet->GetModel()));
     solarSystem[i].planet->Render();
+    // render moons
     for (int j =0; j < solarSystem[i].numMoons; j++){
  	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
 	solarSystem[i].moon[j]->Render();
 	}
+    // render rings
+    if (i == 6){
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].ring->GetModel()));
+  }
   }
 
   // Get any errors from OpenGL
@@ -275,52 +261,33 @@ std::string Graphics::ErrorString(GLenum error)
 }
 
 
-// void Graphics::FileReader (const xmlpp::Node* node, int planet){
-//   const xmlpp::TextNode* nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
-
-//   if (!nodeText && !node->get_name().empty()){
-//     if (node->get_name() == "planet"){
-//       std::cout << "Node name = " << node->get_name() << node->name <<std::endl;
-//     }
-
-//   }
-//   if(nodeText && !nodeText->is_white_space ())
-//   {
-
-//     //std::cout << node->get_name();
-//   //  if (node->get_name() == "name"){
-//        std::cout << "text = \"" << nodeText->get_content() << "\"" << std::endl;
-//      //}
-//   }
-
-//     xmlpp::Node::NodeList list = node->get_children();
-//     for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
-//     {
-//       FileReader(*iter, planet); //recursive
-//     }
-
-
-// }
-
 void Graphics::FileReader (){
+  // read in config file
   std::string trash;
     ifstream fin;
     fin.open("../assets/config2.txt");
     for (int i = 0; i < 10; i++){
+      //get object name
       getline(fin, trash, ' ');
-
       fin >> solarSystem[i].name;
       getline(fin, trash, ' ');
+      // get size
       fin >> solarSystem[i].proportionToEarth;
+      //  get rotation radius
+      // store twice for scaled to actual view *
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationRadius;
       storedValues[i] = solarSystem[i].rotationRadius;
+      // get speed
       getline(fin, trash, ' ');
       fin >> solarSystem[i].rotationSpeed;
+      // change orbit speed
       getline(fin, trash, ' ');
       fin >> solarSystem[i].orbitSpeedRatio;
+      // get number of rings
       getline(fin, trash, ' ');
       fin >> solarSystem[i].numRings;
+      // get nubmer of moons
       getline(fin, trash, ' ');
       fin >> solarSystem[i].numMoons;
     }  

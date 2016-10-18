@@ -33,18 +33,12 @@ bool Shader::Initialize()
 }
 
 // Use this method to add shaders to the program. When finished - call finalize()
-bool Shader::AddShader(GLenum ShaderType)
+bool Shader::AddShader(GLenum ShaderType, std::string name)
 {
   std::string s;
 
-  if(ShaderType == GL_VERTEX_SHADER)
-  {
-    s = loadShader("../shaders/vertex_shad.glsl");
-  }
-  else if(ShaderType == GL_FRAGMENT_SHADER)
-  {
-    s = loadShader("../shaders/fragment_shad.glsl");
-  }
+
+   s = loadShader("../shaders/" + name);
 
   GLuint ShaderObj = glCreateShader(ShaderType);
 
