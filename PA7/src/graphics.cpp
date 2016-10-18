@@ -3,7 +3,7 @@
 
 Graphics::Graphics()
 {
-
+  scalar = 1;
 }
 
 Graphics::~Graphics()
@@ -59,7 +59,7 @@ bool Graphics::Initialize(int width, int height)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
     for (int j =0; j < solarSystem[i].numMoons; j++){
-	      solarSystem[i].moon[j] = new Object("moon.obj");  
+	   solarSystem[i].moon[j] = new Object("moon.obj");  
 	  }
   }
 
@@ -163,6 +163,25 @@ void Graphics::Update(unsigned int dt, int userInput)
 			solarSystem[chosenPlanet].orbitSpeedRatio -0.01;
 		}		
 	}
+
+  //numpad -
+  else if (userInput == 1073741910)
+  {
+    if (scalar > 0)
+    {
+      scalar -= 0.1;
+    }
+    else if (scalar < 0)
+    {
+      scalar = 0;
+    }
+  }
+
+  //numpad +
+  else if (userInput == 1073741911)
+  {
+    scalar += 0.1;
+  }
 	//actual data
 	else if (userInput == 44){
 		for (int i = 0; i < 10; i++){
@@ -183,9 +202,9 @@ void Graphics::Update(unsigned int dt, int userInput)
   // Update the object
   for (int i=0; i<10; i++)
   {
-    solarSystem[i].planet->Update(dt, solarSystem[i].rotationRadius,solarSystem[i].rotationSpeed, solarSystem[i].orbitSpeedRatio, solarSystem[i].proportionToEarth);
+    solarSystem[i].planet->Update(dt, solarSystem[i], scalar);
         for (int j =0; j < solarSystem[i].numMoons; j++){
-	  solarSystem[i].moon[j]->Update(dt, solarSystem[i].planet->GetModel());  
+	  solarSystem[i].moon[j]->UpdateMoon(dt, solarSystem[i].planet->GetModel(), scalar);  
 	}
 
   }
@@ -287,7 +306,7 @@ std::string Graphics::ErrorString(GLenum error)
 void Graphics::FileReader (){
   std::string trash;
     ifstream fin;
-    fin.open("../assets/config.txt");
+    fin.open("../assets/config2.txt");
     for (int i = 0; i < 10; i++){
       getline(fin, trash, ' ');
 

@@ -10,22 +10,6 @@ using namespace std;
 #include "shader.h"
 #include "object.h"
 
-struct Planet
-{
-    string name;
-    Object *planet;
-    Object *moon[4];
-    Object *rings;
-    Object *orbitPath;
-    float proportionToEarth;
-    float rotationRadius;
-    float rotationSpeed;
-    float orbitSpeedRatio;
-    bool hasRings;
-    float numRings;
-    bool hasMoons;
-    float numMoons;
-};
 
 class Graphics
 {
@@ -48,6 +32,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
+    float scalar;
 
     Planet solarSystem[10];
     int chosenPlanet = 0;
