@@ -53,6 +53,8 @@ W: up
 A: left
 S: down
 D: right
+Q: rotate right
+E: rotate left
 ```
 
 # Solar System Controls

@@ -59,12 +59,12 @@ bool Camera::Update(int userInput){
     case DOWN: //RMB
       view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,1.1,0.0));
       break;
-  /*  case ROTATELEFT: //q
+    case ROTATELEFT: //q
       view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, -5.0, 0.0));
       break;
     case ROTATERIGHT: //e
       view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 5.0, 0.0));
-      break;*/
+      break;
   }
 
 }
