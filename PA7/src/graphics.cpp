@@ -54,13 +54,13 @@ bool Graphics::Initialize(int width, int height)
   // }
   FileReader ();
 
-  // Create the object
+  // Create the objects
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
     for (int j =0; j < solarSystem[i].numMoons; j++){
-	  solarSystem[i].moon[j] = new Object("moon.obj");  
-	}
+	      solarSystem[i].moon[j] = new Object("moon.obj");  
+	  }
   }
 
   // Set up the shaders
@@ -187,6 +187,7 @@ void Graphics::Update(unsigned int dt, int userInput)
         for (int j =0; j < solarSystem[i].numMoons; j++){
 	  solarSystem[i].moon[j]->Update(dt, solarSystem[i].planet->GetModel());  
 	}
+
   }
 }
 
@@ -209,9 +210,9 @@ void Graphics::Render()
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].planet->GetModel()));
     solarSystem[i].planet->Render();
     for (int j =0; j < solarSystem[i].numMoons; j++){
- 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
-	solarSystem[i].moon[j]->Render();
-	}
+ 	    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
+	    solarSystem[i].moon[j]->Render();
+	  }
   }
 
   // Get any errors from OpenGL

@@ -17,13 +17,13 @@ bool Camera::Initialize(int w, int h)
   //  ...Like you should update it before you render more dynamic 
   //  for this project having them static will be fine
   view = glm::lookAt( glm::vec3(0.0, -400.0, 8.0), //Eye Position
-                      glm::vec3(0.0, 0.0, 0.0), //Focus point
+                      glm::vec3(0.0, 1.0, 0.0), //Focus point
                       glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                  float(w)/float(h), //Aspect Ratio, so Circles stay Circular
                                  0.01f, //Distance to the near plane, normally a small value like this
-                                 800.0f); //Distance to the far plane, 
+                                 1000.0f); //Distance to the far plane, 
   return true;
 }
 
@@ -59,12 +59,12 @@ bool Camera::Update(int userInput){
     case DOWN: //RMB
       view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,1.1,0.0));
       break;
-  /*  case ROTATELEFT: //q
-      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, -5.0, 0.0));
+    case ROTATELEFT: //q
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 0.0, 5.0));
       break;
     case ROTATERIGHT: //e
-      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 5.0, 0.0));
-      break;*/
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 0.0, -5.0));
+      break;
   }
 
 }

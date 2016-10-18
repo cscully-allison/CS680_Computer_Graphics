@@ -15,6 +15,8 @@ struct Planet
     string name;
     Object *planet;
     Object *moon[4];
+    Object *rings;
+    Object *orbitPath;
     float proportionToEarth;
     float rotationRadius;
     float rotationSpeed;
