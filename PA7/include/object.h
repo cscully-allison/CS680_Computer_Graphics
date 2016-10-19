@@ -19,14 +19,16 @@ class Object
 {
   public:
     Object(std::string objectname);
+    Object();
     ~Object();
     void Update(unsigned int dt, Planet current, float scalar);
     void UpdateMoon(unsigned int dt,  glm::mat4 planet, float scalar);
     void Render();
+    void RingRender();
 
     glm::mat4 GetModel();
     
-  private:
+  protected:
     glm::mat4 model;
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
@@ -42,11 +44,13 @@ class Object
 
 };
 
+
 struct Planet
 {
     std::string name;
     Object *planet;
     Object *moon[4];
+    Object *ring;
     float proportionToEarth;
     float rotationRadius;
     float rotationSpeed;

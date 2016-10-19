@@ -15,9 +15,6 @@ This project uses Assimp 3.2. Instructions for downloading and running Assimp ca
 
 This project uses ImagicMagick 6.8.9-9. Instructions for downloading and running ImageMagick can be found at [Install Source](http://www.imagemagick.org/script/install-source.php)
 
-This project uses libxml++ 2.6. Instructions for downloading and running libxml++ can be found at [Manual](http://libxmlplusplus.sourceforge.net/docs/manual/html/) 
-libxml++ uses gtkmm which can be downloaded at [Download](http://www.gtkmm.org/en/download.html)
-
 # Building and Running
 
 In the PA7 Directory type in the following order:
@@ -35,17 +32,39 @@ make
 ## Before Running
 
 ```
-	1) Make sure that any .obj files you intend to load are placed in the asset folder
-	2) Ensure that thier .mtl files are located in the asset folder as well
-	3) A .obj has been uploaded to the github for quick testing (capsule.obj)
+1) Make sure that any .obj files you intend to load and the config.txt are placed in the asset folder
+2) Ensure that the associated .mtl files to the objects are located in the asset folder as well
 ```
 
 ## Upon Running
 
 ```
-1) The window will hang as a prompt appears in the terminal
-2) Put in only the filename with the .obj extension (the program will handle the pathing to the assets folder)
-3) The program will continue normally upon input
+1) The window will hang as the solar system loads
+2) Press the ESC key to exit the window
+```
+
+## Controls
+
+# Camera
+```
+Left Mouse Key: Zoom in
+Right Mouse Key: Zoom out
+W: up
+A: left
+S: down
+D: right
+Q: rotate right
+E: rotate left
+```
+
+# Solar System Controls
+
+```
+Numpad
++: Speed up 
+-: Slow down
+/: Scaled View
+*: Actual view
 ```
 
 # Misc Notes

@@ -27,10 +27,15 @@ class Graphics
 
     Camera *m_camera;
     Shader *m_shader;
+    Shader *n_shader;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
+
+    GLint n_projectionMatrix;
+    GLint n_viewMatrix;
+    GLint n_modelMatrix;
 
     float scalar;
 

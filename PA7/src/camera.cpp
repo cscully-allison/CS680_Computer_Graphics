@@ -42,16 +42,16 @@ bool Camera::Update(int userInput){
   switch(userInput){
     case FORWARD: //w
       //view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.5, 0.0, 0.0));
-      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,-0.5));
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,-1.0));
       break;
     case BACK: //s
-      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,0.5));
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,1.0));
       break;
     case LEFT: //a
-      view *= glm::translate(glm::mat4(1.0), glm::vec3(0.5,0.0,0.0));
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(1.0,0.0,0.0));
       break;
     case RIGHT: //d
-      view *= glm::translate(glm::mat4(1.0), glm::vec3(-0.5,0.0,0.0));
+      view *= glm::translate(glm::mat4(1.0), glm::vec3(-1.0,0.0,0.0));
       break;
     case UP: //LMB
       view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,-1.1,0.0));
@@ -60,10 +60,10 @@ bool Camera::Update(int userInput){
       view *= glm::translate(glm::mat4(1.0), glm::vec3(0.0,1.1,0.0));
       break;
     case ROTATELEFT: //q
-      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 0.0, 5.0));
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, -5.0, 0.0));
       break;
     case ROTATERIGHT: //e
-      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 0.0, -5.0));
+      view *=  glm::rotate(glm::mat4(1.0f), 0.01f, glm::vec3(0.0, 5.0, 0.0));
       break;
   }
 
