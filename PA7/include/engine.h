@@ -7,9 +7,6 @@
 #include "window.h"
 #include "graphics.h"
 
-#include <irrKlang.h>
-using namespace irrklang;
-
 class Engine
 {
   public:
