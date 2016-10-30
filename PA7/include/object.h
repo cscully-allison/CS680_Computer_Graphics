@@ -24,6 +24,7 @@ class Object
     void Update(unsigned int dt, Planet current, float scalar);
     void UpdateMoon(unsigned int dt,  glm::mat4 planet, float scalar);
     void Render();
+    void RingRender();
 
     glm::mat4 GetModel();
     

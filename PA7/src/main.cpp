@@ -2,7 +2,6 @@
 
 #include "engine.h"
 
-
 int main(int argc, char **argv)
 {
   // Start` an engine and run it then cleanup after

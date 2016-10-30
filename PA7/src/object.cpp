@@ -166,3 +166,25 @@ void Object::Render()
   glDisableVertexAttribArray(2);
   
 }
+
+void Object::RingRender()
+{
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+
+  glDrawArrays(GL_TRIANGLES, 0, Indices.size());
+  
+  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  
+}
+

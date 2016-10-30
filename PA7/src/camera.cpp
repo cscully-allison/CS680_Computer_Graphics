@@ -17,7 +17,7 @@ bool Camera::Initialize(int w, int h)
   //  ...Like you should update it before you render more dynamic 
   //  for this project having them static will be fine
   view = glm::lookAt( glm::vec3(0.0, -400.0, 8.0), //Eye Position
-                      glm::vec3(0.0, 0.0, 0.0), //Focus point
+                      glm::vec3(0.0, 1.0, 0.0), //Focus point
                       glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to

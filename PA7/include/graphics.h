@@ -11,7 +11,6 @@ using namespace std;
 #include "object.h"
 
 
-
 class Graphics
 {
   public:

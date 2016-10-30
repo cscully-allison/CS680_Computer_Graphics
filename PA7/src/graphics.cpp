@@ -48,7 +48,7 @@ bool Graphics::Initialize(int width, int height)
   // read in config file
   FileReader ();
 
-  // Create the object
+  // Create the objects
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet = new Object(solarSystem[i].name);
@@ -60,6 +60,7 @@ bool Graphics::Initialize(int width, int height)
 
   // Set up the shaders
   m_shader = new Shader();
+
   if(!m_shader->Initialize())
   {
     printf("Shader Failed to Initialize\n");
@@ -88,7 +89,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // create ring for saturn
-  solarSystem[6].ring = new Object();  
+  solarSystem[6].ring = new Object();
 
   //   // Add the vertex shader
   if(!m_shader->AddShader(GL_VERTEX_SHADER, "vertex_color_shad.glsl"))
@@ -180,12 +181,13 @@ void Graphics::Update(unsigned int dt, int userInput)
   for (int i=0; i<10; i++)
   {
     solarSystem[i].planet->Update(dt, solarSystem[i], scalar);
-        for (int j =0; j < solarSystem[i].numMoons; j++){
+  for (int j =0; j < solarSystem[i].numMoons; j++){
 	  solarSystem[i].moon[j]->UpdateMoon(dt, solarSystem[i].planet->GetModel(), scalar);  
 	}
 	if (i ==6){
-	        solarSystem[i].ring->UpdateMoon (dt*2, solarSystem[i].planet->GetModel(), scalar); 
-	        }
+    solarSystem[i].ring->Update(dt, solarSystem[i], scalar);
+    //solarSystem[i].ring->UpdateMoon(dt*4, solarSystem[i].planet->GetModel(), scalar);
+	}
   }
 }
 
@@ -210,14 +212,16 @@ void Graphics::Render()
     solarSystem[i].planet->Render();
     // render moons
     for (int j =0; j < solarSystem[i].numMoons; j++){
- 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
-	solarSystem[i].moon[j]->Render();
-	}
-    // render rings
+ 	      glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].moon[j]->GetModel()));
+	     solarSystem[i].moon[j]->Render();
+	  }
+
     if (i == 6){
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].ring->GetModel()));
+      glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(solarSystem[i].ring->GetModel()));
+      solarSystem[i].ring->RingRender();
+    }
   }
-  }
+
 
   // Get any errors from OpenGL
   auto error = glGetError();
