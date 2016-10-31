@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "graphics_headers.h"
+#include <btBulletDynamicsCommon.h>
 
 //assimp headers
 #include <assimp/Importer.hpp> //includes the importer, which is used to read our obj file
@@ -15,11 +16,16 @@ class Object
 {
   public:
     Object();
+    Object(std::string filename);
     ~Object();
-    void Update(unsigned int dt);
+    void setOrientation();
+    void setPos(glm::vec3 position);
+    void Update(unsigned int dt, btDiscreteDynamicsWorld* world);
     void Render();
 
     glm::mat4 GetModel();
+    btRigidBody* getRigidBody();
+
     
   private:
     glm::mat4 model;
@@ -33,6 +39,13 @@ class Object
     Assimp::Importer importer;
     const aiScene* scene;
 
+
+    /* bullet rigid body stuff */
+    btCollisionShape* shape;
+    btDefaultMotionState* motion;
+    btRigidBody* body;
+
 };
+
 
 #endif /* OBJECT_H */

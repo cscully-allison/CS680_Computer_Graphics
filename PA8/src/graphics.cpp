@@ -2,12 +2,28 @@
 
 Graphics::Graphics()
 {
+  broadphase = new btDbvtBroadphase();
+  collisionConfig = new btDefaultCollisionConfiguration();
+  dispatcher = new btCollisionDispatcher(collisionConfig);
+  solver = new btSequentialImpulseConstraintSolver;
+  dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
+  dynamicsWorld->setGravity(btVector3(0,-1,0));
 
 }
 
 Graphics::~Graphics()
 {
+  delete broadphase;
+  delete collisionConfig;
+  delete dispatcher;
+  delete dynamicsWorld;
+  delete solver;
 
+  broadphase = NULL;
+  collisionConfig = NULL;
+  dispatcher = NULL;
+  dynamicsWorld = NULL;
+  solver = NULL;
 }
 
 bool Graphics::Initialize(int width, int height)
@@ -45,7 +61,12 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_cube = new Object();
+  m_table = new Object("table.obj");
+  m_cylinder = new Object("cylinder.obj");
+  m_cube = new Object("cube.obj");
+  m_ball = new Object("ball.obj");
+
+  dynamicsWorld->addRigidBody(m_ball->getRigidBody());
 
   // Set up the shaders
   m_shader = new Shader();
@@ -100,6 +121,11 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
+  m_table->setOrientation();
+  m_ball->setPos(glm::vec3(0.0f, 15.0f, 0.0f));
+  m_cube->setPos(glm::vec3(0.0f,0.0f,1.0f));
+  m_cylinder-> setPos(glm::vec3(0.0f,0.0f,-1.0f));
+
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -110,7 +136,7 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  m_cube->Update(dt);
+  m_ball->Update(dt, dynamicsWorld);
 }
 
 void Graphics::Render()
@@ -127,7 +153,16 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
+  m_table->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
+  m_ball->Render();
+
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cylinder->GetModel()));
+  m_cylinder->Render();
+
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
   m_cube->Render();
 
   // Get any errors from OpenGL

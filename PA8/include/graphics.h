@@ -29,7 +29,22 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
+    Object *m_table;
+    Object *m_ball;
+    Object *m_cylinder;
     Object *m_cube;
+
+
+    /* Bullet Variables */
+    btBroadphaseInterface* broadphase;
+    btDefaultCollisionConfiguration* collisionConfig;
+    btCollisionDispatcher* dispatcher;
+    btSequentialImpulseConstraintSolver* solver;
+    btDiscreteDynamicsWorld* dynamicsWorld;
+
+
+
+
 };
 
 #endif /* GRAPHICS_H */
