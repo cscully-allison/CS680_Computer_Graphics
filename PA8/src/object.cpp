@@ -41,14 +41,17 @@ Object::Object(std::string filename)
   //}
   }
 
-  shape = new btSphereShape(1.0f);
+  shape = new btSphereShape(.1f);
 
   motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
-  btScalar mass(5);
+  btScalar mass(50);
   btVector3 inertia(0,0,0);
   shape->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, motion, shape, inertia);
+  shapeRigidBodyCI.m_friction = .5;
+  shapeRigidBodyCI.m_restitution =.25;
   body = new btRigidBody(shapeRigidBodyCI);
+  body->setActivationState(DISABLE_DEACTIVATION);
   
 
 
@@ -65,7 +68,7 @@ Object::~Object()
 
 void Object::setOrientation(){
   model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
-  model *= glm::rotate(glm::mat4(1.0f), -.175f, glm::vec3(0.0f, 0.0f, 1.0f));
+  model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
   model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
 }
 

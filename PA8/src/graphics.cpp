@@ -70,48 +70,58 @@ bool Graphics::Initialize(int width, int height)
   btScalar mass(5);
   btVector3 inertia(0,0,0);
   btDefaultMotionState* motionFloor = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
-  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,-11.1)));
-  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,3)));
-  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(-8,0,0)));
-  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(9,0,0)));
+  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,-10.8)));
+  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,10.8)));
+  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(-6.6,0,0)));
+  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(6.6,0,0)));
 
   //makes floor 
-  ground = new btStaticPlaneShape(btVector3(0,1,-.2), 0);
+  ground = new btStaticPlaneShape(btVector3(0,1,-.1), 0);
   ground->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo groundBodyCI(0, motionFloor, ground, inertia);  
-  groundBodyCI.m_friction = 0.0;
+  groundBodyCI.m_friction = 0.5;
+  groundBodyCI.m_restitution = 1;
   groundBody = new btRigidBody(groundBodyCI);
+  groundBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(groundBody);
   
   
 
   //adds south wall
-  southWall = new btBoxShape(btVector3(9,5,1));
+  southWall = new btBoxShape(btVector3(9,100,1));
   southWall->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(0, motionSouth, southWall, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(0, motionSouth, southWall, inertia); 
+  southWallBodyCI.m_restitution = 1; 
   southWallBody = new btRigidBody(southWallBodyCI);
+  southWallBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(southWallBody);
 
   //north wall
-  northWall = new btBoxShape(btVector3(9,5,1));
+  northWall = new btBoxShape(btVector3(9,100,1));
   northWall->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo northWallBodyCI(0, motionNorth, northWall, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo northWallBodyCI(0, motionNorth, northWall, inertia);
+  northWallBodyCI.m_restitution = 1;  
   northWallBody = new btRigidBody(northWallBodyCI);
+  northWallBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(northWallBody);
 
 
   //east wall
-  eastWall = new btBoxShape(btVector3(1,5,17));
+  eastWall = new btBoxShape(btVector3(1,100,22.2));
   eastWall->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo eastWallBodyCI(0, motionEast, eastWall, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo eastWallBodyCI(0, motionEast, eastWall, inertia); 
+  eastWallBodyCI.m_restitution = 1; 
   eastWallBody = new btRigidBody(eastWallBodyCI);
+  eastWallBody->setActivationState(DISABLE_DEACTIVATION);  
   dynamicsWorld->addRigidBody(eastWallBody);
 
   //west wall
-  westWall = new btBoxShape(btVector3(1,5,17));
+  westWall = new btBoxShape(btVector3(1,100,22.2));
   westWall->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo westWallBodyCI(0, motionWest, westWall, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo westWallBodyCI(0, motionWest, westWall, inertia);
+  westWallBodyCI.m_restitution = 1;  
   westWallBody = new btRigidBody(westWallBodyCI);
+  westWallBody->setActivationState(DISABLE_DEACTIVATION);  
   dynamicsWorld->addRigidBody(westWallBody);
 
 
