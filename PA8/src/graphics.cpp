@@ -133,11 +133,13 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
-void Graphics::Update(unsigned int dt)
+void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 {
   // Update the object
   m_ball->Update(dt, dynamicsWorld);
+  m_cube->UpdateMouse (dt,dynamicsWorld, mouseX, mouseY);
 }
+
 
 void Graphics::Render()
 {

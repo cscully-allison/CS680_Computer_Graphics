@@ -16,7 +16,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, float mouseX, float mouseY);
     void Render();
 
   private:
@@ -34,7 +34,7 @@ class Graphics
     Object *m_cylinder;
     Object *m_cube;
 
-
+    
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;
     btDefaultCollisionConfiguration* collisionConfig;

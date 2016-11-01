@@ -32,6 +32,9 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
+    
+    float mouseX = 0;
+    float mouseY = 0;
 };
 
 #endif // ENGINE_H
