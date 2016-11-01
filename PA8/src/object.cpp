@@ -41,7 +41,7 @@ Object::Object(std::string filename)
   //}
   }
 
-    shape = new btSphereShape(1.0f);
+  shape = new btSphereShape(1.0f);
 
   motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
   btScalar mass(5);
@@ -96,6 +96,11 @@ void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 
+}
+
+void Object::UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float mouseX, float mouseY){
+    angle += dt * M_PI/10000;
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(-mouseX, 0.0f, -mouseY));
 }
 
 glm::mat4 Object::GetModel()

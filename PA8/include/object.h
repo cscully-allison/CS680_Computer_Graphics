@@ -21,6 +21,7 @@ class Object
     void setOrientation();
     void setPos(glm::vec3 position);
     void Update(unsigned int dt, btDiscreteDynamicsWorld* world);
+    void UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float mouseX, float mouseY);
     void Render();
 
     glm::mat4 GetModel();
