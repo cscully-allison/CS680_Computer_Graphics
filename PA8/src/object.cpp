@@ -65,6 +65,7 @@ Object::~Object()
 
 void Object::setOrientation(){
   model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
+  model *= glm::rotate(glm::mat4(1.0f), -.175f, glm::vec3(0.0f, 0.0f, 1.0f));
   model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
 }
 
