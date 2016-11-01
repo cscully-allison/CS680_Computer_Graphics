@@ -41,8 +41,6 @@ Object::Object(std::string filename)
   //}
   }
 
-  
-  shape = new btSphereShape(1.0f);
 
   motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
   btScalar mass(5);
