@@ -34,6 +34,9 @@ class Graphics
     Object *m_cylinder;
     Object *m_cube;
 
+    btCollisionShape* ground;
+    btCollisionShape* southWall;
+
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

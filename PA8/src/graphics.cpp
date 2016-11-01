@@ -66,7 +66,33 @@ bool Graphics::Initialize(int width, int height)
   m_cube = new Object("cube.obj");
   m_ball = new Object("ball.obj");
 
+  //variables for making planes
+  btScalar mass(5);
+  btVector3 inertia(0,0,0);
+  btRigidBody* groundBody;
+  btRigidBody* southWallBody;
+  btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
+
+  //makes floor 
+  ground = new btStaticPlaneShape(btVector3(0,1,0), 0);
+  ground->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo groundBodyCI(mass, motion, ground, inertia);  
+  groundBody = new btRigidBody(groundBodyCI);
+  dynamicsWorld->addRigidBody(groundBody);
+
+  std::cout << "floor made" << std::endl;
+
+  //adds south wall
+  southWall = new btStaticPlaneShape(btVector3(0,0,1), 1);
+  southWall->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(mass, motion, ground, inertia);  
+  southWallBody = new btRigidBody(southWallBodyCI);
+  dynamicsWorld->addRigidBody(southWallBody);
+
+
+
   dynamicsWorld->addRigidBody(m_ball->getRigidBody());
+
 
   // Set up the shaders
   m_shader = new Shader();
@@ -122,7 +148,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   m_table->setOrientation();
-  m_ball->setPos(glm::vec3(0.0f, 15.0f, 0.0f));
+  m_ball->setPos(glm::vec3(0.0f, 10.0f, 0.0f));
   m_cube->setPos(glm::vec3(0.0f,0.0f,1.0f));
   m_cylinder-> setPos(glm::vec3(0.0f,0.0f,-1.0f));
 
@@ -153,8 +179,8 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
-  m_table->Render();
+  /*glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
+  m_table->Render();*/
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
   m_ball->Render();

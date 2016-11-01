@@ -90,7 +90,7 @@ void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)
   btTransform trans;
   btScalar m[16];
 
-  world->stepSimulation(dt, 1);
+  world->stepSimulation(dt, 5);
 
   body->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
