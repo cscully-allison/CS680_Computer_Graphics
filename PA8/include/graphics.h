@@ -34,14 +34,20 @@ class Graphics
     Object *m_cylinder;
     Object *m_cube;
 
-<<<<<<< HEAD
+
     btCollisionShape* ground;
     btCollisionShape* southWall;
+    btCollisionShape* northWall;
+    btCollisionShape* eastWall;
+    btCollisionShape* westWall;
+    btRigidBody* groundBody;
+    btRigidBody* southWallBody;
+    btRigidBody* northWallBody;
+    btRigidBody* eastWallBody;
+    btRigidBody* westWallBody;
 
 
-=======
-    
->>>>>>> 23c28872d33feb3604121dc69c9ee95c4afeda60
+
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;
     btDefaultCollisionConfiguration* collisionConfig;

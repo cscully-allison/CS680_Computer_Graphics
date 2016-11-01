@@ -69,27 +69,47 @@ bool Graphics::Initialize(int width, int height)
   //variables for making planes
   btScalar mass(5);
   btVector3 inertia(0,0,0);
-  btRigidBody* groundBody;
-  btRigidBody* southWallBody;
-  btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
+  btDefaultMotionState* motionFloor = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
+  /*btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,-1)));
+  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,1)));
+  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(-1,0,0)));
+  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(1,0,0)));*/
 
   //makes floor 
   ground = new btStaticPlaneShape(btVector3(0,1,0), 0);
   ground->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo groundBodyCI(mass, motion, ground, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo groundBodyCI(mass, motionFloor, ground, inertia);  
   groundBody = new btRigidBody(groundBodyCI);
   dynamicsWorld->addRigidBody(groundBody);
 
-  std::cout << "floor made" << std::endl;
-
-  //adds south wall
+ /* //adds south wall
   southWall = new btStaticPlaneShape(btVector3(0,0,1), 1);
   southWall->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(mass, motion, ground, inertia);  
+  btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(mass, motionSouth, southWall, inertia);  
   southWallBody = new btRigidBody(southWallBodyCI);
   dynamicsWorld->addRigidBody(southWallBody);
 
+  //north wall
+  northWall = new btStaticPlaneShape(btVector3(0,0,-1), 1);
+  northWall->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo northWallBodyCI(mass, motionNorth, northWall, inertia);  
+  northWallBody = new btRigidBody(northWallBodyCI);
+  dynamicsWorld->addRigidBody(northWallBody);
 
+
+  //east wall
+  eastWall = new btStaticPlaneShape(btVector3(-1,0,0), 1);
+  eastWall->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo eastWallBodyCI(mass, motionEast, eastWall, inertia);  
+  eastWallBody = new btRigidBody(eastWallBodyCI);
+  dynamicsWorld->addRigidBody(eastWallBody);
+
+  //west wall
+  westWall = new btStaticPlaneShape(btVector3(1,0,0), 1);
+  westWall->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo westWallBodyCI(mass, motionWest, westWall, inertia);  
+  westWallBody = new btRigidBody(westWallBodyCI);
+  dynamicsWorld->addRigidBody(westWallBody);*/
 
   dynamicsWorld->addRigidBody(m_ball->getRigidBody());
 
@@ -148,7 +168,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   m_table->setOrientation();
-  m_ball->setPos(glm::vec3(0.0f, 10.0f, 0.0f));
+  m_ball->setPos(glm::vec3(0.0f, 5.0f, 0.0f));
   m_cube->setPos(glm::vec3(0.0f,0.0f,1.0f));
   m_cylinder-> setPos(glm::vec3(0.0f,0.0f,-1.0f));
 
@@ -164,6 +184,12 @@ void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
   // Update the object
   m_ball->Update(dt, dynamicsWorld);
   m_cube->UpdateMouse (dt,dynamicsWorld, mouseX, mouseY);
+  //groundBody->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(0, -1, 0)));
+  /*southWallBody->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(0, 0,-2)));
+  northWallBody->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(0, 0, 2)));
+  eastWallBody->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(-2, 0, 0)));
+  westWallBody->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(2, 0, 0)));*/
+
 }
 
 
