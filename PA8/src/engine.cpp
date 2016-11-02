@@ -96,16 +96,16 @@ void Engine::Keyboard()
       int temp; int temp2; 
      SDL_GetRelativeMouseState(&temp, &temp2);
         mouseX += float(temp/4);
-         if (mouseX > 1500)
-                 mouseX = 1500;
-         if (mouseX < -3000)
-                 mouseX = -3000;
+         if (mouseX > 60)
+                 mouseX = 60;
+         if (mouseX < -60)
+                 mouseX = -60;
 
         mouseY += float (temp2/4);
-         if (mouseY > 4500)
-                 mouseY = 4500; 
-         if (mouseY < -4000)
-                 mouseY = -4000; 
+         if (mouseY > 90)
+                 mouseY = 90; 
+         if (mouseY < -80)
+                 mouseY = -80; 
   }
 }
 

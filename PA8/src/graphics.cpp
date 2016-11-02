@@ -13,36 +13,7 @@ Graphics::Graphics()
 
 Graphics::~Graphics()
 {
-  delete broadphase;
-  delete collisionConfig;
-  delete dispatcher;
-  delete dynamicsWorld;
-  delete solver;
 
-  delete m_table;
-  delete m_ball;
-  delete m_cylinder;
-  delete m_cube;
-
-
-  delete ground;
-  delete southWall;
-  delete northWall;
-  delete eastWall;
-  delete westWall;
-  delete cylinder;
-  delete groundBody;
-  delete southWallBody;
-  delete northWallBody;
-  delete eastWallBody;
-  delete westWallBody;
-  delete cylinderBody;
-
-  broadphase = NULL;
-  collisionConfig = NULL;
-  dispatcher = NULL;
-  dynamicsWorld = NULL;
-  solver = NULL;
 }
 
 bool Graphics::Initialize(int width, int height)
@@ -94,7 +65,7 @@ bool Graphics::Initialize(int width, int height)
   btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(11.8))));
   btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-6.6),btScalar(0),btScalar(0))));
   btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(6.6),btScalar(0),btScalar(0))));
-  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(1.0f), btScalar(-5.0f))));
+  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(0.0f), btScalar(-5.0f))));
 
   //set cylinder
   cylinder = new btCylinderShape(btVector3(btScalar(0.0025f), btScalar(0.0025f), btScalar(0.0025f)));

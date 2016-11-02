@@ -42,12 +42,12 @@ Object::Object(std::string filename, std::string objectType)
   }
   btScalar mass(0);
 
-  if (objectType.compare("sphere"))
+  if (objectType.compare("sphere") == 0)
   {
-    shape = new btSphereShape(.0005f);
+    shape = new btSphereShape(.5f);
     mass=btScalar(1);  
   }
-  else if (objectType.compare("box"))
+  else if (objectType.compare("box") == 0)
   {
     shape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     mass=btScalar(50);
@@ -61,20 +61,21 @@ Object::Object(std::string filename, std::string objectType)
   
   if (objectType.compare(" ") != 0)
   { 
-    std::cout << "count" << std::endl;
     motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(btScalar(0),btScalar(0),btScalar(0))));
     btVector3 inertia(btScalar(0),btScalar(0),btScalar(0));
     if (mass > 0)
       shape->calculateLocalInertia(mass, inertia);
     btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, motion, shape, inertia);
     shapeRigidBodyCI.m_friction = btScalar(0);
-      if (objectType.compare("sphere"))
+      if (objectType.compare("sphere") == 0)
       {
         shapeRigidBodyCI.m_restitution =btScalar(.25);
+
       }
       else
       {
         shapeRigidBodyCI.m_restitution =btScalar(0);
+        shapeRigidBodyCI.m_angularDamping=btScalar(4);
       }
     
     body = new btRigidBody(shapeRigidBodyCI);
@@ -100,7 +101,7 @@ Object::~Object()
 
 void Object::setOrientation(){
   model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
-  //model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
+  model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
   model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
 }
 
@@ -115,7 +116,7 @@ void Object::setPos(glm::vec3 position){
 
 void Object::setCylinder()
 {
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.0f, -4.0f));
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.0f, -5.0f));
 }
 
 void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)
@@ -135,7 +136,7 @@ void Object::UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float 
 
   btTransform trans;
   btScalar m[16];
-  body->proceedToTransform(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-mouseX/500), btScalar(0.0f), btScalar(-mouseY/500))));
+  body->proceedToTransform(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-mouseX/10), btScalar(0.0f), btScalar(-mouseY/10))));
 
   body->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
