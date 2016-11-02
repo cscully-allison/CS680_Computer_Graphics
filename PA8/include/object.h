@@ -16,13 +16,15 @@ class Object
 {
   public:
     Object();
-    Object(std::string filename);
+    Object(std::string filename, std::string objectType);
     ~Object();
     void setOrientation();
+    void setCylinder();
     void setPos(glm::vec3 position);
     void Update(unsigned int dt, btDiscreteDynamicsWorld* world);
     void UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float mouseX, float mouseY);
     void Render();
+    void setBodyTransform(btVector3);
 
     glm::mat4 GetModel();
     btRigidBody* getRigidBody();

@@ -1,7 +1,7 @@
 #include "object.h"
 
 
-Object::Object(std::string filename)
+Object::Object(std::string filename, std::string objectType)
 {  
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
@@ -40,21 +40,46 @@ Object::Object(std::string filename)
 
   //}
   }
+  btScalar mass(0);
 
-  shape = new btSphereShape(.1f);
+  if (objectType.compare("sphere"))
+  {
+    shape = new btSphereShape(.0005f);
+    mass=btScalar(1);  
+  }
+  else if (objectType.compare("box"))
+  {
+    shape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+    mass=btScalar(50);
+  }
+  /*else if (objectType.compare("cylinder"))
+  {
+    shape = new btCylinderShape(btVector3(btScalar(5.0f), btScalar(5.0f), btScalar(5.0f)));
+    mass=btScalar(0);  
 
-  motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
-  btScalar mass(50);
-  btVector3 inertia(0,0,0);
-  shape->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, motion, shape, inertia);
-  shapeRigidBodyCI.m_friction = .5;
-  shapeRigidBodyCI.m_restitution =.25;
-  body = new btRigidBody(shapeRigidBodyCI);
-  body->setActivationState(DISABLE_DEACTIVATION);
+  }*/
   
-
-
+  if (objectType.compare(" ") != 0)
+  { 
+    std::cout << "count" << std::endl;
+    motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(btScalar(0),btScalar(0),btScalar(0))));
+    btVector3 inertia(btScalar(0),btScalar(0),btScalar(0));
+    if (mass > 0)
+      shape->calculateLocalInertia(mass, inertia);
+    btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, motion, shape, inertia);
+    shapeRigidBodyCI.m_friction = btScalar(0);
+      if (objectType.compare("sphere"))
+      {
+        shapeRigidBodyCI.m_restitution =btScalar(.25);
+      }
+      else
+      {
+        shapeRigidBodyCI.m_restitution =btScalar(0);
+      }
+    
+    body = new btRigidBody(shapeRigidBodyCI);
+    body->setActivationState(DISABLE_DEACTIVATION);
+  }
   angle = 0.0f;
 
 
@@ -64,27 +89,33 @@ Object::~Object()
 {
     Vertices.clear();
     Indices.clear();
+    delete shape;
+    delete motion;
+    delete body;
+
+    shape = NULL;
+    motion = NULL;
+    body = NULL;
 }
 
 void Object::setOrientation(){
   model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
-  model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
+  //model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
   model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
 }
 
 void Object::setPos(glm::vec3 position){
-  model = glm::translate(glm::mat4(1.0f), position);
+  btTransform trans;
+  btScalar m[16];
+  body->proceedToTransform(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(position.x), btScalar(position.y), btScalar(position.z))));
+  body->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+  model = glm::make_mat4(m);
+}
 
-  body->proceedToTransform(btTransform(btQuaternion(0,0,0,1), btVector3(position.x, position.y, position.z)));
-
-/*  shape = new btSphereShape(1.0f);
-
-  motion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(position.x, position.y, position.z)));
-  btScalar mass(5);
-  btVector3 inertia(0,0,0);
-  shape->calculateLocalInertia(mass, inertia);
-  btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, motion, shape, inertia);
-  body = new btRigidBody(shapeRigidBodyCI);*/
+void Object::setCylinder()
+{
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.0f, -4.0f));
 }
 
 void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)
@@ -94,17 +125,26 @@ void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)
   btTransform trans;
   btScalar m[16];
 
-  world->stepSimulation(dt, 5);
 
   body->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
-
 }
 
 void Object::UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float mouseX, float mouseY){
-    angle += dt * M_PI/10000;
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(-mouseX, 0.0f, -mouseY));
+
+  btTransform trans;
+  btScalar m[16];
+  body->proceedToTransform(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-mouseX/500), btScalar(0.0f), btScalar(-mouseY/500))));
+
+  body->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+  model = glm::make_mat4(m);
+}
+
+void Object::setBodyTransform(btVector3 position)
+{
+  body->proceedToTransform(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), position));
 }
 
 glm::mat4 Object::GetModel()

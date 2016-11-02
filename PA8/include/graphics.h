@@ -40,11 +40,13 @@ class Graphics
     btCollisionShape* northWall;
     btCollisionShape* eastWall;
     btCollisionShape* westWall;
+    btCollisionShape* cylinder;
     btRigidBody* groundBody;
     btRigidBody* southWallBody;
     btRigidBody* northWallBody;
     btRigidBody* eastWallBody;
     btRigidBody* westWallBody;
+    btRigidBody* cylinderBody;
 
 
 
