@@ -54,7 +54,6 @@ bool Shader::AddShader(GLenum ShaderType)
     return false;
   }
 
-
   // Save the shader object - will be deleted in the destructor
   m_shaderObjList.push_back(ShaderObj);
 
