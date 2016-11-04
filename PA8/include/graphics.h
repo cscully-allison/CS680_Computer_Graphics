@@ -16,7 +16,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, float mouseX, float mouseY);
     void Render();
 
   private:
@@ -33,6 +33,21 @@ class Graphics
     Object *m_ball;
     Object *m_cylinder;
     Object *m_cube;
+
+
+    btCollisionShape* ground;
+    btCollisionShape* southWall;
+    btCollisionShape* northWall;
+    btCollisionShape* eastWall;
+    btCollisionShape* westWall;
+    btCollisionShape* cylinder;
+    btRigidBody* groundBody;
+    btRigidBody* southWallBody;
+    btRigidBody* northWallBody;
+    btRigidBody* eastWallBody;
+    btRigidBody* westWallBody;
+    btRigidBody* cylinderBody;
+
 
 
     /* Bullet Variables */

@@ -7,6 +7,8 @@ Engine::Engine(string name, int width, int height)
   m_WINDOW_WIDTH = width;
   m_WINDOW_HEIGHT = height;
   m_FULLSCREEN = false;
+  SDL_SetHintWithPriority(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, "1", SDL_HINT_OVERRIDE);
+  SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 Engine::Engine(string name)
@@ -15,6 +17,8 @@ Engine::Engine(string name)
   m_WINDOW_HEIGHT = 0;
   m_WINDOW_WIDTH = 0;
   m_FULLSCREEN = true;
+  SDL_SetHintWithPriority(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, "1", SDL_HINT_OVERRIDE);
+  SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 Engine::~Engine()
@@ -66,7 +70,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, mouseX, mouseY);
     m_graphics->Render();
 
     // Swap to the Window
@@ -87,6 +91,21 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
+  }
+  else if (m_event.type ==  SDL_MOUSEMOTION){
+      int temp; int temp2; 
+     SDL_GetRelativeMouseState(&temp, &temp2);
+        mouseX += float(temp/4);
+         if (mouseX > 60)
+                 mouseX = 60;
+         if (mouseX < -60)
+                 mouseX = -60;
+
+        mouseY += float (temp2/4);
+         if (mouseY > 90)
+                 mouseY = 90; 
+         if (mouseY < -80)
+                 mouseY = -80; 
   }
 }
 
