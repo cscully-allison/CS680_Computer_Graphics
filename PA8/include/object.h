@@ -18,7 +18,7 @@ class Object
     Object();
     Object(std::string filename, std::string objectType);
     ~Object();
-    void setOrientation();
+    void setOrientation(int x);
     void setCylinder();
     void setPos(glm::vec3 position);
     void Update(unsigned int dt, btDiscreteDynamicsWorld* world);
