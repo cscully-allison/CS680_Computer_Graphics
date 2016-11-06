@@ -17,13 +17,15 @@ class Graphics
     ~Graphics();
     bool Initialize(int width, int height);
     void Update(unsigned int dt, float mouseX, float mouseY);
-    void Render();
+    void Render(int keyboardInput);
 
   private:
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
     Shader *m_shader;
+    Shader *gouraund_shader;
+    Shader *phong_shader;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;

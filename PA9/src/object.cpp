@@ -18,7 +18,11 @@ Object::Object(std::string filename, std::string objectType)
       Vertices.push_back(Vertex(
                             glm::vec3(scene->mMeshes[meshNums]->mVertices[vertex].x, 
                                       scene->mMeshes[meshNums]->mVertices[vertex].y, 
-                                      scene->mMeshes[meshNums]->mVertices[vertex].z), glm::vec3(color.r, color.g, color.b)));
+                                      scene->mMeshes[meshNums]->mVertices[vertex].z), 
+                            glm::vec3(scene->mMeshes[meshNums]->mNormals[vertex].x, 
+                                      scene->mMeshes[meshNums]->mNormals[vertex].y, 
+                                      scene->mMeshes[meshNums]->mNormals[vertex].z),
+                            glm::vec3(color.r, color.g, color.b)));
 
 
     }
@@ -28,7 +32,7 @@ Object::Object(std::string filename, std::string objectType)
       Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[1]);
       Indices.push_back(scene->mMeshes[meshNums]->mFaces[index].mIndices[2]);
     }
-      //if(scene->HasMeshes()){
+     
       glGenBuffers(1, &VB);
       glBindBuffer(GL_ARRAY_BUFFER, VB);
       glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
@@ -37,8 +41,6 @@ Object::Object(std::string filename, std::string objectType)
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
-
-  //}
   }
   btScalar mass(0);
 
@@ -166,7 +168,8 @@ void Object::Render()
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
@@ -176,4 +179,5 @@ void Object::Render()
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }

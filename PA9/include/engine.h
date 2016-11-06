@@ -30,6 +30,7 @@ class Engine
 
     Graphics *m_graphics;
     unsigned int m_DT;
+    unsigned int keyboardInput;
     long long m_currentTimeMillis;
     bool m_running;
     

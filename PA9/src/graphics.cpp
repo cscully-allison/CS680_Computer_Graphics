@@ -130,36 +130,66 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(m_cube->getRigidBody());    
 
   // Set up the shaders
-  m_shader = new Shader();
-  if(!m_shader->Initialize())
+  phong_shader = new Shader();
+  if(!phong_shader->Initialize())
   {
     printf("Shader Failed to Initialize\n");
     return false;
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER))
+  if(!phong_shader->AddShader(GL_VERTEX_SHADER, "per_fragment_lighting_vshad.glsl"))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER))
+  if(!phong_shader->AddShader(GL_FRAGMENT_SHADER, "per_fragment_lighting_fshad.glsl"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
   }
 
   // Connect the program
-  if(!m_shader->Finalize())
+  if(!phong_shader->Finalize())
   {
     printf("Program to Finalize\n");
     return false;
   }
 
+ // Set up the shaders
+  gouraund_shader = new Shader();
+  if(!gouraund_shader->Initialize())
+  {
+    printf("Shader Failed to Initialize\n");
+    return false;
+  }
+
+  // Add the vertex shader
+  if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
+  {
+    printf("Vertex Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Add the fragment shader
+  if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
+  {
+    printf("Fragment Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Connect the program
+  if(!gouraund_shader->Finalize())
+  {
+    printf("Program to Finalize\n");
+    return false;
+  }
+
+
   // Locate the projection matrix in the shader
-  m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
+  m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
   if (m_projectionMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_projectionMatrix not found\n");
@@ -167,7 +197,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the view matrix in the shader
-  m_viewMatrix = m_shader->GetUniformLocation("viewMatrix");
+  m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
   if (m_viewMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_viewMatrix not found\n");
@@ -175,7 +205,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the model matrix in the shader
-  m_modelMatrix = m_shader->GetUniformLocation("modelMatrix");
+  m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
   if (m_modelMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_modelMatrix not found\n");
@@ -204,14 +234,21 @@ void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 }
 
 
-void Graphics::Render()
+void Graphics::Render(int keyboardInput)
 {
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Start the correct program
-  m_shader->Enable();
+  std::cout << keyboardInput << std::endl;
+  
+  if(keyboardInput == 103 || keyboardInput == 0){
+    // Start the correct program
+    gouraund_shader->Enable();
+  }
+  else if(keyboardInput == 112){
+    phong_shader->Enable();
+  }
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 

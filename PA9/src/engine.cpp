@@ -71,7 +71,7 @@ void Engine::Run()
 
     // Update and render the graphics
     m_graphics->Update(m_DT, mouseX, mouseY);
-    m_graphics->Render();
+    m_graphics->Render(keyboardInput);
 
     // Swap to the Window
     m_window->Swap();
@@ -91,6 +91,8 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
+
+    keyboardInput = m_event.key.keysym.sym;
   }
   else if (m_event.type ==  SDL_MOUSEMOTION){
       int temp; int temp2; 
