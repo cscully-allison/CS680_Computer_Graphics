@@ -58,6 +58,7 @@ Object::Object(std::string filename, std::string objectType)
     mass=btScalar(0);  
 
   }*/
+
   
   if (objectType.compare(" ") != 0)
   { 
