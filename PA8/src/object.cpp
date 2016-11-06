@@ -5,7 +5,7 @@ Object::Object(std::string filename, std::string objectType)
 {  
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/newObjects/" + filename, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes;
   aiColor3D color (0.0f,0.0f, 0.0f);
   
@@ -44,12 +44,12 @@ Object::Object(std::string filename, std::string objectType)
 
   if (objectType.compare("sphere") == 0)
   {
-    shape = new btSphereShape(.5f);
+    shape = new btSphereShape(.25f);
     mass=btScalar(1);  
   }
   else if (objectType.compare("box") == 0)
   {
-    shape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+    shape = new btBoxShape(btVector3(.5f, .5f, .5f));
     mass=btScalar(50);
   }
   /*else if (objectType.compare("cylinder"))
@@ -100,10 +100,11 @@ Object::~Object()
     body = NULL;
 }
 
-void Object::setOrientation(){
-  model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
-  model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
-  model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
+void Object::setOrientation(int x){
+  model = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, (0.25f*x), 0.0f));
+  //model = glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(0.0f,1.0f,0.0f));
+  //model *= glm::rotate(glm::mat4(1.0f), -((.175f)*(.75f)), glm::vec3(0.0f, 0.0f, 1.0f));
+  //model *= glm::scale(glm::mat4(1.0f), glm::vec3( 1.5, 1.5, 1.5));
 }
 
 void Object::setPos(glm::vec3 position){
@@ -117,7 +118,7 @@ void Object::setPos(glm::vec3 position){
 
 void Object::setCylinder()
 {
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.0f, -5.0f));
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, -3.0f));
 }
 
 void Object::Update(unsigned int dt, btDiscreteDynamicsWorld* world)

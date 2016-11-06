@@ -53,22 +53,23 @@ bool Graphics::Initialize(int width, int height)
   // Create the object
   m_table = new Object("table.obj", " ");
   m_cylinder = new Object("cylinder.obj", " ");
-  m_cube = new Object("cube.obj", "box");
+  m_cube = new Object("box.obj", "box");
   m_ball = new Object("ball.obj", "sphere");
   m_cylinder->setCylinder();
+  //m_cube->setOrientation(-1);
 
   //variables for making planes
   btScalar mass(0);
   btVector3 inertia(0,0,0);
   btDefaultMotionState* motionFloor = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(0))));
-  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(-11.8))));
-  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(11.8))));
-  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-6.6),btScalar(0),btScalar(0))));
-  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(6.6),btScalar(0),btScalar(0))));
-  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(0.0f), btScalar(-5.0f))));
+  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(2),btScalar(-5))));
+  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(2),btScalar(5))));
+  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-5),btScalar(2),btScalar(0))));
+  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(5),btScalar(2),btScalar(0))));
+  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(0.0f), btScalar(-3.0f))));
 
   //set cylinder
-  cylinder = new btCylinderShape(btVector3(btScalar(0.0025f), btScalar(0.0025f), btScalar(0.0025f)));
+  cylinder = new btCylinderShape(btVector3(btScalar(0.5f), btScalar(0.5f), btScalar(0.5f)));
   cylinder->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo cylinderBodyCI(btScalar(0),cylinderPos, cylinder, inertia);
   cylinderBodyCI.m_friction = btScalar(0);
@@ -79,7 +80,7 @@ bool Graphics::Initialize(int width, int height)
 
 
   //makes floor 
-  ground = new btStaticPlaneShape(btVector3(btScalar(0),btScalar(1),btScalar(-.1)), btScalar(0));
+  ground = new btStaticPlaneShape(btVector3(btScalar(0),btScalar(1),btScalar(0)), btScalar(0));
   ground->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo groundBodyCI(btScalar(0), motionFloor, ground, inertia);  
   groundBodyCI.m_friction = btScalar(0.5);
@@ -89,7 +90,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(groundBody);
 
   //adds south wall
-  southWall = new btBoxShape(btVector3(btScalar(9),btScalar(100),btScalar(1)));
+  southWall = new btBoxShape(btVector3(btScalar(4),btScalar(40),btScalar(1)));
   southWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(btScalar(0), motionSouth, southWall, inertia); 
   southWallBodyCI.m_restitution = btScalar(1); 
@@ -98,7 +99,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(southWallBody);
 
   //north wall
-  northWall = new btBoxShape(btVector3(btScalar(9),btScalar(100),btScalar(1)));
+  northWall = new btBoxShape(btVector3(btScalar(4),btScalar(40),btScalar(1)));
   northWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo northWallBodyCI(0, motionNorth, northWall, inertia);
   northWallBodyCI.m_restitution = btScalar(1);  
@@ -108,7 +109,7 @@ bool Graphics::Initialize(int width, int height)
 
 
   //east wall
-  eastWall = new btBoxShape(btVector3(btScalar(1),btScalar(100),btScalar(22.2)));
+  eastWall = new btBoxShape(btVector3(btScalar(1),btScalar(40),btScalar(4)));
   eastWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo eastWallBodyCI(0, motionEast, eastWall, inertia); 
   eastWallBodyCI.m_restitution = btScalar(1); 
@@ -117,7 +118,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(eastWallBody);
 
   //west wall
-  westWall = new btBoxShape(btVector3(btScalar(1),btScalar(100),btScalar(22.2)));
+  westWall = new btBoxShape(btVector3(btScalar(1),btScalar(40),btScalar(4)));
   westWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo westWallBodyCI(0, motionWest, westWall, inertia);
   westWallBodyCI.m_restitution = btScalar(1);  
@@ -182,9 +183,9 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
-  m_table->setOrientation();
-  m_ball->setPos(glm::vec3(3.0f, .5f, 10.0f));
-  m_cube->setPos(glm::vec3(0.0f,2.0f,0.0f));
+  m_table->setOrientation(1);
+  m_ball->setPos(glm::vec3(2.0f, 0.0f, 2.0f));
+  m_cube->setPos(glm::vec3(0.0f,0.0f,0.0f));
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
