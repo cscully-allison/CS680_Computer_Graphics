@@ -30,12 +30,16 @@ class Graphics
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
+    GLint m_scalar;
+    GLint ball;
+
+    glm::vec3 scalar;
 
     Object *m_table;
     Object *m_ball;
     Object *m_cylinder;
     Object *m_cube;
-
+    glm::vec4 pos;
 
     btCollisionShape* ground;
     btCollisionShape* southWall;

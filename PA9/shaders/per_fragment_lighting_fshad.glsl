@@ -10,12 +10,13 @@
           	vec3 L;
           	vec3 V;
                vec3 diffuse;
+               vec3 scalar;
           } fs_in;
 
 
           //material properties
           vec3 diffuse_albedo = fs_in.diffuse;
-          uniform vec3 specular_albedo = vec3(0.7);
+          vec3 specular_albedo = vec3(0.7) * fs_in.scalar;
           uniform float specular_power = 2.0;
 
           void main(void)

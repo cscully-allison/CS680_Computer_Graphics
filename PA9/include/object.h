@@ -24,6 +24,7 @@ class Object
     void Update(unsigned int dt, btDiscreteDynamicsWorld* world);
     void UpdateMouse(unsigned int dt, btDiscreteDynamicsWorld* world, float mouseX, float mouseY);
     void Render();
+    void Render(GLint scalarLoc, glm::vec3 scalar);
     void setBodyTransform(btVector3);
 
     glm::mat4 GetModel();

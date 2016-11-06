@@ -73,6 +73,8 @@ void Engine::Run()
     m_graphics->Update(m_DT, mouseX, mouseY);
     m_graphics->Render(keyboardInput);
 
+    keyboardInput = -1;
+
     // Swap to the Window
     m_window->Swap();
   }
@@ -93,21 +95,22 @@ void Engine::Keyboard()
     }
 
     keyboardInput = m_event.key.keysym.sym;
+
   }
   else if (m_event.type ==  SDL_MOUSEMOTION){
       int temp; int temp2; 
      SDL_GetRelativeMouseState(&temp, &temp2);
         mouseX += float(temp/4);
-         if (mouseX > 60)
-                 mouseX = 60;
-         if (mouseX < -60)
-                 mouseX = -60;
+         if (mouseX > 32)
+                 mouseX = 32;
+         if (mouseX < -32)
+                 mouseX = -32;
 
         mouseY += float (temp2/4);
-         if (mouseY > 90)
-                 mouseY = 90; 
-         if (mouseY < -80)
-                 mouseY = -80; 
+         if (mouseY > 32)
+                 mouseY = 32; 
+         if (mouseY < -32)
+                 mouseY = -32; 
   }
 }
 

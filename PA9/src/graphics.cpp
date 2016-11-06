@@ -49,11 +49,10 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-
-  // Create the object
+// Create the object
   m_table = new Object("table.obj", " ");
   m_cylinder = new Object("cylinder.obj", " ");
-  m_cube = new Object("cube.obj", "box");
+  m_cube = new Object("box.obj", "box");
   m_ball = new Object("ball.obj", "sphere");
   m_cylinder->setCylinder();
 
@@ -61,14 +60,14 @@ bool Graphics::Initialize(int width, int height)
   btScalar mass(0);
   btVector3 inertia(0,0,0);
   btDefaultMotionState* motionFloor = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(0))));
-  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(-11.8))));
-  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(0),btScalar(11.8))));
-  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-6.6),btScalar(0),btScalar(0))));
-  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(6.6),btScalar(0),btScalar(0))));
-  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(0.0f), btScalar(-5.0f))));
+  btDefaultMotionState* motionSouth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(2),btScalar(-5))));
+  btDefaultMotionState* motionNorth = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(0),btScalar(2),btScalar(5))));
+  btDefaultMotionState* motionEast = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(-5),btScalar(2),btScalar(0))));
+  btDefaultMotionState* motionWest = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(5),btScalar(2),btScalar(0))));
+  btDefaultMotionState* cylinderPos = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), btVector3(btScalar(3.0f), btScalar(0.0f), btScalar(-3.0f))));
 
   //set cylinder
-  cylinder = new btCylinderShape(btVector3(btScalar(0.0025f), btScalar(0.0025f), btScalar(0.0025f)));
+  cylinder = new btCylinderShape(btVector3(btScalar(0.5f), btScalar(0.5f), btScalar(0.5f)));
   cylinder->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo cylinderBodyCI(btScalar(0),cylinderPos, cylinder, inertia);
   cylinderBodyCI.m_friction = btScalar(0);
@@ -79,7 +78,7 @@ bool Graphics::Initialize(int width, int height)
 
 
   //makes floor 
-  ground = new btStaticPlaneShape(btVector3(btScalar(0),btScalar(1),btScalar(-.1)), btScalar(0));
+  ground = new btStaticPlaneShape(btVector3(btScalar(0),btScalar(1),btScalar(0)), btScalar(0));
   ground->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo groundBodyCI(btScalar(0), motionFloor, ground, inertia);  
   groundBodyCI.m_friction = btScalar(0.5);
@@ -89,7 +88,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(groundBody);
 
   //adds south wall
-  southWall = new btBoxShape(btVector3(btScalar(9),btScalar(100),btScalar(1)));
+  southWall = new btBoxShape(btVector3(btScalar(4),btScalar(40),btScalar(1)));
   southWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo southWallBodyCI(btScalar(0), motionSouth, southWall, inertia); 
   southWallBodyCI.m_restitution = btScalar(1); 
@@ -98,7 +97,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(southWallBody);
 
   //north wall
-  northWall = new btBoxShape(btVector3(btScalar(9),btScalar(100),btScalar(1)));
+  northWall = new btBoxShape(btVector3(btScalar(4),btScalar(40),btScalar(1)));
   northWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo northWallBodyCI(0, motionNorth, northWall, inertia);
   northWallBodyCI.m_restitution = btScalar(1);  
@@ -108,7 +107,7 @@ bool Graphics::Initialize(int width, int height)
 
 
   //east wall
-  eastWall = new btBoxShape(btVector3(btScalar(1),btScalar(100),btScalar(22.2)));
+  eastWall = new btBoxShape(btVector3(btScalar(1),btScalar(40),btScalar(4)));
   eastWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo eastWallBodyCI(0, motionEast, eastWall, inertia); 
   eastWallBodyCI.m_restitution = btScalar(1); 
@@ -117,14 +116,13 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(eastWallBody);
 
   //west wall
-  westWall = new btBoxShape(btVector3(btScalar(1),btScalar(100),btScalar(22.2)));
+  westWall = new btBoxShape(btVector3(btScalar(1),btScalar(40),btScalar(4)));
   westWall->calculateLocalInertia(mass, inertia);
   btRigidBody::btRigidBodyConstructionInfo westWallBodyCI(0, motionWest, westWall, inertia);
   westWallBodyCI.m_restitution = btScalar(1);  
   westWallBody = new btRigidBody(westWallBodyCI);
   westWallBody->setActivationState(DISABLE_DEACTIVATION);  
   dynamicsWorld->addRigidBody(westWallBody);
-
 
   dynamicsWorld->addRigidBody(m_ball->getRigidBody());
   dynamicsWorld->addRigidBody(m_cube->getRigidBody());    
@@ -212,9 +210,23 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
+  //Locate the scalar in the shader
+  m_scalar = phong_shader->GetUniformLocation("scalar");
+  if (m_scalar == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_scalar not found\n");
+    return false;
+  }
+
+  ball = phong_shader->GetUniformLocation("ballPosition");
+  if (ball == INVALID_UNIFORM_LOCATION)
+  {
+    printf("ball not found\n");
+    return false;
+  }
   m_table->setOrientation();
-  m_ball->setPos(glm::vec3(3.0f, .5f, 10.0f));
-  m_cube->setPos(glm::vec3(0.0f,2.0f,0.0f));
+  m_ball->setPos(glm::vec3(2.0f, 0.0f, 2.0f));
+  m_cube->setPos(glm::vec3(0.0f,0.0f,0.0f));
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -240,15 +252,26 @@ void Graphics::Render(int keyboardInput)
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  std::cout << keyboardInput << std::endl;
+  //std::cout << keyboardInput << std::endl;
   
-  if(keyboardInput == 103 || keyboardInput == 0){
+  //p or default  
+  if(keyboardInput == 112 || keyboardInput == 0){
     // Start the correct program
-    gouraund_shader->Enable();
-  }
-  else if(keyboardInput == 112){
     phong_shader->Enable();
   }
+  //keyboard input g
+  else if(keyboardInput == 103){
+    gouraund_shader->Enable();
+  }
+
+  //numpad +
+  if(keyboardInput == 1073741911 && scalar.x < 10.0){
+    scalar += glm::vec3(0.1);
+  }
+  else if(keyboardInput == 1073741910 && scalar.x > 0){
+    scalar -= glm::vec3(0.1);
+  }
+
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
@@ -259,13 +282,19 @@ void Graphics::Render(int keyboardInput)
   m_table->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
+  pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  std::cout << pos.x << " " << pos.z << std::endl;
+  glUniform4fv(ball, 1, glm::value_ptr(pos)); 
+
   m_ball->Render();
 
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cylinder->GetModel()));
-  m_cylinder->Render();
 
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
-  m_cube->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cylinder->GetModel()));
+  m_cylinder->Render();
+  
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
+  m_cube->Render(m_scalar, scalar);
+
 
   // Get any errors from OpenGL
   auto error = glGetError();
