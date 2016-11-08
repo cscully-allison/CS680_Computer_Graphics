@@ -51,7 +51,7 @@ bool Graphics::Initialize(int width, int height)
   }
   height = 2.0;
 // Create the object
-  m_table = new Object("table.obj", " ");
+  m_table = new Object("table2.obj", " ");
   m_cylinder = new Object("cylinder.obj", " ");
   m_cube = new Object("box.obj", "box");
   m_ball = new Object("ball.obj", "sphere");
@@ -362,13 +362,13 @@ void Graphics::Render(int keyboardInput)
     spot -= 0.1;
   }
   
-  //numpad enter spotlight height
-  else if (keyboardInput == 1073741912 && height < 10){
+  //numpad 6 spotlight height
+  else if (keyboardInput == 1073741918 && height < 10){
       height +=1;
     }
     
-  // numpad . spotlight height 
-  else if (keyboardInput == 1073741923 && height > 0){
+  // numpad 9 spotlight height 
+  else if (keyboardInput == 1073741921 && height > 1){
   std::cout << height << std::endl;
       height -=1;
     }

@@ -1,4 +1,4 @@
-# PA8: Bullet/Pinball
+# PA9: Lighting
 
 ## Connor Scully-Allison
 ## Hannah Munoz
@@ -19,7 +19,7 @@ This project uses Bullet 2.86. Instructions for downloading and running Bullet c
 
 # Building and Running
 
-In the PA8 Directory type in the following order:
+In the PA9 Directory type in the following order:
 
 ```
 mkdir build
@@ -30,19 +30,24 @@ make
 ```
 
 # Operation Instructions
-
+```
+Input Commands:
+Mouse Movement : moves box around table
+Esc : exits the program
+	Numpad Controls
+	+ and - : controls world ambient brightness
+	* and / : controls the spotlight ambient brightness
+	6 and 9 : controls spotlight size
+	0 and . : controls table specularity
+	1 and 2 : controls cylinder specularity
+	4 and 5 : controls ball specularity
+	7 and 8 : controls cube specularity
+``` 
 ## Before Running
 
 ```
 1) Make sure that any .obj files you intend to load and the config.txt are placed in the asset folder
 2) Ensure that the associated .mtl files to the objects are located in the asset folder as well
-```
-
-## Controls
-
-```
-Mouse: move the box
-Esc: exit
 ```
 
 # Misc Notes
