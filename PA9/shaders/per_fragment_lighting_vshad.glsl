@@ -12,7 +12,9 @@
           uniform mat4 modelMatrix;
           uniform vec3 scalar;
           uniform vec3 spec;
-           uniform vec4 ballPosition;
+          uniform vec3 spot;
+          uniform vec4 ballPosition;
+          uniform float height;
 
           out VS_OUT{
             vec3 N;  //normal
@@ -22,6 +24,7 @@
             vec3 diffuse; //color
             vec3 scalar;  //scalar
             vec3 spec;  //scalar
+            vec3 spot;
             vec3 Ka;
             vec3 Kd;
             vec3 Ks;
@@ -29,7 +32,7 @@
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3(ballPosition.x, 2.0, ballPosition.z);
+          vec3 spotlight_pos = vec3(ballPosition.x, height, ballPosition.z);
           
           void main(void) 
           { 
@@ -47,7 +50,6 @@
             vs_out.V = -p.xyz;
             
             
-            
             //Caluclate spotlight vector
             vs_out.spotL = spotlight_pos - p.xyz;
 
@@ -56,6 +58,7 @@
             vs_out.diffuse = diffuse; 
             vs_out.scalar = scalar;
             vs_out.spec = spec;
+            vs_out.spot = spot;
             vs_out.Ks = Ks;
             vs_out.Ka = Ka;
             vs_out.Kd = Kd;

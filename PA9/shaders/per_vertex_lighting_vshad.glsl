@@ -12,13 +12,14 @@
           uniform mat4 modelMatrix;
           uniform vec3 scalar;
           uniform vec3 spec;
-          uniform vec3 spotlightSpec;
+          uniform vec3 spot;
           uniform vec4 ballPosition;
+          uniform float height;
 
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3 (ballPosition.x, 4.0, ballPosition.z);
+          vec3 spotlight_pos = vec3 (ballPosition.x, height, ballPosition.z);
 
           //material properties
           uniform float specular_power = 16.0;
@@ -64,16 +65,16 @@
                 //calculate R locally
                 R = normalize( reflect(-L, N) );
                 
-                float spot = dot (L,V);
-                if (spot < 0.01){
+                float spotLight = dot (L,V);
+                if (spotLight < 0.01){
                    // spot = pow (spot, 4);
                    // float dist = length (L);
                     //float att = spot / (1 +1*dist+1*dist*dist);
 
                     diffuse = diffuse * max(dot(N,L), 0.0);
-                    specular = pow(max(dot(R, V), 0.0), 100) * spotlightSpec;
+                    specular = pow(max(dot(R, V), 0.0), 100) * vec3 (1.0);
 
-                     color += ambient + diffuse + specular;
+                     color += spot + diffuse + specular;
                      }
             }
 

@@ -13,6 +13,7 @@
                 vec3 diffuse;
                 vec3 scalar;
                 vec3 spec;  //scalar
+                vec3 spot;
                 vec3 Ka;
                 vec3 Kd;
                 vec3 Ks;
@@ -51,8 +52,8 @@
           	       //calculate R locally
           	       R = normalize(reflect(-L, N));
                        
-                       float spot = dot (L,V);
-                       if (spot < 0.01){
+                       float spotLight = dot (L,V);
+                       if (spotLight < 0.01){
                                 //spot = pow (spot, 4);
                                 //float dist = length (L);
                                 //float att = spot / (20*dist+20*dist*dist);
@@ -61,7 +62,7 @@
           	                diffuse = max(dot(N,L), 0.0) * diffuse_albedo;
           	                specular = pow(max(dot(R, V), 0.0), 1.0) * spotlightSpec;
 
-          	                color += vec4(spotlightAmbient + diffuse, 1.0) + vec4 (specular,1);
+          	                color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
           	       }
           	}
           } 

@@ -49,6 +49,7 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+  height = 2.0;
 // Create the object
   m_table = new Object("table.obj", " ");
   m_cylinder = new Object("cylinder.obj", " ");
@@ -186,6 +187,20 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
   
+    m_height = gouraund_shader->GetUniformLocation("height");
+  if (m_height == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_height not found\n");
+    return false;
+  }
+  
+    m_spot = gouraund_shader->GetUniformLocation("spot");
+  if (m_spot == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_spot not found\n");
+    return false;
+  }
+  
     //Locate the spec in the shader
   m_spec = gouraund_shader->GetUniformLocation("spec");
   if (m_spec == INVALID_UNIFORM_LOCATION)
@@ -232,6 +247,20 @@ bool Graphics::Initialize(int width, int height)
   if (m_scalar == INVALID_UNIFORM_LOCATION)
   {
     printf("m_scalar not found\n");
+    return false;
+  }
+  
+    m_height = phong_shader->GetUniformLocation("height");
+  if (m_height == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_height not found\n");
+    return false;
+  }
+  
+    m_spot = phong_shader->GetUniformLocation("spot");
+  if (m_spot == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_spot not found\n");
     return false;
   }
   
@@ -292,6 +321,8 @@ void Graphics::Render(int keyboardInput)
   m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
   //Locate the scalar in the shader
   m_scalar = gouraund_shader->GetUniformLocation("scalar");
+  m_height = gouraund_shader->GetUniformLocation("height");
+  m_spot = gouraund_shader->GetUniformLocation("spot");
   m_spec = gouraund_shader->GetUniformLocation("spec");
   ball = gouraund_shader->GetUniformLocation("ballPosition");
 
@@ -306,20 +337,44 @@ void Graphics::Render(int keyboardInput)
   m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
   //Locate the scalar in the shader
   m_scalar = phong_shader->GetUniformLocation("scalar");
+  m_height = phong_shader->GetUniformLocation("height");
+  m_spot = phong_shader->GetUniformLocation("spot");
   m_spec = phong_shader->GetUniformLocation("spec");
   ball = phong_shader->GetUniformLocation("ballPosition");
   }
 
-  //numpad +
+  //numpad + ambient lighting
   if(keyboardInput == 1073741911 && scalar.x < 10.0){
     scalar += glm::vec3(0.1);
   }
+  // numpad - ambient lighting
   else if(keyboardInput == 1073741910 && scalar.x > 0){
     scalar -= glm::vec3(0.1);
   }
-      // std::cout << keyboardInput << std::endl;
+  
+  // numpad * spotlight ambient
+   else if(keyboardInput == 1073741909 && spot.x < 10.0){
+    spot += 0.1;
+  }
+  
+  // numpad / spotlight ambient
+  else if(keyboardInput == 1073741908 && spot.x > 0){
+    spot -= 0.1;
+  }
+  
+  //numpad enter spotlight height
+  else if (keyboardInput == 1073741912 && height < 10){
+      height +=1;
+    }
+    
+  // numpad . spotlight height 
+  else if (keyboardInput == 1073741923 && height > 0){
+  std::cout << height << std::endl;
+      height -=1;
+    }
+      // std::cout <<  height<< std::endl;
    //numpad 0 + for table (1073741913)
-   if (keyboardInput == 1073741922){
+    if (keyboardInput == 1073741922){
       m_table->setSpec (glm::vec3(0.1));
     }
     
@@ -362,21 +417,21 @@ void Graphics::Render(int keyboardInput)
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
-  m_table->Render(m_scalar, scalar, m_spec, m_table->getSpec());
+  m_table->Render(m_scalar, scalar, m_spec, m_table->getSpec(), m_spot, spot, m_height, height);
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
   pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   //std::cout << pos.x << " " << pos.z << std::endl;
   glUniform4fv(ball, 1, glm::value_ptr(pos)); 
 
-  m_ball->Render(m_scalar, scalar, m_spec, m_ball->getSpec());
+  m_ball->Render(m_scalar, scalar, m_spec, m_ball->getSpec(), m_spot, spot, m_height, height);
 
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cylinder->GetModel()));
-  m_cylinder->Render(m_scalar,  scalar, m_spec, m_cylinder->getSpec());
+  m_cylinder->Render(m_scalar,  scalar, m_spec, m_cylinder->getSpec(), m_spot, spot, m_height, height);
   
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
-  m_cube->Render(m_scalar, scalar, m_spec, m_cube->getSpec());
+  m_cube->Render(m_scalar, scalar, m_spec, m_cube->getSpec(), m_spot, spot, m_height, height);
 
 
   // Get any errors from OpenGL

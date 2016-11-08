@@ -31,10 +31,14 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint m_scalar;
+    GLint m_spot;
     GLint m_spec;
+    GLint m_height;
     GLint ball;
 
     glm::vec3 scalar;
+    glm::vec3 spot;
+    GLfloat height;
 
     Object *m_table;
     Object *m_ball;
