@@ -281,7 +281,7 @@ void Graphics::Render(int keyboardInput)
   //std::cout << keyboardInput << std::endl;
   
   //g or default  
-  if(keyboardInput == 103 || keyboardInput == 0){
+  if(keyboardInput == 103 ){
     // Start the correct program
     gouraund_shader->Enable();
       // Locate the projection matrix in the shader
@@ -297,7 +297,7 @@ void Graphics::Render(int keyboardInput)
 
   }
   //keyboard input p
-  else if(keyboardInput == 112){
+  else if(keyboardInput == 112 || keyboardInput == 0){
         phong_shader->Enable();
    m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
   // Locate the view matrix in the shader

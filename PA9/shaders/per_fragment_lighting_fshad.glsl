@@ -1,7 +1,7 @@
 #version 330
           
           //Output
-          layout (location = 0) out vec4 color;
+          out vec4 color;
 
           //Input from vertex shader
           in VS_OUT
@@ -9,8 +9,12 @@
           	vec3 N;
           	vec3 L;
           	vec3 V;
-               vec3 diffuse;
-               vec3 scalar;
+                vec3 diffuse;
+                vec3 scalar;
+                vec3 spec;  //scalar
+                vec3 Ka;
+                vec3 Kd;
+                vec3 Ks;
           } fs_in;
 
 
@@ -28,11 +32,11 @@
           	vec3 V = normalize(fs_in.V);
 
           	//calculate R locally
-          	vec3 R = reflect(-L, N);
+          	vec3 R = normalize(reflect(-L, N));
 
           	//compute the diffuse and specular components for each fragment
           	vec3 diffuse = max(dot(N,L), 0.0) * diffuse_albedo;
-          	vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * specular_albedo;
+          	vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * fs_in.spec;
 
           	color = vec4(ambient + diffuse, 1.0) + vec4 (specular,1);
           } 

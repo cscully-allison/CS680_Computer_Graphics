@@ -3,12 +3,15 @@
           layout (location = 0) in vec4 v_position; 
           layout (location = 1) in vec3 normal;
           layout (location = 2) in vec3 diffuse;
-
+          layout (location = 3) in vec3 Ka;
+          layout (location = 4) in vec3 Kd;
+          layout (location = 5) in vec3 Ks;
 
           uniform mat4 projectionMatrix; 
           uniform mat4 viewMatrix; 
           uniform mat4 modelMatrix;
           uniform vec3 scalar;
+          uniform vec3 spec;
 
           out VS_OUT{
             vec3 N;  //normal
@@ -16,6 +19,10 @@
             vec3 V;  //view
             vec3 diffuse; //color
             vec3 scalar;  //scalar
+            vec3 spec;  //scalar
+            vec3 Ka;
+            vec3 Kd;
+            vec3 Ks;
           } vs_out;
 
           //light position
@@ -41,4 +48,8 @@
 
             vs_out.diffuse = diffuse; 
             vs_out.scalar = scalar;
+            vs_out.spec = spec;
+            vs_out.Ks = Ks;
+            vs_out.Ka = Ka;
+            vs_out.Kd = Kd;
           } 
