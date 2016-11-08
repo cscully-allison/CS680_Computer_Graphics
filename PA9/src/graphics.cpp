@@ -308,7 +308,6 @@ void Graphics::Render(int keyboardInput)
   m_scalar = phong_shader->GetUniformLocation("scalar");
   m_spec = phong_shader->GetUniformLocation("spec");
   ball = phong_shader->GetUniformLocation("ballPosition");
-
   }
 
   //numpad +

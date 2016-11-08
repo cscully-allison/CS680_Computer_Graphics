@@ -17,7 +17,7 @@
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3 (ballPosition.x, 2.0, ballPosition.z);
+          vec3 spotlight_pos = vec3 (ballPosition.x, 5.0, ballPosition.z);
 
           //material properties
           uniform float specular_power = 16.0;
@@ -43,7 +43,7 @@
             vec3 V = normalize(-p.xyz);
 
             //calculate R locally
-            vec3 R = normalize( reflect(-L, N) );
+            vec3 R = normalize( reflect(-L, N) );    
 
             //compute the diffuse and specular components for each
             //fragments
@@ -54,6 +54,30 @@
 
             color = ambient + diffuse + specular;
 
+
+            //view space coordinate
+            p = modelMatrix * v_position;
+
+            // Calculate normal in view space
+            N =normalize( mat3(modelMatrix) * normal);
+
+            //Caluclate light vector
+            L = normalize(spotlight_pos - p.xyz);
+
+            //calculate view vector
+            V = normalize(-p.xyz);
+
+            //calculate R locally
+            R = normalize( reflect(-L, N) );
+            
+            //compute the diffuse and specular components for each
+            //fragments
+            diffuse = diffuse * max(dot(N,L), 0.0);
+            
+            // multiple here to increase specularity
+            specular = pow(max(dot(R, V), 0.0), 100) * spec;
+
+            color += ambient + diffuse + specular;
 
             gl_Position = projectionMatrix * viewMatrix * p; 
           } 
