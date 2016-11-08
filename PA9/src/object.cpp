@@ -8,12 +8,17 @@ Object::Object(std::string filename, std::string objectType)
   scene = importer.ReadFile("../assets/newObjects/" + filename, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes;
   aiColor3D color (0.0f,0.0f, 0.0f);
-  
+  glm::vec3 Ks;
+  glm::vec3 Ka;
+  glm::vec3 Kd;
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){
-
-
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    Ks = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    Ka = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-
+    Kd = glm::vec3(color.r, color.g, color.b);
+ 
     for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
       Vertices.push_back(Vertex(
                             glm::vec3(scene->mMeshes[meshNums]->mVertices[vertex].x, 
@@ -22,7 +27,7 @@ Object::Object(std::string filename, std::string objectType)
                             glm::vec3(scene->mMeshes[meshNums]->mNormals[vertex].x, 
                                       scene->mMeshes[meshNums]->mNormals[vertex].y, 
                                       scene->mMeshes[meshNums]->mNormals[vertex].z),
-                            glm::vec3(color.r, color.g, color.b)));
+                            glm::vec3(color.r, color.g, color.b), Ka, Kd, Ks));
 
 
     }
@@ -181,19 +186,26 @@ void Object::Render()
 }
 
 
-void Object::Render(GLint scalarLoc, glm::vec3 scalar)
+void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec)
 {
 
   glUniform3fv(scalarLoc, 1, glm::value_ptr(scalar));
+  glUniform3fv(specLoc, 1, glm::value_ptr(spec));
 
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glEnableVertexAttribArray(4);
+  glEnableVertexAttribArray(5);
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal));
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,Ka));
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,Kd));
+  glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,Ks));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
@@ -204,4 +216,15 @@ void Object::Render(GLint scalarLoc, glm::vec3 scalar)
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
+  glDisableVertexAttribArray(4);
+  glDisableVertexAttribArray(5);
+}
+
+glm::vec3 Object::getSpec(){
+        return spec;
+}
+
+void Object::setSpec (glm::vec3 s){
+        spec += s;
 }

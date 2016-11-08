@@ -31,6 +31,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint m_scalar;
+    GLint m_spec;
     GLint ball;
 
     glm::vec3 scalar;

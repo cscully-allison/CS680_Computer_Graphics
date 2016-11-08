@@ -16,8 +16,9 @@
 
           //material properties
           vec3 diffuse_albedo = fs_in.diffuse;
-          vec3 specular_albedo = vec3(0.7) * fs_in.scalar;
+          uniform vec3 specular_albedo = vec3(0.7);
           uniform float specular_power = 2.0;
+          vec3 ambient= fs_in.scalar; 
 
           void main(void)
           { 
@@ -29,10 +30,9 @@
           	//calculate R locally
           	vec3 R = reflect(-L, N);
 
-          	//compute the diffuse and specular components for each
-          	//fragment
+          	//compute the diffuse and specular components for each fragment
           	vec3 diffuse = max(dot(N,L), 0.0) * diffuse_albedo;
           	vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * specular_albedo;
 
-          	color = vec4(diffuse + specular, 1.0);
+          	color = vec4(ambient + diffuse, 1.0) + vec4 (specular,1);
           } 

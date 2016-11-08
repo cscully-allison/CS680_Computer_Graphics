@@ -27,8 +27,11 @@ struct Vertex
   glm::vec3 vertex;
   glm::vec3 normal;
   glm::vec3 color;
+  glm::vec3 Ka;
+  glm::vec3 Kd;
+  glm::vec3 Ks;
 
-  Vertex(glm::vec3 v, glm::vec3 n, glm::vec3 c): vertex(v), normal(n), color(c) {}
+  Vertex(glm::vec3 v, glm::vec3 n, glm::vec3 c, glm::vec3 Ka, glm::vec3 Kd, glm::vec3 Ks): vertex(v), normal(n), color(c), Ka (Ka), Kd (Kd), Ks(Ks) {}
 };
 
 #endif /* GRAPHICS_HEADERS_H */
