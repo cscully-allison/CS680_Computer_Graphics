@@ -53,19 +53,6 @@
 
             color = ambient + diffuse + specular;
 
-            // spotlight
-            L = normalize (spotlight_pos.xyz);
-            V = normalize (- ballPosition.xyz);
-
-            if (dot (L,V) > 2){
-               R = reflect(-L, N);
-               diffuse = max(dot(N,L), 0.0) * diffuse_albedo;
-               specular = pow(max(dot(R, V), 0.0), specular_power) * vec3 (0.0, 0.0, 0.0);
-
-               vec3 colorTemp = ambient + diffuse + specular;
-               color += colorTemp;
-            }
-
 
             gl_Position = projectionMatrix * viewMatrix  * p; 
           } 

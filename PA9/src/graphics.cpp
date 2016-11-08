@@ -224,6 +224,7 @@ bool Graphics::Initialize(int width, int height)
     printf("ball not found\n");
     return false;
   }
+  
   m_table->setOrientation();
   m_ball->setPos(glm::vec3(2.0f, 0.0f, 2.0f));
   m_cube->setPos(glm::vec3(0.0f,0.0f,0.0f));
@@ -254,14 +255,35 @@ void Graphics::Render(int keyboardInput)
 
   //std::cout << keyboardInput << std::endl;
   
-  //p or default  
-  if(keyboardInput == 112 || keyboardInput == 0){
+  //g or default  
+  if(keyboardInput == 103 || keyboardInput == 0){
     // Start the correct program
-    phong_shader->Enable();
-  }
-  //keyboard input g
-  else if(keyboardInput == 103){
     gouraund_shader->Enable();
+      // Locate the projection matrix in the shader
+  m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
+
+  // Locate the view matrix in the shader
+  m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
+
+  // Locate the model matrix in the shader
+  m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
+  //Locate the scalar in the shader
+  m_scalar =gouraund_shader->GetUniformLocation("scalar");
+  ball = gouraund_shader->GetUniformLocation("ballPosition");
+
+  }
+  //keyboard input p
+  else if(keyboardInput == 112){
+        phong_shader->Enable();
+   m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
+  // Locate the view matrix in the shader
+  m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
+  // Locate the model matrix in the shader
+  m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
+  //Locate the scalar in the shader
+  m_scalar = phong_shader->GetUniformLocation("scalar");
+  ball = phong_shader->GetUniformLocation("ballPosition");
+
   }
 
   //numpad +
