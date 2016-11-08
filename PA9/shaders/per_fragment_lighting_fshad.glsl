@@ -52,8 +52,8 @@
           	       //calculate R locally
           	       R = normalize(reflect(-L, N));
                        
-                       float spotLight = dot (L,V);
-                       if (spotLight < 0.01){
+                       float spotLight = degrees(acos(dot (L,V)));
+                       if (spotLight > 5){
                                 //spot = pow (spot, 4);
                                 //float dist = length (L);
                                 //float att = spot / (20*dist+20*dist*dist);

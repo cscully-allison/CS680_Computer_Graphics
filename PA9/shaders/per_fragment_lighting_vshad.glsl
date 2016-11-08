@@ -32,7 +32,7 @@
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3(ballPosition.x, height, ballPosition.z);
+          vec3 spotlight_pos = vec3(ballPosition.x+height, ballPosition.y+height, ballPosition.z+height);
           
           void main(void) 
           { 

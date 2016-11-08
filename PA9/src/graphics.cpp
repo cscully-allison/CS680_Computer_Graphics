@@ -364,13 +364,12 @@ void Graphics::Render(int keyboardInput)
   
   //numpad 6 spotlight height
   else if (keyboardInput == 1073741918 && height < 10){
-      height +=1;
+      height +=.1;
     }
     
   // numpad 9 spotlight height 
   else if (keyboardInput == 1073741921 && height > 1){
-  std::cout << height << std::endl;
-      height -=1;
+      height -=.1;
     }
       // std::cout <<  height<< std::endl;
    //numpad 0 + for table (1073741913)
