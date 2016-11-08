@@ -12,12 +12,13 @@
           uniform mat4 modelMatrix;
           uniform vec3 scalar;
           uniform vec3 spec;
+          uniform vec3 spotlightSpec;
           uniform vec4 ballPosition;
 
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3 (ballPosition.x, 5.0, ballPosition.z);
+          vec3 spotlight_pos = vec3 (ballPosition.x, 4.0, ballPosition.z);
 
           //material properties
           uniform float specular_power = 16.0;
@@ -55,29 +56,26 @@
             color = ambient + diffuse + specular;
 
 
-            //view space coordinate
-            p = modelMatrix * v_position;
+            // spotlight
 
-            // Calculate normal in view space
-            N =normalize( mat3(modelMatrix) * normal);
+            float NdotL = max (dot(N,L),0.0);
+            if ( NdotL > 0.0){    
+                L = normalize(spotlight_pos - p.xyz);
+                //calculate R locally
+                R = normalize( reflect(-L, N) );
+                
+                float spot = dot (L,V);
+                if (spot < 0.01){
+                   // spot = pow (spot, 4);
+                   // float dist = length (L);
+                    //float att = spot / (1 +1*dist+1*dist*dist);
 
-            //Caluclate light vector
-            L = normalize(spotlight_pos - p.xyz);
+                    diffuse = diffuse * max(dot(N,L), 0.0);
+                    specular = pow(max(dot(R, V), 0.0), 100) * spotlightSpec;
 
-            //calculate view vector
-            V = normalize(-p.xyz);
-
-            //calculate R locally
-            R = normalize( reflect(-L, N) );
-            
-            //compute the diffuse and specular components for each
-            //fragments
-            diffuse = diffuse * max(dot(N,L), 0.0);
-            
-            // multiple here to increase specularity
-            specular = pow(max(dot(R, V), 0.0), 100) * spec;
-
-            color += ambient + diffuse + specular;
+                     color += ambient + diffuse + specular;
+                     }
+            }
 
             gl_Position = projectionMatrix * viewMatrix * p; 
           } 

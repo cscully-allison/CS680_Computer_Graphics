@@ -29,7 +29,7 @@
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
-          vec3 spotlight_pos = vec3(ballPosition.x + 2, 2.0, ballPosition.z + 2);
+          vec3 spotlight_pos = vec3(ballPosition.x, 2.0, ballPosition.z);
           
           void main(void) 
           { 
@@ -46,11 +46,10 @@
             //calculate view vector
             vs_out.V = -p.xyz;
             
-         
-
-            //Caluclate light vector
+            
+            
+            //Caluclate spotlight vector
             vs_out.spotL = spotlight_pos - p.xyz;
-
 
             gl_Position = projectionMatrix * viewMatrix * p;
 
