@@ -16,7 +16,10 @@ class Object
 {
   public:
     Object();
-    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin);
+    //dynamic object
+    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
+    //static object
+    Object (std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
     ~Object();
     void setOrientation(int x);
     void Update();

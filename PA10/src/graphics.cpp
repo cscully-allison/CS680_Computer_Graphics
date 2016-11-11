@@ -55,11 +55,11 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_table = new Object("table.obj", 0, btVector3 (0,0,0), btVector3 (0,0,0));
+  m_table = new Object("table.obj",btVector3 (0,0,0),0.5,1,0);
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
   
-  m_ball = new Object("ball.obj", 5, btVector3 (0,10,0), btVector3 (0,10,0));
+  m_ball = new Object("ball.obj", 5, btVector3 (0,10,0), btVector3 (0,10,0),0,.25,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
   
   // Set up the shaders
@@ -126,7 +126,7 @@ void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 {
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   m_ball->Update ();
- // m_table->Update ();
+  m_table->Update ();
 }
 
 
