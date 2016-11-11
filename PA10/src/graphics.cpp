@@ -71,19 +71,19 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER))
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, "vertex_shad.glsl"))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER))
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER,"fragment_shad.glsl"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
   }
-
+ 
   // Connect the program
   if(!m_shader->Finalize())
   {
@@ -125,8 +125,7 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 {
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-  m_ball->Update ();
-  m_table->Update ();
+  m_ball->Update ();;
 }
 
 

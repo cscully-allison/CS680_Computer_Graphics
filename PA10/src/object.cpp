@@ -91,8 +91,12 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
     glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+    glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+    glm::vec3 t = glm::vec3(color.r, color.g, color.b);
 
-    Color materialsColor (Ka,Kd, Ks);
+    Color materialsColor (Ka,Kd, Ks, e, t);
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
       Vertices.push_back(Vertex(
@@ -174,7 +178,6 @@ void Object::Update()
   btScalar m[16];
 
   body->getMotionState()->getWorldTransform(trans);
-  //std::cout  << ": " << trans.getOrigin().getX() << " " << trans.getOrigin().getY() << " " << trans.getOrigin().getZ() << std::endl;
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 }
@@ -200,10 +203,21 @@ void Object::Render()
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glEnableVertexAttribArray(4);  
+  glEnableVertexAttribArray(5);
+  glEnableVertexAttribArray(6);   
+  
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,properties.Kd));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normals));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Kd));
+  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ka));
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ks));
+  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.emissive));
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.transparent));
+
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
@@ -213,4 +227,10 @@ void Object::Render()
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
+  glDisableVertexAttribArray(4);  
+  glDisableVertexAttribArray(5);
+  glDisableVertexAttribArray(6);
+  
 }
