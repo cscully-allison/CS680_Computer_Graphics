@@ -71,14 +71,14 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER, "vertex_shad.glsl"))
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, "per_fragment_lighting_vshad.glsl"))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER,"fragment_shad.glsl"))
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER,"per_fragment_lighting_fshad.glsl"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
@@ -148,6 +148,7 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
   m_ball->Render();
+  glUniform4fv(m_ball, 1, glm::value_ptr(m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0))); 
 
   // Get any errors from OpenGL
   auto error = glGetError();

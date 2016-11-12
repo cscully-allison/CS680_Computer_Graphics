@@ -21,8 +21,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
     glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+    glm::vec3 t = glm::vec3(color.r, color.g, color.b);
 
-    Color materialsColor (Ka,Kd, Ks);
+    Color materialsColor (Ka,Kd, Ks, e, t);
+
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
       Vertices.push_back(Vertex(
@@ -206,8 +210,7 @@ void Object::Render()
   glEnableVertexAttribArray(3);
   glEnableVertexAttribArray(4);  
   glEnableVertexAttribArray(5);
-  glEnableVertexAttribArray(6);   
-  
+  glEnableVertexAttribArray(6);    
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
@@ -215,9 +218,8 @@ void Object::Render()
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Kd));
   glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ka));
   glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ks));
-  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.emissive));
-  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.transparent));
-
+  glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.emissive));
+  glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.transparent));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
@@ -232,5 +234,4 @@ void Object::Render()
   glDisableVertexAttribArray(4);  
   glDisableVertexAttribArray(5);
   glDisableVertexAttribArray(6);
-  
 }

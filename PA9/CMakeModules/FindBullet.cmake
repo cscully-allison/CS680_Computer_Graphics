@@ -42,6 +42,7 @@ macro(_FIND_BULLET_LIBRARY _var)
      HINTS
         $usr
         $usr/lib/Release
+        $usr/lib/bullet
         $usr/lib/Debug
         $usr/out/release8/libs
         $usr/out/debug8/libs
@@ -61,6 +62,7 @@ endmacro()
 
 find_path(BULLET_INCLUDE_DIR NAMES btBulletCollisionCommon.h
   HINTS
+    $usr/lib/bullet
     $usr/include
     $usr/src
   PATH_SUFFIXES bullet
