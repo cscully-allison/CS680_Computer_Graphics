@@ -43,21 +43,19 @@
           	vec3 specular = pow(max(dot(N, H), 0.0),  specular_power) * fs_in.Ks;
             specular = clamp (specular, 0.0, 1.0);
 
-          	color = vec4(+ diffuse + specular, 1.0);
+          	color = vec4(diffuse + specular, 1.0);
 
-            //spotlight;
-          /*  if (max (dot (N,L), 0.0) > 0.0){
-              L = normalize(fs_in.spotlightL);
-
-              V = normalize(fs_in.spotlightV);
-               H = normalize (L + V);
-              intensity = degrees(acos(dot (L,V)));
-
-              if ( intensity > 20){
-                H = normalize (L + V);
-                diffuse = max(dot(N,L), 0.0) * fs_in.Kd;
-                spec = fs_in.Ks * pow(max(dot(H, V), 0.0), 1.0);
+              float NdotL = max (dot(N,L),0.0);
+                if ( NdotL > 0.0){
+                   L = normalize(fs_in.spotlightL);
+                   H = normalize(L + V);
+                   float spotLight = degrees(acos(dot (L,V)));
+                   if (spotLight > 60){
+                      V = normalize(fs_in.spotlightV);
+                      diffuse = max(dot(N,L), 0.0) * fs_in.Kd;
+                      specular = pow(max(dot(H, V), 0.0), 5.0) * vec3 (0.2);
+                      color += vec4(NdotL * diffuse + specular, 1.0);
+                   }
               }
-               color += vec4(diffuse, 1.0) + vec4 (specular,1);
-            }*/ 
+
           }

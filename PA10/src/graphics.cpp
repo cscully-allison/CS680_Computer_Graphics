@@ -56,11 +56,11 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   // index 1 for table
-  m_table = new Object("table.obj",btVector3 (0,0,0),0.1,.2, 0, 1);
+  m_table = new Object("table.obj",btVector3 (0,0,0),0.5, 1, 0, 1);
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
   
-  m_ball = new Object("ball.obj", 5, btVector3 (0,5,0), btVector3 (0,5,0),0.1,0,0);
+  m_ball = new Object("ball.obj", 5, btVector3 (0,10,0), btVector3 (0,10,0),0,0.25,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
   
   // Set up the shaders
@@ -115,6 +115,13 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
+  
+  ball = m_shader->GetUniformLocation("ballPosition");
+  if (ball == INVALID_UNIFORM_LOCATION)
+  {
+    printf("ball not found\n");
+    return false;
+  }
 
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
@@ -163,9 +170,10 @@ void Graphics::Render()
   m_table->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
+    pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  glUniform4fv(ball, 1, glm::value_ptr(pos)); 
   m_ball->Render();
-  //pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
-  //glUniform4fv(ball, 1, glm::value_ptr(pos)); 
+
 
   // Get any errors from OpenGL
   auto error = glGetError();

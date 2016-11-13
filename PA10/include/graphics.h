@@ -29,12 +29,13 @@ class Graphics
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
+    GLint ball;
 
     Object *m_table;
     Object *m_ball;
 
     glm::vec4 pos;
-    GLuint ball;
+
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

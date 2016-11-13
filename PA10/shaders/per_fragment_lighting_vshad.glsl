@@ -7,13 +7,11 @@
           layout (location = 4) in vec3 Ks;
           layout (location = 5) in vec3 emissive;
           layout (location = 6) in vec3 transparent;
-          layout (location = 7) in vec3 ballPosition;
-
 
           uniform mat4 projectionMatrix; 
           uniform mat4 viewMatrix; 
           uniform mat4 modelMatrix;
-          uniform vec4 ball;  
+          uniform vec4 ballPosition;  
 
           out VS_OUT{
             vec3 N;  //normal
@@ -34,7 +32,7 @@
 
           //light position
           vec3 light_pos = vec3(0, 10.0, 5.0);
-          vec3 spotlight_pos = vec3(ball.x, 1.0, ball.z);
+          vec3 spotlight_pos = vec3(ballPosition.x, 1.0, ballPosition.z);
           
           void main(void) 
           { 
@@ -51,7 +49,7 @@
             vs_out.V = -p.xyz;
 
             vs_out.spotlightL = spotlight_pos - p.xyz;
-            vs_out.spotlightV = -ball.xyz;
+            vs_out.spotlightV = -ballPosition.xyz;
 
             gl_Position = projectionMatrix * viewMatrix * p;
 
