@@ -21,7 +21,7 @@ class Object
     //static object
     Object (std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
     ~Object();
-    void setOrientation(int x);
+    void setOrientation();
     void Update();
     void Render();
     void setBodyTransform(btVector3);
