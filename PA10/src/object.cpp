@@ -73,10 +73,9 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-
 }
 
-Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping)
+Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
 {  
 
   //Verticies and indicies needs to be initilized for run
@@ -140,7 +139,6 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-    
 }
 
    // create collision shape
@@ -158,6 +156,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
+    body->setUserIndex(indexNumber);
 
 }
 

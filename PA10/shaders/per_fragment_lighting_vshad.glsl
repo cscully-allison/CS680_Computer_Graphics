@@ -50,7 +50,7 @@
             //calculate view vector
             vs_out.V = -p.xyz;
 
-            vs_out.spotlightL = spotlight_pos - ball.xyz;
+            vs_out.spotlightL = spotlight_pos - p.xyz;
             vs_out.spotlightV = -ball.xyz;
 
             gl_Position = projectionMatrix * viewMatrix * p;

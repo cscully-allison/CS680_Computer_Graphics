@@ -55,11 +55,12 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_table = new Object("table.obj",btVector3 (0,0,0),0.5,1,0);
+  // index 1 for table
+  m_table = new Object("table.obj",btVector3 (0,0,0),0.1,.2, 0, 1);
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
   
-  m_ball = new Object("ball.obj", 5, btVector3 (0,10,0), btVector3 (0,10,0),0,.25,0);
+  m_ball = new Object("ball.obj", 5, btVector3 (0,5,0), btVector3 (0,5,0),0.1,0,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
   
   // Set up the shaders
@@ -125,9 +126,24 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 {
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
+  collisionDetection();
   m_ball->Update ();;
 }
 
+void Graphics::collisionDetection (){
+  for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
+    btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+    const btCollisionObject* collisionObject = contactManifold->getBody1();
+        
+    for (int j = 0; j < contactManifold->getNumContacts(); j++) {
+      btManifoldPoint& pt = contactManifold->getContactPoint(j);
+      if (pt.getDistance() < 0.0f){
+        std::cout << collisionObject->getUserIndex()<< std::endl;
+      }
+    }
+
+  }
+}
 
 void Graphics::Render()
 {
@@ -148,7 +164,8 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
   m_ball->Render();
-  glUniform4fv(m_ball, 1, glm::value_ptr(m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0))); 
+  //pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  //glUniform4fv(ball, 1, glm::value_ptr(pos)); 
 
   // Get any errors from OpenGL
   auto error = glGetError();

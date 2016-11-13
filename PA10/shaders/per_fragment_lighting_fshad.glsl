@@ -43,7 +43,7 @@
           	vec3 specular = pow(max(dot(N, H), 0.0),  specular_power) * fs_in.Ks;
             specular = clamp (specular, 0.0, 1.0);
 
-          	color = vec4(fs_in.Ka + diffuse + specular, 1.0);
+          	color = vec4(+ diffuse + specular, 1.0);
 
             //spotlight;
           /*  if (max (dot (N,L), 0.0) > 0.0){

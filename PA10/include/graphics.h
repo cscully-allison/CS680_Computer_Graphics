@@ -18,6 +18,7 @@ class Graphics
     bool Initialize(int width, int height);
     void Update(unsigned int dt, float mouseX, float mouseY);
     void Render();
+    void collisionDetection();
 
   private:
     std::string ErrorString(GLenum error);
@@ -31,6 +32,9 @@ class Graphics
 
     Object *m_table;
     Object *m_ball;
+
+    glm::vec4 pos;
+    GLuint ball;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;
