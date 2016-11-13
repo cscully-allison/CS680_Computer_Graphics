@@ -56,8 +56,9 @@ bool Engine::Initialize()
 
 void Engine::Run()
 {
+  unsigned int key;
   m_running = true;
-
+  force = 0;
   while(m_running)
   {
     // Update the DT
@@ -66,19 +67,22 @@ void Engine::Run()
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {
-      Keyboard();
+      key = Keyboard();
+     // std::cout << key << std::endl;
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, mouseX, mouseY);
+    m_graphics->Update(m_DT, key, force);
     m_graphics->Render();
-
+    if (key == 13){
+      force = 0;
+    }
     // Swap to the Window
     m_window->Swap();
   }
 }
 
-void Engine::Keyboard()
+unsigned int Engine::Keyboard()
 {
   if(m_event.type == SDL_QUIT)
   {
@@ -91,10 +95,23 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
+    else if (m_event.key.keysym.sym == 13)
+    {
+      force ++;
+
+    }
+    else
+    {
+      return m_event.key.keysym.sym;
+    }  
   }
-  else if (m_event.type ==  SDL_MOUSEMOTION){
-      int temp; int temp2; 
-     SDL_GetRelativeMouseState(&temp, &temp2);
+
+  else if (m_event.type == SDL_KEYUP)
+  {
+    if (m_event.key.keysym.sym == 13)
+    {
+      return m_event.key.keysym.sym;
+    }
   }
 }
 

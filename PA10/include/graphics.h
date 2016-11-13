@@ -16,7 +16,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, float mouseX, float mouseY);
+    void Update(unsigned int dt, unsigned int keyPress, int force);
     void Render();
     void collisionDetection();
 
@@ -36,6 +36,10 @@ class Graphics
 
     glm::vec4 pos;
 
+    btRigidBody* ceilingBody;
+
+    uint score;
+    int ballsLeft;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

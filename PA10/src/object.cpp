@@ -10,7 +10,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
 
-  btConvexHullShape* shape = new btConvexHullShape();
+  //btConvexHullShape* shape = new btConvexHullShape();
   
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
     const aiMesh* mesh = scene->mMeshes[meshNums];
@@ -38,11 +38,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                                       mesh->mNormals[vertex].z),
                             materialsColor));
 
-      shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
+     /* shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
                                  mesh->mVertices[vertex].y, 
                                  mesh->mVertices[vertex].z));
-      
+      */
     }
+
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -60,6 +61,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 }
 
    // create collision shape
+    btCollisionShape* shape = new btSphereShape(.25f);
     shape->calculateLocalInertia(mass, inertia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
@@ -172,6 +174,12 @@ void Object::setOrientation(int x){
   model = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, (0.25f*x), 0.0f));
 
 }
+
+void Object::setGrav(btVector3 grav)
+{
+  body->setGravity(grav);
+}
+
 
 
 void Object::Update()
