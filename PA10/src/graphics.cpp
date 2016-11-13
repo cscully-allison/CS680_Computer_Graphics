@@ -7,7 +7,7 @@ Graphics::Graphics()
   dispatcher = new btCollisionDispatcher(collisionConfig);
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-  dynamicsWorld->setGravity(btVector3(0,-1,0));
+  dynamicsWorld->setGravity(btVector3(-.15,-1,0));
 
 }
 
@@ -22,6 +22,7 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize(int width, int height)
 {
+  score = 0;
   // Used for the linux OS
   #if !defined(__APPLE__) && !defined(MACOSX)
     // cout << glewGetString(GLEW_VERSION) << endl;
@@ -56,12 +57,27 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   // index 1 for table
-  m_table = new Object("table.obj",btVector3 (0,0,0),0.5, 1, 0, 1);
+  m_table = new Object("possibleTable.obj",btVector3 (0,0,0),0, .25, 0, 1);
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
   
-  m_ball = new Object("ball.obj", 5, btVector3 (0,10,0), btVector3 (0,10,0),0,0.25,0);
+  m_ball = new Object("ball.obj",5, btVector3 (0,0,0), btVector3 (-8,.5,6),0,1,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
+
+  btVector3 inertia(0,0,0);
+  btDefaultMotionState* motionCeiling = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)),
+                                                                 btVector3(btScalar(0),btScalar(.55),btScalar(0))));
+
+  btCollisionShape* ceiling = new btStaticPlaneShape(btVector3(0.0f, -1.0f, 0.0f), 0.0f);
+  ceiling->calculateLocalInertia(0, inertia);
+  btRigidBody::btRigidBodyConstructionInfo ceilingBodyCI(btScalar(0), motionCeiling, ceiling, inertia);  
+  ceilingBodyCI.m_friction = btScalar(0);
+  ceilingBodyCI.m_restitution = btScalar(0);
+  ceilingBody = new btRigidBody(ceilingBodyCI);
+  ceilingBody->setActivationState(DISABLE_DEACTIVATION);
+  dynamicsWorld->addRigidBody(ceilingBody);
+
+
   
   // Set up the shaders
   m_shader = new Shader();
@@ -130,11 +146,22 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
-{
+void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
+{ 
+  glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  //std::cout << "x: " << pos.x << "  z: " << pos.z << std::endl;
+  if (keyPress == 13)
+  {
+    if (force > 60)
+    {
+      force = 60;
+    }
+    m_ball->GetRigidBody()->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+  }
+
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   collisionDetection();
-  m_ball->Update ();;
+  m_ball->Update ();
 }
 
 void Graphics::collisionDetection (){
@@ -143,9 +170,16 @@ void Graphics::collisionDetection (){
     const btCollisionObject* collisionObject = contactManifold->getBody1();
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
+
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
+      
       if (pt.getDistance() < 0.0f){
-        std::cout << collisionObject->getUserIndex()<< std::endl;
+        switch (collisionObject->getUserIndex()){
+          case 1:
+            // default, do nothing
+          break;
+        }
+       // std::cout << collisionObject->getUserIndex()<< std::endl;
       }
     }
 

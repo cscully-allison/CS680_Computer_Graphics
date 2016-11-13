@@ -25,6 +25,7 @@ class Object
     void Update();
     void Render();
     void setBodyTransform(btVector3);
+    void setGrav(btVector3 grav);
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();

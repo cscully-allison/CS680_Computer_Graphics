@@ -50,7 +50,7 @@
                    L = normalize(fs_in.spotlightL);
                    H = normalize(L + V);
                    float spotLight = degrees(acos(dot (L,V)));
-                   if (spotLight > 60){
+                   if (spotLight > 90){
                       V = normalize(fs_in.spotlightV);
                       diffuse = max(dot(N,L), 0.0) * fs_in.Kd;
                       specular = pow(max(dot(H, V), 0.0), 5.0) * vec3 (0.2);

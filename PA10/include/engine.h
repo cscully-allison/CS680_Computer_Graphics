@@ -15,7 +15,7 @@ class Engine
     ~Engine();
     bool Initialize();
     void Run();
-    void Keyboard();
+    unsigned int Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
   
@@ -32,6 +32,8 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
+
+    int force;
     
     float mouseX = 0;
     float mouseY = 0;
