@@ -150,9 +150,9 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     shape->calculateLocalInertia(0, interia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
-    bodyTransform.setOrigin (startOrigin);
-    btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, btVector3(0,0,0));
+    bodyTransform.setOrigin (btVector3(0.0,0.0,0.0));
+    btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), startOrigin));
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, btVector3(0.0,0.0,0.0));
     rigidBodyCI.m_friction = friction;
     rigidBodyCI.m_restitution = restitution;
     rigidBodyCI.m_angularDamping = damping;
@@ -170,9 +170,13 @@ Object::~Object()
 
 }
 
-void Object::setOrientation(int x){
-  model = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, (0.25f*x), 0.0f));
+void Object::setOrientation(){
+  btTransform trans;
+  btScalar m[16];
 
+  body->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+  model = glm::make_mat4(m);
 }
 
 void Object::setGrav(btVector3 grav)

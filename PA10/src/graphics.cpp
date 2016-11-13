@@ -60,7 +60,15 @@ bool Graphics::Initialize(int width, int height)
   m_table = new Object("possibleTable.obj",btVector3 (0,0,0),0, .25, 0, 1);
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
-  
+
+  m_leftFlipper = new Object("ball.obj",btVector3 (-8,.5,0),0, .5, 0, 2);
+  dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
+  m_leftFlipper->setOrientation();
+
+  m_rightFlipper = new Object("ball.obj",btVector3 (8,.5,-1),0, .5, 0, 2);
+  dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
+  m_rightFlipper->setOrientation();
+
   m_ball = new Object("ball.obj",5, btVector3 (0,0,0), btVector3 (-8,.5,6),0,1,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
@@ -77,8 +85,6 @@ bool Graphics::Initialize(int width, int height)
   ceilingBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(ceilingBody);
 
-
-  
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -203,8 +209,14 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
   m_table->Render();
 
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_leftFlipper->GetModel()));
+  m_leftFlipper->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_rightFlipper->GetModel()));
+  m_rightFlipper->Render();
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
-    pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   glUniform4fv(ball, 1, glm::value_ptr(pos)); 
   m_ball->Render();
 
