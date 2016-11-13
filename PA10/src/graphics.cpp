@@ -61,11 +61,11 @@ bool Graphics::Initialize(int width, int height)
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
-  m_leftFlipper = new Object("ball.obj",btVector3 (-8,.5,0),0, .5, 0, 2);
+  m_leftFlipper = new Object("flipper-left.obj",btVector3 (-8,.5,0),0, .5, 0, 2);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   m_leftFlipper->setOrientation();
 
-  m_rightFlipper = new Object("ball.obj",btVector3 (8,.5,-1),0, .5, 0, 2);
+  m_rightFlipper = new Object("flipper-right.obj",btVector3 (8,.5,-1),0, .5, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
   m_rightFlipper->setOrientation();
 
