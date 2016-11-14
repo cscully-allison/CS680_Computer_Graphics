@@ -2,7 +2,7 @@
 
 
 
-Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping)
+Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
 {  
 
   //Verticies and indicies needs to be initilized for run
@@ -10,7 +10,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
 
-  //btConvexHullShape* shape = new btConvexHullShape();
+  btConvexHullShape* shape = new btConvexHullShape();
   
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
     const aiMesh* mesh = scene->mMeshes[meshNums];
@@ -38,10 +38,87 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                                       mesh->mNormals[vertex].z),
                             materialsColor));
 
-     /* shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
+      shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
                                  mesh->mVertices[vertex].y, 
                                  mesh->mVertices[vertex].z));
-      */
+      
+    }
+
+
+    for(unsigned int index = 0; index < mesh->mNumFaces; index++){
+      Indices.push_back(mesh->mFaces[index].mIndices[0]);
+      Indices.push_back(mesh->mFaces[index].mIndices[1]);
+      Indices.push_back(mesh->mFaces[index].mIndices[2]);
+    }
+
+      glGenBuffers(1, &VB);
+      glBindBuffer(GL_ARRAY_BUFFER, VB);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
+
+      glGenBuffers(1, &IB);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+}
+
+   // create collision shape
+    shape->calculateLocalInertia(mass, inertia);
+    btDefaultMotionState* motion;
+    switch(rotate)
+    {
+      case 1:
+         motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), -.5235), startOrigin));
+      break;
+
+      case 2:
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+      break;
+    }
+    
+    // static bodies get a mass of 0
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
+    rigidBodyCI.m_friction = friction;
+    rigidBodyCI.m_restitution = restitution;
+    rigidBodyCI.m_angularDamping = damping;
+    body = new btRigidBody(rigidBodyCI);
+    body->setActivationState (DISABLE_DEACTIVATION);
+
+
+
+}
+
+Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping)
+{  
+
+  //Verticies and indicies needs to be initilized for run
+  //Presumably we will call the assimp functions here
+  scene = importer.ReadFile("../assets/ball.obj", aiProcess_Triangulate);
+  aiColor3D color (0.0f,0.0f, 0.0f);
+
+  for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+    const aiMesh* mesh = scene->mMeshes[meshNums];
+    // get material properties per mesh
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+    glm::vec3 t = glm::vec3(color.r, color.g, color.b);
+
+    Color materialsColor (Ka,Kd, Ks, e, t);
+
+
+    for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      Vertices.push_back(Vertex(
+                            glm::vec3(mesh->mVertices[vertex].x, 
+                                      mesh->mVertices[vertex].y, 
+                                      mesh->mVertices[vertex].z), 
+                            glm::vec3(mesh->mNormals[vertex].x, 
+                                      mesh->mNormals[vertex].y, 
+                                      mesh->mNormals[vertex].z),
+                            materialsColor));
     }
 
 
@@ -76,6 +153,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
 }
+
 
 Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
 {  
@@ -151,7 +229,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     btTransform bodyTransform;
     bodyTransform.setIdentity();
     bodyTransform.setOrigin (btVector3(0.0,0.0,0.0));
-    btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0),btScalar(0),btScalar(0),btScalar(1)), startOrigin));
+    btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, btVector3(0.0,0.0,0.0));
     rigidBodyCI.m_friction = friction;
     rigidBodyCI.m_restitution = restitution;
@@ -192,6 +270,27 @@ void Object::Update()
   btTransform trans;
   btScalar m[16];
 
+  body->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+  model = glm::make_mat4(m);
+}
+void Object::UpdateFlipper(int side)
+{
+  btTransform trans;
+  btTransform rotation;
+  btScalar m[16];
+
+  /*if (side == 0)
+  {
+    //body->proceedToTransform(btTransform(btQuaternion(btVector3(0,1,0), -.5235), btVector3(-8.8,.7,-5.25)));
+    body->applyTorqueImpulse(btVector3(1.0f,0.0f,0.0f));
+  }
+  else if (side == 1)
+  {
+    body->proceedToTransform(btTransform(btQuaternion(btVector3(0,1,0), .5235), btVector3(-8.8,.7,2.25)));   
+  }*/
+
+  //get transform
   body->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);

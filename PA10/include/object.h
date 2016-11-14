@@ -17,12 +17,15 @@ class Object
   public:
     Object();
     //dynamic object
-    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
+    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate);
+    // ball
+    Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
     //static object
     Object (std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
     ~Object();
     void setOrientation();
     void Update();
+    void UpdateFlipper(int side);
     void Render();
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);

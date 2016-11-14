@@ -35,6 +35,9 @@ class Graphics
     Object *m_ball;
     Object *m_leftFlipper;
     Object *m_rightFlipper;
+    Object *m_bump1;
+    Object *m_bump2;
+    Object *m_bump3;
 
     glm::vec4 pos;
 

@@ -54,22 +54,28 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-
+  std::cout << "ass" << std::endl;
   // Create the object
   // index 1 for table
-  m_table = new Object("possibleTable.obj",btVector3 (0,0,0),0, .25, 0, 1);
+  m_table = new Object("possibleTable.obj",btVector3 (0,0,0),0, .5, 0, 1);
+
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
-  m_leftFlipper = new Object("flipper-left.obj",btVector3 (-8,.5,0),0, .5, 0, 2);
+  m_bump1 = new Object("bumper.obj", btVector3(4, .5, 3), 0, .5, 0, 1);
+  dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
+
+  m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (-8.8,.7,-5.25),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
+  m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,0,0));
   m_leftFlipper->setOrientation();
 
-  m_rightFlipper = new Object("flipper-right.obj",btVector3 (8,.5,-1),0, .5, 0, 2);
+  m_rightFlipper = new Object("flipper-right.obj",500, btVector3 (0,0,0),btVector3 (-8.8,.7,2.25),0, 0, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
+  m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,0,0));
   m_rightFlipper->setOrientation();
 
-  m_ball = new Object("ball.obj",5, btVector3 (0,0,0), btVector3 (-8,.5,6),0,1,0);
+  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-8,.5,6),0,1,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -163,11 +169,17 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
       force = 60;
     }
     m_ball->GetRigidBody()->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+
   }
 
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   collisionDetection();
   m_ball->Update ();
+  //if (keyPress == 1073742053)
+  m_rightFlipper->UpdateFlipper(1);
+
+  //if (keyPress == 1073742049)
+  m_leftFlipper->UpdateFlipper(0);
 }
 
 void Graphics::collisionDetection (){
@@ -178,7 +190,7 @@ void Graphics::collisionDetection (){
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
 
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      
+      std::cout << pt.x << std::endl;
       if (pt.getDistance() < 0.0f){
         switch (collisionObject->getUserIndex()){
           case 1:

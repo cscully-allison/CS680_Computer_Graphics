@@ -68,7 +68,7 @@ void Engine::Run()
     while(SDL_PollEvent(&m_event) != 0)
     {
       key = Keyboard();
-     // std::cout << key << std::endl;
+     std::cout << key << std::endl;
     }
 
     // Update and render the graphics
@@ -98,7 +98,6 @@ unsigned int Engine::Keyboard()
     else if (m_event.key.keysym.sym == 13)
     {
       force ++;
-
     }
     else
     {
