@@ -188,9 +188,12 @@ void Graphics::collisionDetection (){
     const btCollisionObject* collisionObject = contactManifold->getBody1();
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
-
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      std::cout << pt.x << std::endl;
+      const btVector3& ball = pt.getPositionWorldOnA();
+      std::cout << ball.getX() <<" " << ball.getY() << " " << ball.getZ() << std::endl;
+      if (ball.getX() < 10 && ball.getZ() > 3){
+        reinitateBall ();
+      }
       if (pt.getDistance() < 0.0f){
         switch (collisionObject->getUserIndex()){
           case 1:
@@ -202,6 +205,10 @@ void Graphics::collisionDetection (){
     }
 
   }
+}
+
+void Graphics::reinitateBall(){
+ // std::cout << "hello";
 }
 
 void Graphics::Render()

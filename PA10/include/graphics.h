@@ -19,6 +19,7 @@ class Graphics
     void Update(unsigned int dt, unsigned int keyPress, int force);
     void Render();
     void collisionDetection();
+    void reinitateBall();
 
   private:
     std::string ErrorString(GLenum error);
