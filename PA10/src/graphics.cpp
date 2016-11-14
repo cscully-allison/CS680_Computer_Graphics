@@ -8,6 +8,10 @@ Graphics::Graphics()
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
   dynamicsWorld->setGravity(btVector3(-.15,-1,0));
+  ballsLeft = 3;
+  score = 0;
+  resetable = true;
+  ballCleared = false;
 
 }
 
@@ -22,7 +26,7 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize(int width, int height)
 {
-  score = 0;
+
   // Used for the linux OS
   #if !defined(__APPLE__) && !defined(MACOSX)
     // cout << glewGetString(GLEW_VERSION) << endl;
@@ -62,7 +66,7 @@ bool Graphics::Initialize(int width, int height)
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
-  m_bump1 = new Object("bumper.obj", btVector3(4, .5, 3), 0, .5, 0, 1);
+  m_bump1 = new Object("bumper.obj", btVector3(0, .5, 0), 0, .5, 0, 2);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
 
   m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (-8.8,.7,-5.25),0, 0, 0, 1);
@@ -75,7 +79,7 @@ bool Graphics::Initialize(int width, int height)
   m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,0,0));
   m_rightFlipper->setOrientation();
 
-  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-8,.5,6),0,1,0);
+  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-11,.5,6),0,1,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -154,22 +158,41 @@ bool Graphics::Initialize(int width, int height)
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-
+  ballCleared = false;
   return true;
 }
 
 void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 { 
+
+
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   //std::cout << "x: " << pos.x << "  z: " << pos.z << std::endl;
-  if (keyPress == 13)
+  if (pos.z > 5.8)
   {
-    if (force > 60)
-    {
-      force = 60;
-    }
-    m_ball->GetRigidBody()->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+    resetable = true;
+  }
 
+  if (ballCleared == false)
+  {
+    if (keyPress == 13)
+    {
+      if (force > 60)
+      {
+        force = 60;
+      }
+      m_ball->GetRigidBody()->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+
+    }
+  }
+  std::cout << pos.z << "  " << ballCleared << std::endl;
+  if (pos.z < 5)
+  {
+    ballCleared = true;
+  }
+  else if (pos.z > 5)
+  {
+    ballCleared = false;
   }
 
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
@@ -180,6 +203,11 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 
   //if (keyPress == 1073742049)
   m_leftFlipper->UpdateFlipper(0);
+
+  if (pos.x < -11.7  && pos.z < 5 && resetable){
+    reinitateBall ();
+    resetable = false;
+  }
 }
 
 void Graphics::collisionDetection (){
@@ -189,11 +217,6 @@ void Graphics::collisionDetection (){
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      const btVector3& ball = pt.getPositionWorldOnA();
-      std::cout << ball.getX() <<" " << ball.getY() << " " << ball.getZ() << std::endl;
-      if (ball.getX() < 10 && ball.getZ() > 3){
-        reinitateBall ();
-      }
       if (pt.getDistance() < 0.0f){
         switch (collisionObject->getUserIndex()){
           case 1:
@@ -208,7 +231,22 @@ void Graphics::collisionDetection (){
 }
 
 void Graphics::reinitateBall(){
- // std::cout << "hello";
+  
+  ballsLeft --;
+  if (ballsLeft > 0)
+  {
+  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11,.5,6)));
+  m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+  m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+  ballCleared = false;
+  }
+  else if (ballsLeft == 0)
+  {
+    std::cout << "fuck you suck..." << std::endl;
+    m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
+  }
+
+
 }
 
 void Graphics::Render()
@@ -227,6 +265,9 @@ void Graphics::Render()
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
   m_table->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump1->GetModel()));
+  m_bump1->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_leftFlipper->GetModel()));
   m_leftFlipper->Render();

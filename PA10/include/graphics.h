@@ -46,6 +46,8 @@ class Graphics
 
     uint score;
     int ballsLeft;
+    bool resetable;
+    bool ballCleared;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;
