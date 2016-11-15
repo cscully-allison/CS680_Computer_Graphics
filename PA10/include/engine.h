@@ -18,6 +18,10 @@ class Engine
     unsigned int Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
+
+    void Menu(void);
+
+    void menuEvent (int option);
   
   private:
     // Window related variables
@@ -34,6 +38,7 @@ class Engine
     bool m_running;
 
     int force;
+    static int menu;
     
     float mouseX = 0;
     float mouseY = 0;

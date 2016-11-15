@@ -71,6 +71,10 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       case 2:
           motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
       break;
+        
+      default:
+        motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
+      break;
     }
     
     // static bodies get a mass of 0
@@ -80,8 +84,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-
-
+    body->setUserIndex(rotate);
 
 }
 
@@ -142,7 +145,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
     btTransform bodyTransform;
     bodyTransform.setIdentity();
     bodyTransform.setOrigin (startOrigin);
-    btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
+    btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
     
     // static bodies get a mass of 0
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
@@ -235,7 +238,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(indexNumber);
+    body->setUserIndex(indexNumber);
 }
 
 
@@ -274,7 +277,7 @@ void Object::Update()
 }
 
 void Object::applyForce(int force){
-      body->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(force*15.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 void Object::UpdateBumper(int scale){

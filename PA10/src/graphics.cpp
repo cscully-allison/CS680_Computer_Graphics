@@ -60,21 +60,23 @@ bool Graphics::Initialize(int width, int height)
   }
   // Create the object
   // index 1 for table
-  m_table = new Object("smootherpinballtable.obj",btVector3 (0,0,0),0, .5, 0, 1);
+  m_table = new Object("smootherpinballtable.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
-  m_bump1 = new Object("bumper.obj", btVector3(3, .5, 3), 0, .5, 0, 2);
+  m_bump1 = new Object("bumper.obj", btVector3(4, 0.5, 4), 0, .5, 0, 3);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
-  
- /* m_bump2 = new Object("bumper.obj", btVector3(1, .5, -1), 0, .5, 0, 3);
-  dynamicsWorld->addRigidBody(m_bump2->GetRigidBody());
-  
-  m_bump3 = new Object("bumper.obj", btVector3(-1, .5, 1), 0, .5, 0, 4);
-  dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());*/
+  m_bump1->setOrientation();
 
-  //m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,-5.25),0, 0, 0, 1);
+  m_bump2 = new Object("bumper.obj", btVector3(4, 0.5, -4), 0, .5, 0, 4);
+  dynamicsWorld->addRigidBody(m_bump2->GetRigidBody());
+  m_bump2->setOrientation();
+  
+  m_bump3 = new Object("bumper.obj", btVector3(8, .5, 0), 0, .5, 0, 5);
+  dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());
+  m_bump3->setOrientation();
+
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
@@ -82,16 +84,14 @@ bool Graphics::Initialize(int width, int height)
   m_leftFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
-  //m_rightFlipper = new Object("flipper-right.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,2.25),0, 0, 0, 2);
   m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,2.5),0, 0, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
   m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
   m_rightFlipper->setOrientation();
   m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
-  //m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(1,0,1));
 
-  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-11,.5,7),0,1,0);
+  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1,0);
 
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
@@ -232,24 +232,29 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 void Graphics::collisionDetection (unsigned int dt){
   for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
     btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-    const btCollisionObject* collisionObject = contactManifold->getBody1();
+    const btCollisionObject* collisionObject = contactManifold->getBody0();
+    const btCollisionObject* ball = contactManifold->getBody1();
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      if (pt.getDistance() < 0.0f){
-        //switch (collisionObject->getUserIndex()){
-          //case 1:
-            // default, do nothing
-          //break;
-          //case 2:
-                /*for (float i = 0.1; i < 2.0; i+=0.2){
-                        dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-                        m_bump1->UpdateBumper(i);
-                }
-                std::cout << "hit" << std::endl;*/
-          //break;
-        //}
-       // std::cout << collisionObject->getUserIndex()<< std::endl;
+      if (pt.getDistance() < 0.0f && collisionObject->getUserIndex() == 4){
+        switch (ball->getUserIndex()){
+          //left flipper
+          case 1:
+              std::cout << " 1 hit" << std::endl;
+
+            //default, do nothing
+          break;
+          //right flipper
+          case 2:
+                // for (float i = 0.1; i < 2.0; i+=0.2){
+                //         dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
+                //         m_bump1->UpdateBumper(i);
+                // }
+                std::cout << " 2 hit" << std::endl;
+          break;
+        }
+        std::cout << collisionObject->getUserIndex() - ball->getUserIndex() << std::endl;
       }
     }
        // std::cout << std::endl;
@@ -260,10 +265,10 @@ void Graphics::reinitateBall(){
   ballsLeft --;
   if (ballsLeft > 0)
   {
-  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11.7,.5,7)));
-  m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-  m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-  ballCleared = false;
+    m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-13,.5,7)));
+    m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    ballCleared = false;
   }
   else if (ballsLeft == 0)
   {
@@ -294,11 +299,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump1->GetModel()));
   m_bump1->Render();
   
-  /*glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump2->GetModel()));
+ glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump2->GetModel()));
   m_bump2->Render();
   
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump3->GetModel()));
-  m_bump3->Render();*/
+  m_bump3->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_leftFlipper->GetModel()));
   m_leftFlipper->Render();
