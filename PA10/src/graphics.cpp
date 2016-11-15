@@ -91,8 +91,8 @@ bool Graphics::Initialize(int width, int height)
   m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
-  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1,0);
-
+  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1, 0);
+  //m_ball = new Object(5, btVector3 (0,0,0), btVector3 (5, 0.5, -4.5),0,1, 0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -232,30 +232,41 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 void Graphics::collisionDetection (unsigned int dt){
   for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
     btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-    const btCollisionObject* collisionObject = contactManifold->getBody0();
-    const btCollisionObject* ball = contactManifold->getBody1();
+    const btCollisionObject* collisionObject = contactManifold->getBody1();
+    const btCollisionObject* collisionObject2 = contactManifold->getBody0();
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      if (pt.getDistance() < 0.0f && collisionObject->getUserIndex() == 4){
-        switch (ball->getUserIndex()){
-          //left flipper
-          case 1:
-              std::cout << " 1 hit" << std::endl;
-
-            //default, do nothing
-          break;
-          //right flipper
-          case 2:
-                // for (float i = 0.1; i < 2.0; i+=0.2){
-                //         dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-                //         m_bump1->UpdateBumper(i);
-                // }
-                std::cout << " 2 hit" << std::endl;
-          break;
-        }
-        std::cout << collisionObject->getUserIndex() - ball->getUserIndex() << std::endl;
+      if (collisionObject->getUserIndex() != 0 && collisionObject2->getUserIndex() != 0 && collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1){
+      if (pt.getDistance() < 0.1f ){
+       // std::cout << collisionObject->getUserIndex()  << " " << collisionObject2->getUserIndex() << std::endl;
+        int notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
+        //std::cout << notBall << std::endl;
+       //  switch (notBall){
+       //    //left flipper
+       //    case 1:
+       //        std::cout << " 1 hit" << std::endl;
+       //    break;
+       //    //right flipper
+       //    case 2:
+       //          // for (float i = 0.1; i < 2.0; i+=0.2){
+       //          //         dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
+       //          //         m_bump1->UpdateBumper(i);
+       //          // }
+       //          std::cout << " 2 hit" << std::endl;
+       //    break;
+       //    case 3:
+       //        std::cout << " 3 hit" << std::endl;
+       //    break;
+       //              case 4:
+       //        std::cout << " 4 hit" << std::endl;
+       //    break;
+       //              case 5:
+       //        std::cout << "5 hit" << std::endl;
+       //    break;
+       // }
       }
+    }
     }
        // std::cout << std::endl;
   }

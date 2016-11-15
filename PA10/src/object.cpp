@@ -154,6 +154,8 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
+    body->setUserIndex(10);
+
 }
 
 
