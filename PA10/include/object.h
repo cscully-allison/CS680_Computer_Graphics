@@ -29,6 +29,7 @@ class Object
     void UpdateFlipper(int side, unsigned int keyPress);
     void UpdateBumper(int scale);
     void ScoreUpdate(int i, uint score);
+    void BallNumUpdate();
     void Render();
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);

@@ -18,10 +18,6 @@ class Engine
     unsigned int Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
-
-    void Menu(void);
-
-    void menuEvent (int option);
   
   private:
     // Window related variables
@@ -39,7 +35,7 @@ class Engine
 
     vector <unsigned int> key;
     int force;
-    static int menu;
+    int menu;
 };
 
 #endif // ENGINE_H

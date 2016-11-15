@@ -124,6 +124,11 @@ bool Graphics::Initialize(int width, int height)
   for (int i= 0; i < 5; i++){
     ScoreArray.push_back (numbers[0]);
   }
+
+  BallNum.push_back (numbers[0]);
+  BallNum.push_back (numbers[1]);
+  BallNum.push_back (numbers[2]);
+  BallNum.push_back (numbers[3]);
   
     // Set up the shaders
   m_shader = new Shader();
@@ -205,6 +210,8 @@ void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force
     ScoreArray[i]->ScoreUpdate(i, score);
   }
 
+  BallNum[ballsLeft]->BallNumUpdate();
+ 
   if (pos.z > 5.8){
       resetable = true;
   }
@@ -348,6 +355,9 @@ void Graphics::Render()
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ScoreArray[i]->GetModel()));
     ScoreArray[i]->Render();
   }
+
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(BallNum[ballsLeft]->GetModel()));
+    BallNum[ballsLeft]->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
