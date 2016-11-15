@@ -286,8 +286,6 @@ void Object::UpdateBumper(int scale){
   btTransform trans;
   btScalar m[16];
 
-
-
   body->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);

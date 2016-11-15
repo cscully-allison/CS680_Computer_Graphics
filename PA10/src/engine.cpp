@@ -84,7 +84,7 @@ bool Engine::Initialize()
 
 void Engine::Run()
 {
-  unsigned int key;
+
   m_running = true;
   force = 0;
   while(m_running)
@@ -95,15 +95,17 @@ void Engine::Run()
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {
-      key = Keyboard();
+      key.push_back (Keyboard());
      //std::cout << key << std::endl;
     }
 
     // Update and render the graphics
     m_graphics->Update(m_DT, key, force);
     m_graphics->Render();
-    if (key == 13){
-      force = 0;
+    for (int i = 0; i < key.size(); i++ ){
+       if (key[i] == 13){
+          force = 0;
+      }
     }
     // Swap to the Window
     m_window->Swap();
@@ -138,6 +140,14 @@ unsigned int Engine::Keyboard()
     if (m_event.key.keysym.sym == 13)
     {
       return m_event.key.keysym.sym;
+    }
+
+    else{
+      for (int i = 0; i < key.size(); i++){
+        if (key[i] == m_event.key.keysym.sym){
+          key.erase (key.begin()+ i);
+        }
+      }
     }
   }
 }

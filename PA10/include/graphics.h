@@ -16,9 +16,9 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, unsigned int keyPress, int force);
+    void Update(unsigned int dt, vector <unsigned int>  keyPress, int force);
     void Render();
-    void collisionDetection(unsigned int dt);
+    int collisionDetection(unsigned int dt);
     void reinitateBall();
 
   private:
@@ -48,6 +48,7 @@ class Graphics
     int ballsLeft;
     bool resetable;
     bool ballCleared;
+    int count1, count2, count3;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

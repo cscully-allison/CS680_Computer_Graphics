@@ -92,7 +92,7 @@ bool Graphics::Initialize(int width, int height)
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
   m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1, 0);
-  //m_ball = new Object(5, btVector3 (0,0,0), btVector3 (5, 0.5, -4.5),0,1, 0);
+  //m_ball = new Object(5, btVector3 (0,0,0), btVector3 (5, 0.5, 4),0,1, 0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -175,61 +175,60 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
+void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force)
 { 
+
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
-  //std::cout << pos.x << std::endl;
-  //resetable = pos.z < 5.8;
-  //std::cout << resetable << std::endl;
-  //has to be this way, when we just assigned like
-  //resetable = (pos.z > 5.8); it was calling reinitiateBall
-  //twice for some reason
-  if (pos.z > 5.8)
-  {
-    resetable = true;
-  }
-
-  if (!ballCleared)
-  {
-    if (keyPress == 13)
-    {
-      m_ball->applyForce (min (force, 60));
-    }
-  }
-
-
-  //has to be this way, when we just assigned like
-  //ballCleared = (pos.z > 5); it was calling reinitiateBall
-  //twice for some reason
- if (pos.z < 5)
-   {
-     ballCleared = true;
-   }
-   else if (pos.z > 5)
-   {
-     ballCleared = false;
-   }
-
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-  collisionDetection(dt);
+  int update = collisionDetection(dt);
   m_ball->Update ();
-  
-  if (keyPress == 1073742053)
-  {
-    m_rightFlipper->UpdateFlipper(1, keyPress);
-  }
-  if (keyPress == 1073742049)
-  {
-    m_leftFlipper->UpdateFlipper(0, keyPress);
-  }
 
+  if (pos.z > 5.8){
+      resetable = true;
+  }
   if (pos.x < -11.86  && pos.z < 5.5  && ballCleared && resetable){
     resetable = false;
-    reinitateBall ();
+      reinitateBall ();
+  }
+  if (pos.z < 5){
+     ballCleared = true;
+  }
+  else {
+    ballCleared = false;
+  }
+
+  switch (update){
+    case 3:
+        //1cout = 1;
+   // m_bump1->UpdateBumper(2);
+    break;
+    case 4:
+        //2cout = 1;
+    break;
+    case 5:
+        //3cout = 1;
+    break;
+  }
+     
+  for (int i = 0; i < keyPress.size(); i ++){
+    if (!ballCleared){
+        if (keyPress[i] == 13){
+          m_ball->applyForce (min (force, 60));
+        }
+    } 
+    if (keyPress[i] == 1073742053)
+    {
+      m_rightFlipper->UpdateFlipper(1, keyPress[i]);
+    }
+    if (keyPress[i] == 1073742049)
+    {
+      m_leftFlipper->UpdateFlipper(0, keyPress[i]);
+    }
   }
 }
 
-void Graphics::collisionDetection (unsigned int dt){
+int Graphics::collisionDetection (unsigned int dt){
+  int notBall;
   for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
     btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
     const btCollisionObject* collisionObject = contactManifold->getBody1();
@@ -238,38 +237,33 @@ void Graphics::collisionDetection (unsigned int dt){
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
       if (collisionObject->getUserIndex() != 0 && collisionObject2->getUserIndex() != 0 && collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1){
-      if (pt.getDistance() < 0.1f ){
-       // std::cout << collisionObject->getUserIndex()  << " " << collisionObject2->getUserIndex() << std::endl;
-        int notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
-        //std::cout << notBall << std::endl;
-       //  switch (notBall){
-       //    //left flipper
-       //    case 1:
-       //        std::cout << " 1 hit" << std::endl;
-       //    break;
-       //    //right flipper
-       //    case 2:
-       //          // for (float i = 0.1; i < 2.0; i+=0.2){
-       //          //         dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-       //          //         m_bump1->UpdateBumper(i);
-       //          // }
-       //          std::cout << " 2 hit" << std::endl;
-       //    break;
-       //    case 3:
-       //        std::cout << " 3 hit" << std::endl;
-       //    break;
-       //              case 4:
-       //        std::cout << " 4 hit" << std::endl;
-       //    break;
-       //              case 5:
-       //        std::cout << "5 hit" << std::endl;
-       //    break;
-       // }
+        if (pt.getDistance() < 0.1f ){
+          notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
+          switch (notBall){
+            //left flipper
+            case 1:
+                score += 50;
+            break;
+            //right flipper
+            case 2:
+                score += 50;
+            break;
+            case 3:
+                score += 100;
+            break;
+            case 4:
+                score += 100;
+            break;
+            case 5:
+                score += 100;
+            break;
+         }
+        }
       }
     }
-    }
-       // std::cout << std::endl;
   }
+
+  return notBall;
 }
 
 void Graphics::reinitateBall(){
@@ -283,7 +277,7 @@ void Graphics::reinitateBall(){
   }
   else if (ballsLeft == 0)
   {
-    std::cout << "fuck you suck..." << std::endl;
+    std::cout << "fuck you suck... "  << score << std::endl;
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
   }
 
