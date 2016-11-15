@@ -228,16 +228,15 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     shape->calculateLocalInertia(0, interia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
-    bodyTransform.setOrigin (btVector3(0.0,0.0,0.0));
+    bodyTransform.setOrigin (startOrigin);
     btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, btVector3(0.0,0.0,0.0));
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, interia);
     rigidBodyCI.m_friction = friction;
     rigidBodyCI.m_restitution = restitution;
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
     body->setUserIndex(indexNumber);
-
 }
 
 
@@ -274,6 +273,23 @@ void Object::Update()
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 }
+
+void Object::applyForce(int force){
+      body->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+}
+
+void Object::UpdateBumper(int scale){
+  btTransform trans;
+  btScalar m[16];
+
+
+
+  body->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+  model = glm::make_mat4(m);
+  model *= glm::scale (model, glm::vec3(scale, scale, scale));
+}
+
 void Object::UpdateFlipper(int side)
 {
   btTransform trans;

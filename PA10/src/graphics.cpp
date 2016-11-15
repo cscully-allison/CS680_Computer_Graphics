@@ -58,7 +58,6 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-  std::cout << "ass" << std::endl;
   // Create the object
   // index 1 for table
   m_table = new Object("smootherpinballtable.obj",btVector3 (0,0,0),0, .5, 0, 1);
@@ -68,6 +67,12 @@ bool Graphics::Initialize(int width, int height)
 
   m_bump1 = new Object("bumper.obj", btVector3(3, .5, 3), 0, .5, 0, 2);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
+  
+ /* m_bump2 = new Object("bumper.obj", btVector3(1, .5, -1), 0, .5, 0, 3);
+  dynamicsWorld->addRigidBody(m_bump2->GetRigidBody());
+  
+  m_bump3 = new Object("bumper.obj", btVector3(-1, .5, 1), 0, .5, 0, 4);
+  dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());*/
 
   //m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,-5.25),0, 0, 0, 1);
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.0,0,-3.3),0, 0, 0, 1);
@@ -87,6 +92,7 @@ bool Graphics::Initialize(int width, int height)
   //m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(1,0,1));
 
   m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-11,.5,7),0,1,0);
+
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -171,40 +177,23 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 { 
-
-
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
-  //std::cout << "x: " << pos.x << "  z: " << pos.z << std::endl;
-  if (pos.z > 5.8)
-  {
-    resetable = true;
-  }
+  resetable = pos.z > 5.8;
 
-  if (ballCleared == false)
+  if (!ballCleared)
   {
     if (keyPress == 13)
     {
-      if (force > 60)
-      {
-        force = 60;
-      }
-      m_ball->GetRigidBody()->applyForce(btVector3(force*10.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
-
+      m_ball->applyForce (min (force, 60));
     }
   }
-  std::cout << pos.z << "  " << ballCleared << std::endl;
-  if (pos.z < 5)
-  {
-    ballCleared = true;
-  }
-  else if (pos.z > 5)
-  {
-    ballCleared = false;
-  }
+
+  ballCleared = pos.z < 6;
 
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
-  collisionDetection();
+  collisionDetection(dt);
   m_ball->Update ();
+  
   //if (keyPress == 1073742053)
   m_rightFlipper->UpdateFlipper(1);
 
@@ -217,7 +206,7 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
   }
 }
 
-void Graphics::collisionDetection (){
+void Graphics::collisionDetection (unsigned int dt){
   for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
     btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
     const btCollisionObject* collisionObject = contactManifold->getBody1();
@@ -229,11 +218,18 @@ void Graphics::collisionDetection (){
           case 1:
             // default, do nothing
           break;
+          case 2:
+                /*for (float i = 0.1; i < 2.0; i+=0.2){
+                        dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
+                        m_bump1->UpdateBumper(i);
+                }
+                std::cout << "hit" << std::endl;*/
+          break;
         }
        // std::cout << collisionObject->getUserIndex()<< std::endl;
       }
     }
-
+       // std::cout << std::endl;
   }
 }
 
@@ -275,6 +271,12 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump1->GetModel()));
   m_bump1->Render();
+  
+  /*glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump2->GetModel()));
+  m_bump2->Render();
+  
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump3->GetModel()));
+  m_bump3->Render();*/
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_leftFlipper->GetModel()));
   m_leftFlipper->Render();

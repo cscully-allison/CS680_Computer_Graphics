@@ -26,9 +26,11 @@ class Object
     void setOrientation();
     void Update();
     void UpdateFlipper(int side);
+    void UpdateBumper(int scale);
     void Render();
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
+    void applyForce (int force);
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();
