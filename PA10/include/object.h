@@ -25,7 +25,7 @@ class Object
     ~Object();
     void setOrientation();
     void Update();
-    void UpdateFlipper(int side);
+    void UpdateFlipper(int side, unsigned int keyPress);
     void UpdateBumper(int scale);
     void Render();
     void setBodyTransform(btVector3);

@@ -4,7 +4,6 @@
 
 Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
 {  
-
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
@@ -138,7 +137,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 }
 
    // create collision shape
-    btCollisionShape* shape = new btSphereShape(.05f);
+    btCollisionShape* shape = new btSphereShape(.25f);
     shape->calculateLocalInertia(mass, inertia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
@@ -236,7 +235,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    body->setUserIndex(indexNumber);
+    //body->setUserIndex(indexNumber);
 }
 
 
@@ -290,24 +289,25 @@ void Object::UpdateBumper(int scale){
   model *= glm::scale (model, glm::vec3(scale, scale, scale));
 }
 
-void Object::UpdateFlipper(int side)
+void Object::UpdateFlipper(int side, unsigned int keyPress)
 {
   btTransform trans;
   btTransform rotation;
   btScalar m[16];
+  body->getMotionState()->getWorldTransform(trans); 
 
-  /*if (side == 0)
+  if (side == 0 && keyPress == 1073742049)
   {
-    //body->proceedToTransform(btTransform(btQuaternion(btVector3(0,1,0), -.5235), btVector3(-8.8,.7,-5.25)));
-    body->applyTorqueImpulse(btVector3(1.0f,0.0f,0.0f));
+    body->applyTorqueImpulse(btVector3(20.0f,20.0f,20.0f));
   }
-  else if (side == 1)
+  else if (side == 1 && keyPress == 1073742053)
   {
-    body->proceedToTransform(btTransform(btQuaternion(btVector3(0,1,0), .5235), btVector3(-8.8,.7,2.25)));   
-  }*/
+    body->applyTorqueImpulse(btVector3(-20.0f,-20.0f,-20.0f));
+       
+  }
 
   //get transform
-  body->getMotionState()->getWorldTransform(trans);
+  
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 }

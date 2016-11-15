@@ -75,7 +75,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());*/
 
   //m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,-5.25),0, 0, 0, 1);
-  m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.0,0,-3.3),0, 0, 0, 1);
+  m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
   m_leftFlipper->setOrientation();
@@ -83,7 +83,7 @@ bool Graphics::Initialize(int width, int height)
   m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
   //m_rightFlipper = new Object("flipper-right.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,2.25),0, 0, 0, 2);
-  m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.2,0,2.5),0, 0, 0, 2);
+  m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,2.5),0, 0, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
   m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
   m_rightFlipper->setOrientation();
@@ -178,7 +178,16 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
 { 
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
-  resetable = pos.z > 5.8;
+  //std::cout << pos.x << std::endl;
+  //resetable = pos.z < 5.8;
+  //std::cout << resetable << std::endl;
+  //has to be this way, when we just assigned like
+  //resetable = (pos.z > 5.8); it was calling reinitiateBall
+  //twice for some reason
+  if (pos.z > 5.8)
+  {
+    resetable = true;
+  }
 
   if (!ballCleared)
   {
@@ -188,21 +197,35 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
     }
   }
 
-  ballCleared = pos.z < 6;
+
+  //has to be this way, when we just assigned like
+  //ballCleared = (pos.z > 5); it was calling reinitiateBall
+  //twice for some reason
+ if (pos.z < 5)
+   {
+     ballCleared = true;
+   }
+   else if (pos.z > 5)
+   {
+     ballCleared = false;
+   }
 
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   collisionDetection(dt);
   m_ball->Update ();
   
-  //if (keyPress == 1073742053)
-  m_rightFlipper->UpdateFlipper(1);
+  if (keyPress == 1073742053)
+  {
+    m_rightFlipper->UpdateFlipper(1, keyPress);
+  }
+  if (keyPress == 1073742049)
+  {
+    m_leftFlipper->UpdateFlipper(0, keyPress);
+  }
 
-  //if (keyPress == 1073742049)
-  m_leftFlipper->UpdateFlipper(0);
-
-  if (pos.x < -11.7  && pos.z < 5.5 && resetable){
-    reinitateBall ();
+  if (pos.x < -11.86  && pos.z < 5.5  && ballCleared && resetable){
     resetable = false;
+    reinitateBall ();
   }
 }
 
@@ -214,18 +237,18 @@ void Graphics::collisionDetection (unsigned int dt){
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
       if (pt.getDistance() < 0.0f){
-        switch (collisionObject->getUserIndex()){
-          case 1:
+        //switch (collisionObject->getUserIndex()){
+          //case 1:
             // default, do nothing
-          break;
-          case 2:
+          //break;
+          //case 2:
                 /*for (float i = 0.1; i < 2.0; i+=0.2){
                         dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
                         m_bump1->UpdateBumper(i);
                 }
                 std::cout << "hit" << std::endl;*/
-          break;
-        }
+          //break;
+        //}
        // std::cout << collisionObject->getUserIndex()<< std::endl;
       }
     }
@@ -234,11 +257,10 @@ void Graphics::collisionDetection (unsigned int dt){
 }
 
 void Graphics::reinitateBall(){
-  
   ballsLeft --;
   if (ballsLeft > 0)
   {
-  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11,.5,7)));
+  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11.7,.5,7)));
   m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
   m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
   ballCleared = false;
