@@ -77,8 +77,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());
   m_bump3->setOrientation();
 
-  btDefaultMotionState* UL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3)));
-  btDefaultMotionState* lL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3)));
+
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
   leftLower = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
   m_leftFlipper->GetRigidBody()->setMotionState(UL);
