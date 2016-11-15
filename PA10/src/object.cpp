@@ -334,8 +334,12 @@ void Object::applyForce(int force){
 }
 
 void Object::ScoreUpdate(int i, uint score){
-    model = glm::translate (glm::mat4(1.0f), glm::vec3(i, 0.0f , 0.0f));
-    model += glm::scale (model, glm::vec3(2, 2, 2));
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , 2*i));
+
+}
+
+void Object::BallNumUpdate(){
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , -7));
 
 }
 

@@ -32,30 +32,6 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
-// void Engine::Menu (void){
-  
-//   menu = glutCreateMenu (*menuEvent);
-//   glutAddMenuEntry("Red",1);
-//   glutAddMenuEntry("Blue",2);
-//   glutAddMenuEntry("Green",3);
-//   glutAddMenuEntry("Orange",4);
-
-//   glutAttachMenu(GLUT_RIGHT_BUTTON);
-// }
-
-// void Engine::menuEvent(int option){
-//   switch (option) {
-//     case 1 :
- 
-//       break;
-//     case 2 :
-//  break;
-//     case 3 :
-//  break;
-//     case 4 :
-// break;
-//   }
-// }
 
 bool Engine::Initialize()
 {

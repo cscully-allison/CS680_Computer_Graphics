@@ -41,7 +41,7 @@ class Graphics
     Object *m_bump3;
     vector <Object*> numbers;
     vector <Object*> ScoreArray;
-
+    vector <Object*> BallNum;
     glm::vec4 pos;
 
     btRigidBody* ceilingBody;
