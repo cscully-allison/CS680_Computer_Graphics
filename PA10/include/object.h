@@ -22,11 +22,13 @@ class Object
     Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
     //static object
     Object (std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
+    Object (std::string filename);
     ~Object();
     void setOrientation();
     void Update();
     void UpdateFlipper(int side, unsigned int keyPress);
     void UpdateBumper(int scale);
+    void ScoreUpdate(int i, uint score);
     void Render();
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);

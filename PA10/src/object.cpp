@@ -243,6 +243,57 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     body->setUserIndex(indexNumber);
 }
 
+Object::Object(std::string filename)
+{  
+
+  //Verticies and indicies needs to be initilized for run
+  //Presumably we will call the assimp functions here
+  scene = importer.ReadFile("../assets/Numbers/" + filename, aiProcess_Triangulate);
+  aiColor3D color (0.0f,0.0f, 0.0f);
+
+  for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+    const aiMesh* mesh = scene->mMeshes[meshNums];
+    // get material properties per mesh
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+    glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+    glm::vec3 t = glm::vec3(color.r, color.g, color.b);
+
+    Color materialsColor (Ka,Kd, Ks, e, t);
+
+    for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      Vertices.push_back(Vertex(
+                            glm::vec3(mesh->mVertices[vertex].x, 
+                                      mesh->mVertices[vertex].y, 
+                                      mesh->mVertices[vertex].z), 
+                            glm::vec3(mesh->mNormals[vertex].x, 
+                                      mesh->mNormals[vertex].y, 
+                                      mesh->mNormals[vertex].z),
+                            materialsColor));
+    }
+
+    for(unsigned int index = 0; index < mesh->mNumFaces; index++){
+      Indices.push_back(mesh->mFaces[index].mIndices[0]);
+      Indices.push_back(mesh->mFaces[index].mIndices[1]);
+      Indices.push_back(mesh->mFaces[index].mIndices[2]);
+    }
+
+      glGenBuffers(1, &VB);
+      glBindBuffer(GL_ARRAY_BUFFER, VB);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
+
+      glGenBuffers(1, &IB);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+}
+}
+
 
 Object::~Object()
 {
@@ -280,6 +331,12 @@ void Object::Update()
 
 void Object::applyForce(int force){
       body->applyForce(btVector3(force*15.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+}
+
+void Object::ScoreUpdate(int i, uint score){
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(i, 0.0f , 0.0f));
+    model += glm::scale (model, glm::vec3(2, 2, 2));
+
 }
 
 void Object::UpdateBumper(int scale){

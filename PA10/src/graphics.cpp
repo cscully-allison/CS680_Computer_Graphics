@@ -108,7 +108,24 @@ bool Graphics::Initialize(int width, int height)
   ceilingBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(ceilingBody);
 
-  // Set up the shaders
+
+  numbers.push_back (new Object ("number0.obj"));
+  numbers.push_back (new Object ("number1.obj"));
+  numbers.push_back (new Object ("number2.obj"));
+  numbers.push_back (new Object ("number3.obj"));
+  numbers.push_back (new Object ("number4.obj"));
+  numbers.push_back (new Object ("number5.obj"));
+  numbers.push_back (new Object ("number6.obj"));
+  numbers.push_back (new Object ("number7.obj"));
+  numbers.push_back (new Object ("number8.obj"));
+  numbers.push_back (new Object ("number9.obj"));
+
+  //intialize score
+  for (int i= 0; i < 5; i++){
+    ScoreArray.push_back (numbers[0]);
+  }
+  
+    // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
   {
@@ -175,6 +192,7 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
+
 void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force)
 { 
 
@@ -182,6 +200,10 @@ void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   int update = collisionDetection(dt);
   m_ball->Update ();
+
+  for (int i = 0; i < ScoreArray.size(); i ++){
+    ScoreArray[i]->ScoreUpdate(i, score);
+  }
 
   if (pos.z > 5.8){
       resetable = true;
@@ -241,12 +263,12 @@ int Graphics::collisionDetection (unsigned int dt){
           notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
           switch (notBall){
             //left flipper
-            case 1:
-                score += 50;
-            break;
-            //right flipper
-            case 2:
-                score += 50;
+            // case 1:
+            //     score += 50;
+            // break;
+            // //right flipper
+            // case 2:
+            //     score += 50;
             break;
             case 3:
                 score += 100;
@@ -321,6 +343,11 @@ void Graphics::Render()
   glUniform4fv(ball, 1, glm::value_ptr(pos)); 
   m_ball->Render();
 
+  //render score
+  for (int i =0; i < ScoreArray.size(); i++){
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ScoreArray[i]->GetModel()));
+    ScoreArray[i]->Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();

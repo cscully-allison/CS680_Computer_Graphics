@@ -39,6 +39,8 @@ class Graphics
     Object *m_bump1;
     Object *m_bump2;
     Object *m_bump3;
+    vector <Object*> numbers;
+    vector <Object*> ScoreArray;
 
     glm::vec4 pos;
 
