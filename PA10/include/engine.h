@@ -37,7 +37,7 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    vector <unsigned int> key;
+    std::vector <unsigned int> key;
     int force;
     static int menu;
 };

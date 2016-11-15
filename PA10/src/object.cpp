@@ -330,7 +330,7 @@ void Object::Update()
 }
 
 void Object::applyForce(int force){
-      body->applyForce(btVector3(force*15.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(force*2.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 void Object::ScoreUpdate(int i, uint score){
@@ -349,25 +349,40 @@ void Object::UpdateBumper(int scale){
   model *= glm::scale (model, glm::vec3(scale, scale, scale));
 }
 
-void Object::UpdateFlipper(int side, unsigned int keyPress)
+void Object::UpdateFlipper(int side, unsigned int keyPress, btScalar upperLimit, btScalar lowerLimit)
 {
   btTransform trans;
   btTransform rotation;
   btScalar m[16];
-  body->getMotionState()->getWorldTransform(trans); 
+
+  btDefaultMotionState* UL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3)));
+  btDefaultMotionState* lL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3)));
+  btDefaultMotionState* UR = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, 2.5)));
+  btDefaultMotionState* lR =new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5)));
+
+  btScalar current;
+
 
   if (side == 0 && keyPress == 1073742049)
   {
-    body->applyTorqueImpulse(btVector3(20.0f,20.0f,20.0f));
+    body->setMotionState(UL);
+  }
+  else if ((side == 0 && keyPress != 1073742049) )
+  {
+    body->setMotionState(lL);
   }
   else if (side == 1 && keyPress == 1073742053)
   {
-    body->applyTorqueImpulse(btVector3(-20.0f,-20.0f,-20.0f));
-       
+    body->setMotionState(UR);   
+  }
+    else if (side == 1 && keyPress != 1073742053)
+  {
+    body->setMotionState(lR);
   }
 
   //get transform
-  
+  body->getMotionState()->getWorldTransform(trans); 
+
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 }

@@ -95,7 +95,7 @@ void Engine::Run()
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {
-      key.push_back (Keyboard());
+      key.push_back(Keyboard());
      //std::cout << key << std::endl;
     }
 
@@ -141,6 +141,8 @@ unsigned int Engine::Keyboard()
     {
       return m_event.key.keysym.sym;
     }
+
+
 
     for (int i = 0; i < key.size(); i++){
         if (key[i] == m_event.key.keysym.sym){

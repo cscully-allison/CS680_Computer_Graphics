@@ -77,16 +77,24 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());
   m_bump3->setOrientation();
 
+  btDefaultMotionState* UL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3)));
+  btDefaultMotionState* lL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3)));
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
+  leftLower = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
+  m_leftFlipper->GetRigidBody()->setMotionState(UL);
+  leftUpper = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
+  m_leftFlipper->GetRigidBody()->setMotionState(lL);
+
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
-  m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
+  //m_leftFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_leftFlipper->setOrientation();
   m_leftFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
   m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,2.5),0, 0, 0, 2);
+  rightLower = m_rightFlipper->GetRigidBody()->getOrientation().getAngle();
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
-  m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
+  //m_rightFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_rightFlipper->setOrientation();
   m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
@@ -193,7 +201,7 @@ bool Graphics::Initialize(int width, int height)
 }
 
 
-void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force)
+void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
 
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
@@ -237,16 +245,14 @@ void Graphics::Update(unsigned int dt, vector <unsigned int> keyPress, int force
         if (keyPress[i] == 13){
           m_ball->applyForce (min (force, 60));
         }
-    } 
-    if (keyPress[i] == 1073742053)
-    {
-      m_rightFlipper->UpdateFlipper(1, keyPress[i]);
     }
-    if (keyPress[i] == 1073742049)
-    {
-      m_leftFlipper->UpdateFlipper(0, keyPress[i]);
-    }
-  }
+    
+    m_rightFlipper->UpdateFlipper(1, keyPress[i], rightUpper, rightLower);
+
+    m_leftFlipper->UpdateFlipper(0, keyPress[i], leftUpper, leftLower);
+  } 
+
+
 }
 
 int Graphics::collisionDetection (unsigned int dt){

@@ -16,7 +16,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, vector <unsigned int>  keyPress, int force);
+    void Update(unsigned int dt, std::vector <unsigned int>  keyPress, int force);
     void Render();
     int collisionDetection(unsigned int dt);
     void reinitateBall();
@@ -51,6 +51,11 @@ class Graphics
     bool resetable;
     bool ballCleared;
     int count1, count2, count3;
+
+    btScalar leftLower;
+    btScalar leftUpper;
+    btScalar rightLower;
+    btScalar rightUpper;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

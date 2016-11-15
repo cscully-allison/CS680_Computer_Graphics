@@ -26,7 +26,7 @@ class Object
     ~Object();
     void setOrientation();
     void Update();
-    void UpdateFlipper(int side, unsigned int keyPress);
+    void UpdateFlipper(int side, unsigned int keyPress, btScalar upperLimit, btScalar lowerLimit);
     void UpdateBumper(int scale);
     void ScoreUpdate(int i, uint score);
     void Render();
