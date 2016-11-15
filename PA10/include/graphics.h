@@ -18,7 +18,7 @@ class Graphics
     bool Initialize(int width, int height);
     void Update(unsigned int dt, unsigned int keyPress, int force);
     void Render();
-    void collisionDetection();
+    void collisionDetection(unsigned int dt);
     void reinitateBall();
 
   private:
