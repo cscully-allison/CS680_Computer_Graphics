@@ -138,7 +138,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 }
 
    // create collision shape
-    btCollisionShape* shape = new btSphereShape(.25f);
+    btCollisionShape* shape = new btSphereShape(.05f);
     shape->calculateLocalInertia(mass, inertia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();

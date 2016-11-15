@@ -61,25 +61,32 @@ bool Graphics::Initialize(int width, int height)
   std::cout << "ass" << std::endl;
   // Create the object
   // index 1 for table
-  m_table = new Object("possibleTable.obj",btVector3 (0,0,0),0, .5, 0, 1);
+  m_table = new Object("smootherpinballtable.obj",btVector3 (0,0,0),0, .5, 0, 1);
 
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
-  m_bump1 = new Object("bumper.obj", btVector3(0, .5, 0), 0, .5, 0, 2);
+  m_bump1 = new Object("bumper.obj", btVector3(3, .5, 3), 0, .5, 0, 2);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
 
-  m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (-8.8,.7,-5.25),0, 0, 0, 1);
+  //m_leftFlipper = new Object("flipper-left.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,-5.25),0, 0, 0, 1);
+  m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.0,0,-3.3),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
-  m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,0,0));
+  m_leftFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
   m_leftFlipper->setOrientation();
+  m_leftFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
+  m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
-  m_rightFlipper = new Object("flipper-right.obj",500, btVector3 (0,0,0),btVector3 (-8.8,.7,2.25),0, 0, 0, 2);
+  //m_rightFlipper = new Object("flipper-right.obj",500, btVector3 (0,0,0),btVector3 (8.8,.7,2.25),0, 0, 0, 2);
+  m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.2,0,2.5),0, 0, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
-  m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,0,0));
+  m_rightFlipper->GetRigidBody()->setGravity(btVector3(0,5.8,0));
   m_rightFlipper->setOrientation();
+  m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
+  m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
+  //m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(1,0,1));
 
-  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-11,.5,6),0,1,0);
+  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-11,.5,7),0,1,0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -204,7 +211,7 @@ void Graphics::Update(unsigned int dt, unsigned int keyPress, int force)
   //if (keyPress == 1073742049)
   m_leftFlipper->UpdateFlipper(0);
 
-  if (pos.x < -11.7  && pos.z < 5 && resetable){
+  if (pos.x < -11.7  && pos.z < 5.5 && resetable){
     reinitateBall ();
     resetable = false;
   }
@@ -235,7 +242,7 @@ void Graphics::reinitateBall(){
   ballsLeft --;
   if (ballsLeft > 0)
   {
-  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11,.5,6)));
+  m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-11,.5,7)));
   m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
   m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
   ballCleared = false;
