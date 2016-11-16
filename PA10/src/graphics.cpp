@@ -12,6 +12,7 @@ Graphics::Graphics()
   score = 0;
   resetable = true;
   ballCleared = false;
+  gamestate = true;
 
 }
 
@@ -24,7 +25,10 @@ Graphics::~Graphics()
     delete broadphase;
 }
 
-
+bool Graphics::getGameState()
+{
+  return gamestate;
+}
 bool Graphics::Initialize(int width, int height)
 {
 
@@ -334,8 +338,9 @@ void Graphics::reinitateBall(){
   }
   else if (ballsLeft == 0)
   {
-    std::cout << "fuck you suck... "  << score << std::endl;
+    std::cout << "game over... your score is: "  << score << std::endl;
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
+    gamestate = false;
   }
 
 
