@@ -67,7 +67,7 @@ bool Graphics::Initialize(int width, int height)
   }
   // Create the object
   // index 1 for table
-  m_table = new Object("smootherpinballtable.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_table = new Object("texturethings/textured_pinball_table.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
@@ -80,7 +80,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody(m_bump2->GetRigidBody());
   m_bump2->setOrientation();
   
-  m_bump3 = new Object("bumper.obj", btVector3(8, .5, 0), 0, .5, 0, 5);
+  m_bump3 = new Object("bumper.obj", btVector3(0, .5, 0), 0, .5, 0, 5);
   dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());
   m_bump3->setOrientation();
 
