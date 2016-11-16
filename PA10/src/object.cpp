@@ -4,6 +4,7 @@
 
 Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
 {  
+  pressed = false;
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
@@ -351,32 +352,56 @@ void Object::UpdateBumper(int scale){
   model *= glm::scale (model, glm::vec3(scale, scale, scale));
 }
 
-void Object::UpdateFlipper(int side, unsigned int keyPress, btScalar upperLimit, btScalar lowerLimit)
+void Object::UpdateFlipper(int side, unsigned int keyPress, unsigned int dt)
 {
   btTransform trans;
   btTransform rotation;
   btScalar m[16];
  if (!side){
-  if (keyPress == 1073742049)
+  if (keyPress == 1073742049 && pressed == false)
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3))));
-    body->setRestitution(1.8);
+    dtInitial = dt;
+    pressed = true;
+    body->applyTorqueImpulse(btVector3(2000.0f, 2000.0f, 2000.0f));
+    body->setRestitution(.25);
   }
-  else if (keyPress != 1073742049 && keyPress != 1073742053)
+  else if (keyPress == 1073742049 && ((dt - dtInitial) > 50) && pressed == true)
+  {
+    body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setRestitution(.25);
+
+  }
+  else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
     body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3))));
+    body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    pressed = false;
     body->setRestitution(1);
   }
 }
 else if (side){
-  if (keyPress == 1073742053)
+  if (keyPress == 1073742053 && pressed == false)
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, 2.5))));
-    body->setRestitution(1.8);   
+    dtInitial = dt;
+    pressed = true;
+    body->applyTorqueImpulse(btVector3(-2000.0f, -2000.0f, -2000.0f));
+    body->setRestitution(.25);   
   }
-    else if (keyPress != 1073742053 && keyPress != 1073742049)
+    else if (keyPress == 1073742053 && ((dt - dtInitial) > 50) && pressed == true)
+  {
+    body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setRestitution(.25);
+
+  }
+   else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
     body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5))));
+    body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    pressed = false;
     body->setRestitution(1);
   }
 }

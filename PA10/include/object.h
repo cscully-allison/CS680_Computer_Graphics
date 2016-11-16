@@ -26,7 +26,7 @@ class Object
     ~Object();
     void setOrientation();
     void Update();
-    void UpdateFlipper(int side, unsigned int keyPress, btScalar upperLimit, btScalar lowerLimit);
+    void UpdateFlipper(int side, unsigned int keyPress, unsigned int dt);
     void UpdateBumper(int scale);
     void ScoreUpdate(int i, uint score);
     void BallNumUpdate();
@@ -51,6 +51,9 @@ class Object
     /* bullet rigid body stuff */
     btTriangleMesh* mTriMesh;
     btRigidBody* body;
+
+    unsigned int dtInitial;
+    bool pressed;
 
 };
 

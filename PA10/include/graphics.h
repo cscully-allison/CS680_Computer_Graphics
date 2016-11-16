@@ -52,11 +52,6 @@ class Graphics
     bool ballCleared;
     int count1, count2, count3;
 
-    btScalar leftLower;
-    btScalar leftUpper;
-    btScalar rightLower;
-    btScalar rightUpper;
-
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;
     btDefaultCollisionConfiguration* collisionConfig;

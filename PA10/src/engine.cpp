@@ -63,7 +63,7 @@ void Engine::Run()
   while(m_running)
   {
     // Update the DT
-    m_DT = getDT();
+    m_DT += getDT();
 
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)

@@ -86,9 +86,6 @@ bool Graphics::Initialize(int width, int height)
 
 
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
-  leftLower = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
-  leftUpper = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
-
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   //m_leftFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_leftFlipper->setOrientation();
@@ -96,14 +93,13 @@ bool Graphics::Initialize(int width, int height)
   m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
   m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,2.5),0, 0, 0, 2);
-  rightLower = m_rightFlipper->GetRigidBody()->getOrientation().getAngle();
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
   //m_rightFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_rightFlipper->setOrientation();
   m_rightFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
-  m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1, 0);
+  m_ball = new Object(50, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1, 0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);
@@ -211,11 +207,12 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
-
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   int update = collisionDetection(dt);
   m_ball->Update ();
+  int leftCall = 0;
+  int rightCall = 0;
 
   for (int i = 0; i < ScoreArray.size(); i ++){
     ScoreArray[i]->ScoreUpdate(i, score);
@@ -256,12 +253,34 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
           m_ball->applyForce (min (force, 60));
         }
     }
-    
-    m_rightFlipper->UpdateFlipper(1, keyPress[i], rightUpper, rightLower);
+    if (keyPress[i] == 1073742053)
+    {
+    rightCall = i;
+    }
 
-    m_leftFlipper->UpdateFlipper(0, keyPress[i], leftUpper, leftLower);
-  } 
+    if (keyPress[i] == 1073742049)
+    {
+    leftCall = i;
+    }
+  }
 
+  if (leftCall != 0)
+  {
+    m_leftFlipper->UpdateFlipper(0, keyPress[leftCall], dt); 
+  }
+  else
+  {
+    m_leftFlipper->UpdateFlipper(0, 0, dt); 
+  }
+
+  if (rightCall != 0)
+  {
+    m_rightFlipper->UpdateFlipper(1, keyPress[rightCall], dt);
+  }
+  else
+  {
+    m_rightFlipper->UpdateFlipper(1, 0, dt);
+  }
 
 }
 
