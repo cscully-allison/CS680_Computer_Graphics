@@ -46,6 +46,7 @@ class Graphics
     glm::vec4 pos;
 
     btRigidBody* ceilingBody;
+    btRigidBody* wallBody;
 
     uint score;
     int ballsLeft;

@@ -119,6 +119,17 @@ bool Graphics::Initialize(int width, int height)
   ceilingBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(ceilingBody);
 
+  btDefaultMotionState* motionWall = new btDefaultMotionState(btTransform(btQuaternion(btScalar(0), btScalar(0), btScalar(0), btScalar(1)),
+                                                              btVector3(btScalar(0), btScalar(-5), btScalar(6))));
+  btCollisionShape* wall = new btBoxShape(btVector3(100.0f, 2.0f, 0.2f));
+  wall->calculateLocalInertia(0, inertia);
+  btRigidBody::btRigidBodyConstructionInfo wallBodyCI(btScalar(0), motionWall, wall, inertia);
+  wallBodyCI.m_friction = btScalar(0);
+  wallBodyCI.m_restitution = btScalar(0);
+  wallBody = new btRigidBody(wallBodyCI);
+  wallBody->setActivationState(DISABLE_DEACTIVATION);
+  dynamicsWorld->addRigidBody(wallBody);
+
 
   numbers.push_back (new Object ("number0.obj"));
   numbers.push_back (new Object ("number1.obj"));
@@ -218,6 +229,9 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   int leftCall = 0;
   int rightCall = 0;
 
+  btDefaultMotionState* wallPosActive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,0.0f,6.0f)));
+  btDefaultMotionState* wallPosInactive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,-5.0f,6.0f)));
+
   for (int i = 0; i < ScoreArray.size(); i ++){
     ScoreArray[i]->ScoreUpdate(i, score);
   }
@@ -231,11 +245,13 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     resetable = false;
       reinitateBall ();
   }
-  if (pos.z < 5){
+  if (pos.z < 6){
      ballCleared = true;
+     wallBody->setMotionState(wallPosActive);
   }
   else {
     ballCleared = false;
+    wallBody->setMotionState(wallPosInactive);
   }
 
   switch (update){
@@ -254,7 +270,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   for (int i = 0; i < keyPress.size(); i ++){
     if (!ballCleared){
         if (keyPress[i] == 13){
-          m_ball->applyForce (min (force, 60));
+          m_ball->applyForce (min (force, 300));
         }
     }
     if (keyPress[i] == 1073742053)
