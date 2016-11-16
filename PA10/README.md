@@ -1,4 +1,4 @@
-# PA8: Bullet/Pinball
+# PA10: Bullet/Pinball
 
 ## Connor Scully-Allison
 ## Hannah Munoz
@@ -19,7 +19,7 @@ This project uses Bullet 2.86. Instructions for downloading and running Bullet c
 
 # Building and Running
 
-In the PA8 Directory type in the following order:
+In the PA10 Directory type in the following order:
 
 ```
 mkdir build
@@ -41,10 +41,12 @@ make
 ## Controls
 
 ```
-Mouse: move the box
-Esc: exit
+Enter - Hold and release to eject the ball from the starting lane. Force increases with longer hold.
+Left Shift - Left Flipper
+Right Shift - RIght Flipper
 ```
 
 # Misc Notes
+
 
 
