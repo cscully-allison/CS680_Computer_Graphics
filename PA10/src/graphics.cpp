@@ -315,7 +315,7 @@ int Graphics::collisionDetection (unsigned int dt){
         
     for (int j = 0; j < contactManifold->getNumContacts(); j++) {
       btManifoldPoint& pt = contactManifold->getContactPoint(j);
-      if (collisionObject->getUserIndex() != 0 && collisionObject2->getUserIndex() != 0 && collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1){
+      /*if (collisionObject->getUserIndex() != 0 && collisionObject2->getUserIndex() != 0 && collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1){
         if (pt.getDistance() < 0.1f ){
           notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
           switch (notBall){
@@ -338,7 +338,7 @@ int Graphics::collisionDetection (unsigned int dt){
             break;
          }
         }
-      }
+      }*/
     }
   }
 

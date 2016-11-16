@@ -85,7 +85,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    body->setUserIndex(rotate);
+    //body->setUserIndex(rotate);
 
 }
 
@@ -155,7 +155,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    body->setUserIndex(10);
+    //body->setUserIndex(10);
 
 }
 
@@ -241,7 +241,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    body->setUserIndex(indexNumber);
+    //body->setUserIndex(indexNumber);
 }
 
 Object::Object(std::string filename)
