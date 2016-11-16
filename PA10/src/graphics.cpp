@@ -7,7 +7,7 @@ Graphics::Graphics()
   dispatcher = new btCollisionDispatcher(collisionConfig);
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-  dynamicsWorld->setGravity(btVector3(-.15,-1,0));
+  dynamicsWorld->setGravity(btVector3(-.15,0,0));
   ballsLeft = 3;
   score = 0;
   resetable = true;
@@ -23,6 +23,7 @@ Graphics::~Graphics()
     delete collisionConfig;
     delete broadphase;
 }
+
 
 bool Graphics::Initialize(int width, int height)
 {
@@ -50,6 +51,12 @@ bool Graphics::Initialize(int width, int height)
   GLuint vao;
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
+  glEnable(GL_DEPTH_TEST);
+  glCullFace(GL_BACK);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+
+
 
   // Init Camera
   m_camera = new Camera();
@@ -97,7 +104,6 @@ bool Graphics::Initialize(int width, int height)
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
   m_ball = new Object(5, btVector3 (0,0,0), btVector3 (-13,.5,7),0,1, 0);
-  //m_ball = new Object(5, btVector3 (0,0,0), btVector3 (5, 0.5, 4),0,1, 0);
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
   btVector3 inertia(0,0,0);

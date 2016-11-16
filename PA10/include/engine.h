@@ -18,6 +18,8 @@ class Engine
     unsigned int Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
+    void Menu();
+    void menuEvent(int option);
   
   private:
     // Window related variables
