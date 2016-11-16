@@ -329,7 +329,7 @@ void Object::Update()
 }
 
 void Object::applyForce(int force){
-      body->applyForce(btVector3(force*15.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(force*200.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 void Object::ScoreUpdate(int i, uint score){
