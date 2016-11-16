@@ -20,6 +20,7 @@ class Graphics
     void Render();
     int collisionDetection(unsigned int dt);
     void reinitateBall();
+    bool getGameState();
 
   private:
     std::string ErrorString(GLenum error);
@@ -51,6 +52,7 @@ class Graphics
     bool resetable;
     bool ballCleared;
     int count1, count2, count3;
+    bool gamestate;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

@@ -80,6 +80,11 @@ void Engine::Run()
           force = 0;
       }
     }
+
+    if (m_graphics->getGameState() == false)
+    {
+      m_running = false;
+    }
     // Swap to the Window
     m_window->Swap();
   }
