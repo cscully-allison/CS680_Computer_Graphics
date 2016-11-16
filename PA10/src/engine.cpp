@@ -1,8 +1,5 @@
 
 #include "engine.h"
-#include <GL/glut.h>
-#include <GL/freeglut.h>
-
 
 Engine::Engine(string name, int width, int height)
 {
