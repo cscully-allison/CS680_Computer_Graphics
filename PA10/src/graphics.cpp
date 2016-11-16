@@ -80,9 +80,7 @@ bool Graphics::Initialize(int width, int height)
 
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
   leftLower = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
-  m_leftFlipper->GetRigidBody()->setMotionState(UL);
   leftUpper = m_leftFlipper->GetRigidBody()->getOrientation().getAngle();
-  m_leftFlipper->GetRigidBody()->setMotionState(lL);
 
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   //m_leftFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));

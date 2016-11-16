@@ -316,8 +316,6 @@ void Object::setGrav(btVector3 grav)
   body->setGravity(grav);
 }
 
-
-
 void Object::Update()
 {
 
@@ -330,7 +328,7 @@ void Object::Update()
 }
 
 void Object::applyForce(int force){
-      body->applyForce(btVector3(force*2.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(force*15.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 void Object::ScoreUpdate(int i, uint score){
@@ -358,32 +356,30 @@ void Object::UpdateFlipper(int side, unsigned int keyPress, btScalar upperLimit,
   btTransform trans;
   btTransform rotation;
   btScalar m[16];
-
-  btDefaultMotionState* UL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3)));
-  btDefaultMotionState* lL = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3)));
-  btDefaultMotionState* UR = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, 2.5)));
-  btDefaultMotionState* lR =new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5)));
-
-  btScalar current;
-
-
-  if (side == 0 && keyPress == 1073742049)
+ if (!side){
+  if (keyPress == 1073742049)
   {
-    body->setMotionState(UL);
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, -3.3))));
+    body->setRestitution(1.8);
   }
-  else if ((side == 0 && keyPress != 1073742049) )
+  else if (keyPress != 1073742049 && keyPress != 1073742053)
   {
-    body->setMotionState(lL);
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3))));
+    body->setRestitution(1);
   }
-  else if (side == 1 && keyPress == 1073742053)
+}
+else if (side){
+  if (keyPress == 1073742053)
   {
-    body->setMotionState(UR);   
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, 2.5))));
+    body->setRestitution(1.8);   
   }
-    else if (side == 1 && keyPress != 1073742053)
+    else if (keyPress != 1073742053 && keyPress != 1073742049)
   {
-    body->setMotionState(lR);
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5))));
+    body->setRestitution(1);
   }
-
+}
   //get transform
   body->getMotionState()->getWorldTransform(trans); 
 

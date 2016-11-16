@@ -117,9 +117,7 @@ unsigned int Engine::Keyboard()
     {
       return m_event.key.keysym.sym;
     }
-
-
-
+    
     for (int i = 0; i < key.size(); i++){
         if (key[i] == m_event.key.keysym.sym){
           key.erase (key.begin()+ i);
