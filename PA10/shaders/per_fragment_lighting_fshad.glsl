@@ -16,6 +16,11 @@
             vec3 e;
             vec3 t;
 
+            vec3 diffuse;
+            vec3 scalar;
+            vec3 spec;  //scalar
+            vec3 spot;
+
             // spotlight
             vec3 spotlightL;
             vec3 spotlightV;
@@ -38,9 +43,9 @@
           	vec3 H = normalize (L + V);
 
           	//compute the diffuse and specular components for each fragment
-          	vec3 diffuse = max(dot(N,L), 0.0) * fs_in.Kd;
+          	vec3 diffuse = max(dot(N,L), 0.0) * fs_in.Kd * fs_in.diffuse;
             diffuse = clamp (diffuse, 0.0,1.0);
-          	vec3 specular = pow(max(dot(N, H), 0.0),  specular_power) * fs_in.Ks;
+          	vec3 specular = pow(max(dot(N, H), 0.0),  specular_power) * fs_in.spec;
             specular = clamp (specular, 0.0, 1.0);
 
           	color = vec4(diffuse + specular, 1.0);
@@ -52,9 +57,9 @@
                    float spotLight = degrees(acos(dot (L,V)));
                    if (spotLight > 90){
                       V = normalize(fs_in.spotlightV);
-                      diffuse = max(dot(N,L), 0.0) * fs_in.Kd;
+                      diffuse = max(dot(N,L), 0.0) * fs_in.Kd + fs_in.diffuse;
                       specular = pow(max(dot(H, V), 0.0), 5.0) * vec3 (0.2);
-                      color += vec4(NdotL * diffuse + specular, 1.0);
+                      color += vec4(NdotL * diffuse + specular + fs_in.spot, 1.0);
                    }
               }
 

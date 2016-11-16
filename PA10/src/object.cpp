@@ -428,8 +428,14 @@ btRigidBody* Object::GetRigidBody(){
   return body;
 }
 
-void Object::Render()
+void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height)
 {
+
+  glUniform3fv(scalarLoc, 1, glm::value_ptr(scalar));
+  glUniform3fv(specLoc, 1, glm::value_ptr(spec));
+  glUniform3fv(spotLoc, 1, glm::value_ptr(spot));
+  glUniform1f (heightLoc, height);
+
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
@@ -460,4 +466,12 @@ void Object::Render()
   glDisableVertexAttribArray(4);  
   glDisableVertexAttribArray(5);
   glDisableVertexAttribArray(6);
+}
+
+glm::vec3 Object::getSpec(){
+        return spec;
+}
+
+void Object::setSpec (glm::vec3 s){
+        spec += s;
 }

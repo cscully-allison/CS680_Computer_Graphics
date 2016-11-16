@@ -55,12 +55,9 @@ bool Graphics::Initialize(int width, int height)
   GLuint vao;
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
-  glEnable(GL_DEPTH_TEST);
   glCullFace(GL_BACK);
   glEnable(GL_CULL_FACE);
   glEnable(GL_LIGHTING);
-
-
 
   // Init Camera
   m_camera = new Camera();
@@ -154,37 +151,67 @@ bool Graphics::Initialize(int width, int height)
   BallNum.push_back (numbers[2]);
   BallNum.push_back (numbers[3]);
   
-    // Set up the shaders
-  m_shader = new Shader();
-  if(!m_shader->Initialize())
+  // Add the vertex shader
+// Set up the shaders
+  phong_shader = new Shader();
+  if(!phong_shader->Initialize())
   {
     printf("Shader Failed to Initialize\n");
     return false;
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER, "per_fragment_lighting_vshad.glsl"))
+  if(!phong_shader->AddShader(GL_VERTEX_SHADER, "per_fragment_lighting_vshad.glsl"))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER,"per_fragment_lighting_fshad.glsl"))
+  if(!phong_shader->AddShader(GL_FRAGMENT_SHADER, "per_fragment_lighting_fshad.glsl"))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;
   }
- 
+
   // Connect the program
-  if(!m_shader->Finalize())
+  if(!phong_shader->Finalize())
   {
     printf("Program to Finalize\n");
     return false;
   }
 
+ // Set up the shaders
+  gouraund_shader = new Shader();
+  if(!gouraund_shader->Initialize())
+  {
+    printf("Shader Failed to Initialize\n");
+    return false;
+  }
+
+  // Add the vertex shader
+  if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
+  {
+    printf("Vertex Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Add the fragment shader
+  if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
+  {
+    printf("Fragment Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Connect the program
+  if(!gouraund_shader->Finalize())
+  {
+    printf("Program to Finalize\n");
+    return false;
+  }
+ gouraund_shader->Enable();
   // Locate the projection matrix in the shader
-  m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
+  m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
   if (m_projectionMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_projectionMatrix not found\n");
@@ -192,7 +219,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the view matrix in the shader
-  m_viewMatrix = m_shader->GetUniformLocation("viewMatrix");
+  m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
   if (m_viewMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_viewMatrix not found\n");
@@ -200,14 +227,14 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the model matrix in the shader
-  m_modelMatrix = m_shader->GetUniformLocation("modelMatrix");
+  m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
   if (m_modelMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_modelMatrix not found\n");
     return false;
   }
   
-  ball = m_shader->GetUniformLocation("ballPosition");
+  ball = gouraund_shader->GetUniformLocation("ballPosition");
   if (ball == INVALID_UNIFORM_LOCATION)
   {
     printf("ball not found\n");
@@ -364,14 +391,119 @@ void Graphics::reinitateBall(){
 
 }
 
-void Graphics::Render()
+void Graphics::Render(vector <unsigned int>  keyPress)
 {
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+for (int i =0; i < keyPress.size(); i++){
+      //g or default  
+      if(keyPress[i] == 103 ){
+        // Start the correct program
+        gouraund_shader->Enable();
+          // Locate the projection matrix in the shader
+      m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
+      // Locate the view matrix in the shader
+      m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
+      // Locate the model matrix in the shader
+      m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
+      //Locate the scalar in the shader
+      m_scalar = gouraund_shader->GetUniformLocation("scalar");
+      m_height = gouraund_shader->GetUniformLocation("height");
+      m_spot = gouraund_shader->GetUniformLocation("spot");
+      m_spec = gouraund_shader->GetUniformLocation("spec");
+      ball = gouraund_shader->GetUniformLocation("ballPosition");
 
-  // Start the correct program
-  m_shader->Enable();
+      }
+      //keyboard input p
+      else if(keyPress[i] == 112){
+      phong_shader->Enable();
+       m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
+      // Locate the view matrix in the shader
+      m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
+      // Locate the model matrix in the shader
+      m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
+      //Locate the scalar in the shader
+      m_scalar = phong_shader->GetUniformLocation("scalar");
+      m_height = phong_shader->GetUniformLocation("height");
+      m_spot = phong_shader->GetUniformLocation("spot");
+      m_spec = phong_shader->GetUniformLocation("spec");
+      ball = phong_shader->GetUniformLocation("ballPosition");
+      }
+
+      //numpad + ambient lighting
+      if(keyPress[i] == 1073741911 && scalar.x < 10.0){
+        scalar += glm::vec3(0.1);
+      }
+      // numpad - ambient lighting
+      else if(keyPress[i] == 1073741910 && scalar.x > 0){
+        scalar -= glm::vec3(0.1);
+      }
+      
+      // numpad * spotlight ambient
+       else if(keyPress[i] == 1073741909 && spot.x < 10.0){
+        spot += 0.1;
+      }
+      
+      // numpad / spotlight ambient
+      else if(keyPress[i] == 1073741908 && spot.x > 0){
+        spot -= 0.1;
+      }
+      
+      //numpad 6 spotlight height
+      else if (keyPress[i] == 1073741918 && height < 10){
+          height +=.1;
+        }
+        
+      // numpad 9 spotlight height 
+      else if (keyPress[i]== 1073741921 && height > 1){
+          height -=.1;
+        }
+          // std::cout <<  height<< std::endl;
+       //numpad 0 + for table (1073741913)
+        if (keyPress[i] == 1073741922){
+          m_table->setSpec (glm::vec3(0.1));
+        }
+        
+        //numpad . - for table 
+        else if (keyPress[i]== 1073741923){
+          m_table->setSpec (glm::vec3(-0.1));
+        }
+       //numpad 1 + for cylinder
+       else if (keyPress[i] == 1073741913){
+              m_bump1->setSpec (glm::vec3(0.1));
+              m_bump2->setSpec (glm::vec3(0.1));
+              m_bump3->setSpec (glm::vec3(0.1));
+        }
+        //numpad 2 - for cylinder
+       else if (keyPress[i] == 1073741914){
+          m_bump1->setSpec (glm::vec3(-0.1));
+          m_bump2->setSpec (glm::vec3(-0.1));
+          m_bump3->setSpec (glm::vec3(-0.1));
+        }
+       
+       //numpad 4 + for ball
+       else if (keyPress[i] == 1073741916){
+          m_ball->setSpec (glm::vec3(0.1));
+        } 
+        
+        //numpad 5 - for ball
+        else if (keyPress[i] == 1073741917){
+          m_ball->setSpec (glm::vec3(-0.1));
+        }   
+       
+       //numpad 7 + for cube
+        else if (keyPress[i] == 1073741919){
+          m_leftFlipper->setSpec (glm::vec3(0.1));
+          m_rightFlipper->setSpec (glm::vec3(0.1));
+        } 
+        
+         //numpad 8 - for cube
+        else if (keyPress[i] == 1073741920){
+          m_leftFlipper->setSpec (glm::vec3(-0.1));
+          m_rightFlipper->setSpec (glm::vec3(-0.1));
+        } 
+  }
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
@@ -379,36 +511,36 @@ void Graphics::Render()
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
-  m_table->Render();
+  m_table->Render(m_scalar, scalar, m_spec, m_table->getSpec(), m_spot, spot, m_height, height);
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump1->GetModel()));
-  m_bump1->Render();
+  m_bump1->Render(m_scalar, scalar, m_spec, m_bump1->getSpec(), m_spot, spot, m_height, height);
   
  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump2->GetModel()));
-  m_bump2->Render();
+  m_bump2->Render(m_scalar, scalar, m_spec, m_bump2->getSpec(), m_spot, spot, m_height, height);
   
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump3->GetModel()));
-  m_bump3->Render();
+  m_bump3->Render(m_scalar, scalar, m_spec, m_bump3->getSpec(), m_spot, spot, m_height, height);
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_leftFlipper->GetModel()));
-  m_leftFlipper->Render();
+  m_leftFlipper->Render(m_scalar, scalar, m_spec, m_leftFlipper->getSpec(), m_spot, spot, m_height, height);
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_rightFlipper->GetModel()));
-  m_rightFlipper->Render();
+  m_rightFlipper->Render(m_scalar, scalar, m_spec, m_rightFlipper->getSpec(), m_spot, spot, m_height, height);
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_ball->GetModel()));
   pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   glUniform4fv(ball, 1, glm::value_ptr(pos)); 
-  m_ball->Render();
+  m_ball->Render(m_scalar, scalar, m_spec, m_ball->getSpec(), m_spot, spot, m_height, height);
 
   //render score
   for (int i =0; i < ScoreArray.size(); i++){
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ScoreArray[i]->GetModel()));
-    ScoreArray[i]->Render();
+    ScoreArray[i]->Render(m_scalar, scalar, m_spec, ScoreArray[i]->getSpec(), m_spot, spot, m_height, height);
   }
 
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(BallNum[ballsLeft]->GetModel()));
-    BallNum[ballsLeft]->Render();
+    BallNum[ballsLeft]->Render(m_scalar, scalar, m_spec, BallNum[ballsLeft]->getSpec(), m_spot, spot, m_height, height);
 
   // Get any errors from OpenGL
   auto error = glGetError();

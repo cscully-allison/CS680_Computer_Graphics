@@ -17,7 +17,7 @@ class Graphics
     ~Graphics();
     bool Initialize(int width, int height);
     void Update(unsigned int dt, vector <unsigned int>  keyPress, int force);
-    void Render();
+    void Render(vector <unsigned int>  keyPress);
     int collisionDetection(unsigned int dt);
     void reinitateBall();
     bool getGameState();
@@ -26,12 +26,22 @@ class Graphics
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
-    Shader *m_shader;
+    Shader *gouraund_shader;
+    Shader *phong_shader;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint ball;
+
+    GLint m_scalar;
+    GLint m_spot;
+    GLint m_spec;
+    GLint m_height;
+
+    glm::vec3 scalar;
+    glm::vec3 spot;
+    GLfloat height;
 
     Object *m_table;
     Object *m_ball;

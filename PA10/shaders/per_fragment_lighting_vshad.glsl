@@ -11,7 +11,13 @@
           uniform mat4 projectionMatrix; 
           uniform mat4 viewMatrix; 
           uniform mat4 modelMatrix;
-          uniform vec4 ballPosition;  
+          
+          uniform vec4 ballPosition;
+          uniform vec3 diffuse;
+          uniform vec3 scalar;
+          uniform vec3 spec;
+          uniform vec3 spot;
+          uniform float height;  
 
           out VS_OUT{
             vec3 N;  //normal
@@ -24,6 +30,11 @@
             vec3 Ks;
             vec3 e;
             vec3 t;
+
+            vec3 diffuse;
+            vec3 scalar;
+            vec3 spec;  //scalar
+            vec3 spot;            
 
             // spotlight
             vec3 spotlightL;
@@ -59,4 +70,9 @@
             vs_out.Kd = Kd;
             vs_out.e = emissive;
             vs_out.t = transparent;
+
+            vs_out.diffuse = diffuse; 
+            vs_out.scalar = scalar;
+            vs_out.spec = spec;
+            vs_out.spot = spot;
           } 

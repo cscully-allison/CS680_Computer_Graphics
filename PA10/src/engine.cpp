@@ -74,7 +74,7 @@ void Engine::Run()
 
     // Update and render the graphics
     m_graphics->Update(m_DT, key, force);
-    m_graphics->Render();
+    m_graphics->Render(key);
     for (int i = 0; i < key.size(); i++ ){
        if (key[i] == 13){
           force = 0;

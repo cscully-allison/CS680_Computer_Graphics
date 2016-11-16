@@ -30,14 +30,16 @@ class Object
     void UpdateBumper(int scale);
     void ScoreUpdate(int i, uint score);
     void BallNumUpdate();
-    void Render();
+    void Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
     void applyForce (int force);
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();
-    
+    glm::vec3 getSpec();
+    void setSpec (glm::vec3 s);
+
   private:
     glm::mat4 model;
     std::vector<Vertex> Vertices;
@@ -48,6 +50,8 @@ class Object
     Assimp::Importer importer;
     const aiScene* scene;
 
+    glm::vec3 spec;
+    
     /* bullet rigid body stuff */
     btTriangleMesh* mTriMesh;
     btRigidBody* body;
