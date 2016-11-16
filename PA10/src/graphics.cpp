@@ -7,7 +7,7 @@ Graphics::Graphics()
   dispatcher = new btCollisionDispatcher(collisionConfig);
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-  dynamicsWorld->setGravity(btVector3(-.15,0,0));
+  dynamicsWorld->setGravity(btVector3(-.333,-1,0));
   ballsLeft = 3;
   score = 0;
   resetable = true;
@@ -79,15 +79,17 @@ bool Graphics::Initialize(int width, int height)
   m_bump1 = new Object("bumper.obj", btVector3(4, 0.5, 4), 0, .5, 0, 3);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
   m_bump1->setOrientation();
+  m_bump1->GetRigidBody()->setRestitution(1.5);
 
   m_bump2 = new Object("bumper.obj", btVector3(4, 0.5, -4), 0, .5, 0, 4);
   dynamicsWorld->addRigidBody(m_bump2->GetRigidBody());
   m_bump2->setOrientation();
-  
+  m_bump2->GetRigidBody()->setRestitution(1.5);
+
   m_bump3 = new Object("bumper.obj", btVector3(0, .5, 0), 0, .5, 0, 5);
   dynamicsWorld->addRigidBody(m_bump3->GetRigidBody());
   m_bump3->setOrientation();
-
+  m_bump3->GetRigidBody()->setRestitution(1.5);
 
   m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
@@ -125,7 +127,7 @@ bool Graphics::Initialize(int width, int height)
   wall->calculateLocalInertia(0, inertia);
   btRigidBody::btRigidBodyConstructionInfo wallBodyCI(btScalar(0), motionWall, wall, inertia);
   wallBodyCI.m_friction = btScalar(0);
-  wallBodyCI.m_restitution = btScalar(0);
+  wallBodyCI.m_restitution = btScalar(.5);
   wallBody = new btRigidBody(wallBodyCI);
   wallBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(wallBody);
@@ -245,7 +247,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     resetable = false;
       reinitateBall ();
   }
-  if (pos.z < 6){
+  if (pos.z < 6.5){
      ballCleared = true;
      wallBody->setMotionState(wallPosActive);
   }
