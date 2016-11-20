@@ -10,23 +10,35 @@ Object::Object()
   std::vector <Magick::Image> m_image;
   
   //Verticies and indicies needs to be initilized for run
-  std::cout << "Object name?: " << std::endl;
+ /* std::cout << "Object name?: " << std::endl;
   std::cin >> objectname;
-  scene = importer.ReadFile("../assets/" + objectname, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/" + objectname, aiProcess_Triangulate);*/
+  scene = importer.ReadFile("../assets/pt_objects_per_material.obj", aiProcess_Triangulate);
+
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
- 
+
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+
+    std::cout << texturename.C_Str() << std::endl;
+
+    std::cout << "Meshnums" << scene->mNumMeshes << std::endl;
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/");
     filePath.Append(texturename.C_Str()); 
+
+    std::cout << filePath.C_Str() << std::endl;
     
-    m_image.push_back (Magick::Image(filePath.C_Str()));
+    m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
     m_image[meshNums].write(&temp, "RGBA");
     m_blob.push_back(temp);
+
+    std::cout << "This prints" << std::endl;
+
+    std::cout << scene->mMeshes[meshNums]->mNumVertices << std::endl;
 
     for(unsigned int vertex = 0; vertex < scene->mMeshes[meshNums]->mNumVertices; vertex++){
         Vertices.push_back(
@@ -35,11 +47,13 @@ Object::Object()
                                   scene->mMeshes[meshNums]->mVertices[vertex].y, 
                                   scene->mMeshes[meshNums]->mVertices[vertex].z),
                         glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
-                                  1-scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y))
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y))
 
         );
         
     }
+
+      std::cout << "End of loopA" << std::endl;
 
 
     for(unsigned int index = 0; index < scene->mMeshes[meshNums]->mNumFaces; index++){
@@ -57,14 +71,16 @@ Object::Object()
       
 
 
-        glGenTextures(1, &tempTB);
-        TB.push_back(tempTB);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glGenTextures(1, &tempTB);
+      TB.push_back(tempTB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+      std::cout << "End of loop" << std::endl;
       
 
 }

@@ -2,7 +2,7 @@
           
           layout (location = 0) in vec4 position;
           layout (location = 1) in vec3 normal;
-          layout (location = 2) in vec3 Kd; 
+          layout (location = 2) in vec2 texture; 
           layout (location = 3) in vec3 Ka;
           layout (location = 4) in vec3 Ks;
           layout (location = 5) in vec3 emissive;
@@ -28,7 +28,7 @@
           // scalar to change ambient
           vec3 ambient = scalar;
 
-          out vec3 color;
+          out vec4 color;
 
           void main(void) 
           { 
@@ -50,7 +50,7 @@
 
             //compute the diffuse and specular components for each
             //fragments
-            vec3 diffuse = Kd * max(dot(N,L), 0.0);
+            vec4 diffuse = texture2D(gSampler, texture.xy) * max(dot(N,L), 0.0);
             
             // multiple here to increase specularity
             vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * spec;

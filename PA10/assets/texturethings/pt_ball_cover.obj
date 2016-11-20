@@ -1,0 +1,13 @@
+# Blender v2.76 (sub 0) OBJ File: 'pinballtablewip.blend'
+# www.blender.org
+mtllib pt_ball_cover.mtl
+o Plane
+v -13.459660 1.214193 8.090809
+v -11.459660 1.214193 8.090809
+v -13.459660 1.214193 6.090808
+v -11.459660 1.214193 6.090808
+vn 0.000000 1.000000 0.000000
+usemtl Material.008
+s off
+f 2//1 4//1 3//1
+f 1//1 2//1 3//1
