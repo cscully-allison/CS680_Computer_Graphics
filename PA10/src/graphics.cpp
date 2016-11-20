@@ -322,8 +322,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   // update the ball
   m_ball->Update ();
-  int leftCall = 0;
-  int rightCall = 0;
 
 
   // figure out the position of the wall blocking the ball
@@ -436,7 +434,7 @@ int Graphics::collisionDetection (unsigned int dt){
           notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
           // assign score based on object hit
           switch (notBall){
-            left flipper
+            //left flipper
             case 1:
                 score += 50;
             break;
