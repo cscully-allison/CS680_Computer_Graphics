@@ -16,8 +16,8 @@ bool Camera::Initialize(int w, int h)
   //  if you will be having a moving camera the view matrix will need to more dynamic
   //  ...Like you should update it before you render more dynamic 
   //  for this project having them static will be fine
-  view = glm::lookAt( glm::vec3(0.0, 30.0, 0.0), //Eye Position
-                      glm::vec3(0.0, 0.0, 0.0), //Focus point
+  view = glm::lookAt( glm::vec3(-17.0, 12.0, 0.0), //Eye Position
+                      glm::vec3(0.0, -5.0, 0.0), //Focus point
                       glm::vec3(1.0, 0.0, 0.0)); //Positive Y is up
 
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
@@ -35,6 +35,29 @@ glm::mat4 Camera::GetProjection()
 glm::mat4 Camera::GetView()
 {
   return view;
+}
+
+void Camera::Update(int input){
+   // glTranslatef(0, 0, 12);
+
+   switch (input){
+      //move camera left
+      case 1073741904:
+        view = glm::translate(view, glm::vec3(0.0,0.0,1.0));
+      break;
+      //move camera right
+      case 1073741903:
+       view = glm::translate(view, glm::vec3(0.0,0.0,-1.0));
+      break;
+      //move camera up
+      case 1073741906:
+        view = glm::translate(view, glm::vec3(-1.0,0.0,0.0));
+      break;
+      // move camera down
+      case 1073741905:
+        view = glm::translate(view, glm::vec3(1.0,0.0,0.0));
+      break;
+   }
 }
 
 

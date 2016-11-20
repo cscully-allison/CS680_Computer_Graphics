@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include <fstream>
 
 Graphics::Graphics()
 {
@@ -256,6 +257,7 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
+
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   int update = collisionDetection(dt);
@@ -299,6 +301,9 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   }
      
   for (int i = 0; i < keyPress.size(); i ++){
+      // update camera
+      m_camera->Update(keyPress[i]);
+
     if (!ballCleared){
         if (keyPress[i] == 13){
           m_ball->applyForce (min (force, 300));
@@ -374,6 +379,23 @@ int Graphics::collisionDetection (unsigned int dt){
   return notBall;
 }
 
+// void Graphics::highScore ( int score){
+//   std::string name; 
+//   std::ifstream fin;
+
+//   fin.open("../assets/HighScore.txt");
+//     if(!fin.good()){
+//       std::cout << "High Score! Please Enter Your Name" << std::endl;
+//       std::cin >> name;
+//     }
+    
+//   //   while(!fin.eof()){
+//   //       std::getline(fin, buffer);
+//   // shader += (buffer + "\n");
+//   //   }
+
+// }
+
 void Graphics::reinitateBall(){
   ballsLeft --;
   if (ballsLeft > 0)
@@ -386,6 +408,7 @@ void Graphics::reinitateBall(){
   else if (ballsLeft == 0)
   {
     std::cout << "Game Over... Your Score Is: "  << score << std::endl;
+   // highScore(score);
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
     gamestate = false;
     score = 0;
