@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include <fstream>
 
 Graphics::Graphics()
 {
@@ -72,11 +73,15 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+<<<<<<< HEAD
   // Create the object
   // index 1 for table
   m_table = new Object("texturethings/testTable2.obj",btVector3 (0,0,0),0, .5, 0, 0);
+=======
+>>>>>>> f8c4409e6c7f39ec01ea779a37c09462d80efe28
 
-  // add collision shape
+  // Create the table object and add to the dynamicsWorld
+  m_table = new Object("texturethings/textured_pinball_table.obj",btVector3 (0,0,0),0, .5, 0, 0);
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
 
   // Create a bumper object and add to the dynamicsWorld
@@ -170,6 +175,7 @@ bool Graphics::Initialize(int width, int height)
   //   Millions.push_back (numbers[i]);
   // }
 
+  // number of balls left object
   BallNum.push_back (numbers[0]);
   BallNum.push_back (numbers[1]);
   BallNum.push_back (numbers[2]);
@@ -310,10 +316,15 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
+<<<<<<< HEAD
+
+  glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+=======
   int leftCall = 0;
   int rightCall = 0;
 
   // update the dynamics world step
+>>>>>>> f8c4409e6c7f39ec01ea779a37c09462d80efe28
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   // senses any collision; returned variable not used
   int update = collisionDetection(dt);
@@ -322,8 +333,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
   // update the ball
   m_ball->Update ();
-  int leftCall = 0;
-  int rightCall = 0;
 
 
   // figure out the position of the wall blocking the ball
@@ -372,8 +381,14 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
      
   // see which keys have been pressed 
   for (int i = 0; i < keyPress.size(); i ++){
+<<<<<<< HEAD
+      // update camera
+      m_camera->Update(keyPress[i]);
+
+=======
     // the space key is has been released, apply force to the ball  
     // but only if the ball is in starting position
+>>>>>>> f8c4409e6c7f39ec01ea779a37c09462d80efe28
     if (!ballCleared){
         if (keyPress[i] == 32){
           // maximum force allowed to the ball is 300
@@ -498,8 +513,11 @@ void Graphics::reinitateBall(){
   {
     // output score
     std::cout << "Game Over... Your Score Is: "  << score << std::endl;
+<<<<<<< HEAD
    // highScore(score);
-   // put the ball out of play
+=======
+    // put the ball out of play
+>>>>>>> f8c4409e6c7f39ec01ea779a37c09462d80efe28
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
     // end the program
     gamestate = false;

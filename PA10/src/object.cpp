@@ -1,6 +1,72 @@
 #include "object.h"
 
 
+//Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
+//{
+//   aiString texturename;
+//   GLuint tempTB;
+//   std::vector <Magick::Image> m_image;
+
+
+
+//   pressed = false;
+//   //Verticies and indicies needs to be initilized for run
+//   //Presumably we will call the assimp functions here
+//   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
+//   aiColor3D color (0.0f,0.0f, 0.0f);
+//   aiVector3D textureCoords(0.0f, 0.0f, 0.0f);
+
+//   btConvexHullShape* shape = new btConvexHullShape();
+  
+//   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+//     const aiMesh* mesh = scene->mMeshes[meshNums];
+    
+//     // get material properties per mesh
+//     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+//     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
+//     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+//     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
+//     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), textureCoords);
+//     glm::vec2 texture = glm::vec2(textureCoords.x, textureCoords.y);
+//     glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+//     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+//     glm::vec3 t = glm::vec3(color.r, color.g, color.b);
+
+//     Color materialsColor (Ka,Kd, Ks, e, t);
+
+
+//     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+//       Vertices.push_back(Vertex(
+//                             glm::vec3(mesh->mVertices[vertex].x, 
+//                                       mesh->mVertices[vertex].y, 
+//                                       mesh->mVertices[vertex].z), 
+//                             glm::vec3(mesh->mNormals[vertex].x, 
+//                                       mesh->mNormals[vertex].y, 
+//                                       mesh->mNormals[vertex].z),
+//                             materialsColor));
+
+//       shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
+//                                  mesh->mVertices[vertex].y, 
+//                                  mesh->mVertices[vertex].z));
+      
+//     }
+
+
+//     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
+//       Indices.push_back(mesh->mFaces[index].mIndices[0]);
+//       Indices.push_back(mesh->mFaces[index].mIndices[1]);
+//       Indices.push_back(mesh->mFaces[index].mIndices[2]);
+//     }
+
+//       glGenBuffers(1, &VB);
+//       glBindBuffer(GL_ARRAY_BUFFER, VB);
+//       glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
+
+//       glGenBuffers(1, &IB);
+//       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+//       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+// }
 
 Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
 {  

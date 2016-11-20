@@ -74,10 +74,16 @@ void Engine::Run()
 
     // Update and render the graphics
     m_graphics->Update(m_DT, key, force);
+    // pass the key to render
     m_graphics->Render(key);
+
+    // look for space being released
     for (int i = 0; i < key.size(); i++ ){
-       if (key[i] == 13){
+      // if released
+       if (key[i] == 32){
+          // set force to 0
           force = 0;
+          // erase key
           key.erase (key.begin() + i);
       }
     }
@@ -93,10 +99,13 @@ void Engine::Run()
 
 unsigned int Engine::Keyboard()
 {
+  //escape button to quit
   if(m_event.type == SDL_QUIT)
   {
     m_running = false;
   }
+
+  // when a key is pressed down
   else if (m_event.type == SDL_KEYDOWN)
   {
     // handle key down events here
@@ -104,23 +113,31 @@ unsigned int Engine::Keyboard()
     {
       m_running = false;
     }
-    else if (m_event.key.keysym.sym == 13)
+    // if space
+    else if (m_event.key.keysym.sym == 32)
     {
+      // add force
       force ++;
     }
     else
     {
+      // otherwise, return the key
       return m_event.key.keysym.sym;
     }  
   }
 
+  // when the key is released
   else if (m_event.type == SDL_KEYUP)
   {
-    if (m_event.key.keysym.sym == 13)
+    // when space is released
+    if (m_event.key.keysym.sym == 32)
     {
+      // return the space key
       return m_event.key.keysym.sym;
     }
+    // otherwise
     else{
+      // cycle through keys and delete released key
     for (int i = 0; i < key.size(); i++){
         if (key[i] == m_event.key.keysym.sym){
           key.erase (key.begin()+ i);
