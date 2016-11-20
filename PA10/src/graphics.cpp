@@ -460,22 +460,22 @@ int Graphics::collisionDetection (unsigned int dt){
   return notBall;
 }
 
-// void Graphics::highScore ( int score){
-//   std::string name; 
-//   std::ifstream fin;
+void Graphics::highScore ( int score){
+  std::string name; 
+  std::ifstream fin;
 
-//   fin.open("../assets/HighScore.txt");
-//     if(!fin.good()){
-//       std::cout << "High Score! Please Enter Your Name" << std::endl;
-//       std::cin >> name;
-//     }
+  fin.open("../assets/HighScore.txt");
+    if(!fin.good()){
+      std::cout << "High Score! Please Enter Your Name" << std::endl;
+      std::cin >> name;
+    }
     
-//   //   while(!fin.eof()){
-//   //       std::getline(fin, buffer);
-//   // shader += (buffer + "\n");
-//   //   }
+  //   while(!fin.eof()){
+  //       std::getline(fin, buffer);
+  // shader += (buffer + "\n");
+  //   }
 
-// }
+}
 
 void Graphics::reinitateBall(){
   // decrease the number of balls
