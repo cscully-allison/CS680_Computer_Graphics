@@ -224,8 +224,9 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-}
 
+
+}
    // create collision shape
 
     btCollisionShape* shape = new btBvhTriangleMeshShape (mTriMesh, true);  
