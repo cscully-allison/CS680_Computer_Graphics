@@ -22,6 +22,8 @@ class Graphics
     void reinitateBall();
     bool getGameState();
 
+    //void ScoreDisplay (int scoreVar, Object);
+
   private:
     std::string ErrorString(GLenum error);
 
@@ -51,8 +53,14 @@ class Graphics
     Object *m_bump2;
     Object *m_bump3;
     vector <Object*> numbers;
-    vector <Object*> ScoreArray;
     vector <Object*> BallNum;
+    // vector <Object*> Ones;
+    // vector <Object*> Tens;
+    // vector <Object*> Hundreds;
+    // vector <Object*> Thousands;
+    // vector <Object*> TenThousands;
+    // vector <Object*> Millions;
+
     glm::vec4 pos;
 
     btRigidBody* ceilingBody;

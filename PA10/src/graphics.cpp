@@ -88,14 +88,14 @@ bool Graphics::Initialize(int width, int height)
   m_bump3->setOrientation();
   m_bump3->GetRigidBody()->setRestitution(1.5);
 
-  m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,-3.3),0, 0, 0, 1);
+  m_leftFlipper = new Object("fancy_leftflipper.obj",500, btVector3 (0,0,0),btVector3 (-11.0,0,-3.5),0, 0, 0, 1);
   dynamicsWorld->addRigidBody (m_leftFlipper->GetRigidBody());
   //m_leftFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_leftFlipper->setOrientation();
   m_leftFlipper->GetRigidBody()->setLinearFactor(btVector3(0,0,0));
   m_leftFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
-  m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-10.8,0,2.5),0, 0, 0, 2);
+  m_rightFlipper = new Object("fancy_rightflipper.obj",500, btVector3 (0,0,0),btVector3 (-11,0,2.8),0, 0, 0, 2);
   dynamicsWorld->addRigidBody (m_rightFlipper->GetRigidBody());
   //m_rightFlipper->GetRigidBody()->setGravity(btVector3(-5,1,0));
   m_rightFlipper->setOrientation();
@@ -141,10 +141,15 @@ bool Graphics::Initialize(int width, int height)
   numbers.push_back (new Object ("number8.obj"));
   numbers.push_back (new Object ("number9.obj"));
 
-  //intialize score
-  for (int i= 0; i < 5; i++){
-    ScoreArray.push_back (numbers[0]);
-  }
+  // for (int i=0; i<10; i++)
+  // {
+  //   Ones.push_back (numbers[i]);
+  //   Tens.push_back (numbers[i]);
+  //   Hundreds.push_back (numbers[i]);
+  //   Thousands.push_back (numbers[i]);
+  //   TenThousands.push_back (numbers[i]);
+  //   Millions.push_back (numbers[i]);
+  // }
 
   BallNum.push_back (numbers[0]);
   BallNum.push_back (numbers[1]);
@@ -261,9 +266,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   btDefaultMotionState* wallPosActive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,0.0f,6.0f)));
   btDefaultMotionState* wallPosInactive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,-5.0f,6.0f)));
 
-  for (int i = 0; i < ScoreArray.size(); i ++){
-    ScoreArray[i]->ScoreUpdate(i, score);
-  }
 
   BallNum[ballsLeft]->BallNumUpdate();
  
@@ -383,9 +385,10 @@ void Graphics::reinitateBall(){
   }
   else if (ballsLeft == 0)
   {
-    std::cout << "game over... your score is: "  << score << std::endl;
+    std::cout << "Game Over... Your Score Is: "  << score << std::endl;
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
     gamestate = false;
+    score = 0;
   }
 
 
@@ -533,14 +536,26 @@ for (int i =0; i < keyPress.size(); i++){
   glUniform4fv(ball, 1, glm::value_ptr(pos)); 
   m_ball->Render(m_scalar, scalar, m_spec, m_ball->getSpec(), m_spot, spot, m_height, height);
 
-  //render score
-  for (int i =0; i < ScoreArray.size(); i++){
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ScoreArray[i]->GetModel()));
-    ScoreArray[i]->Render(m_scalar, scalar, m_spec, ScoreArray[i]->getSpec(), m_spot, spot, m_height, height);
-  }
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(Ones[score%10]->GetModel()));
+  // Ones[score%10]->Render(m_scalar, scalar, m_spec, Ones[score%10]->getSpec(), m_spot, spot, m_height, height);
+  
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(Tens[(score%100)/10]->GetModel()));
+  // Tens[(score%100)/10]->Render(m_scalar, scalar, m_spec, Tens[(score%100)/10]->getSpec(), m_spot, spot, m_height, height);
 
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(BallNum[ballsLeft]->GetModel()));
-    BallNum[ballsLeft]->Render(m_scalar, scalar, m_spec, BallNum[ballsLeft]->getSpec(), m_spot, spot, m_height, height);
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(Hundreds[(score%1000)/100]->GetModel()));
+  // Hundreds[(score%1000)/100]->Render(m_scalar, scalar, m_spec, Hundreds[(score%1000)/100]->getSpec(), m_spot, spot, m_height, height);
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(Thousands[(score%10000)/1000]->GetModel()));
+  // Thousands[(score%10000)/1000]->Render(m_scalar, scalar, m_spec, Thousands[(score%10000)/1000]->getSpec(), m_spot, spot, m_height, height);
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(TenThousands[(score%100000)/10000]->GetModel()));
+  // TenThousands[(score%100000)/10000]->Render(m_scalar, scalar, m_spec, TenThousands[(score%100000)/10000]->getSpec(), m_spot, spot, m_height, height);
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(Millions[(score%1000000)/100000]->GetModel()));
+  // Millions[(score%1000000)/100000]->Render(m_scalar, scalar, m_spec, Millions[(score%1000000)/100000]->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(BallNum[ballsLeft]->GetModel()));
+  BallNum[ballsLeft]->Render(m_scalar, scalar, m_spec, BallNum[ballsLeft]->getSpec(), m_spot, spot, m_height, height);
 
   // Get any errors from OpenGL
   auto error = glGetError();

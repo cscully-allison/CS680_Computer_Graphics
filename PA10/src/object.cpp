@@ -332,8 +332,8 @@ void Object::applyForce(int force){
       body->applyForce(btVector3(force*200.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
-void Object::ScoreUpdate(int i, uint score){
-    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , 2*i));
+void Object::ScoreUpdate(){
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , 2));
 
 }
 
@@ -374,7 +374,7 @@ void Object::UpdateFlipper(int side, unsigned int keyPress, unsigned int dt)
   }
   else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3))));
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-11, 0, -3.5))));
     body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
     body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     pressed = false;
@@ -398,7 +398,7 @@ else if (side){
   }
    else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5))));
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-11, 0, 2.8))));
     body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
     body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     pressed = false;
