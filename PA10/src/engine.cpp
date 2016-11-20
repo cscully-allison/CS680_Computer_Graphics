@@ -80,7 +80,7 @@ void Engine::Run()
     // look for space being released
     for (int i = 0; i < key.size(); i++ ){
       // if released
-       if (key[i] == 13){
+       if (key[i] == 32){
           // set force to 0
           force = 0;
           // erase key
@@ -114,7 +114,7 @@ unsigned int Engine::Keyboard()
       m_running = false;
     }
     // if space
-    else if (m_event.key.keysym.sym == 13)
+    else if (m_event.key.keysym.sym == 32)
     {
       // add force
       force ++;
@@ -130,7 +130,7 @@ unsigned int Engine::Keyboard()
   else if (m_event.type == SDL_KEYUP)
   {
     // when space is released
-    if (m_event.key.keysym.sym == 13)
+    if (m_event.key.keysym.sym == 32)
     {
       // return the space key
       return m_event.key.keysym.sym;

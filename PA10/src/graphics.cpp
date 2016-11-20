@@ -372,7 +372,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     // the space key is has been released, apply force to the ball  
     // but only if the ball is in starting position
     if (!ballCleared){
-        if (keyPress[i] == 13){
+        if (keyPress[i] == 32){
           // maximum force allowed to the ball is 300
           m_ball->applyForce (min (force, 300));
         }
