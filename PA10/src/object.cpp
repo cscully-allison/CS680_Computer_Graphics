@@ -189,6 +189,32 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 }*/
 
+   // create collision shape
+    shape->calculateLocalInertia(mass, inertia);
+    btDefaultMotionState* motion;
+    switch(rotate)
+    {
+      case 1:
+         motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), -.5235), startOrigin));
+      break;
+
+      case 2:
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+      break;
+        
+      default:
+        motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
+      break;
+    }
+    
+    // static bodies get a mass of 0
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
+    rigidBodyCI.m_friction = friction;
+    rigidBodyCI.m_restitution = restitution;
+    rigidBodyCI.m_angularDamping = damping;
+    body = new btRigidBody(rigidBodyCI);
+    body->setActivationState (DISABLE_DEACTIVATION);
+    //body->setUserIndex(rotate);
 
 }
 

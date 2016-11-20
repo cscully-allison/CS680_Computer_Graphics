@@ -29,7 +29,7 @@ class Object
     void Update();
     void UpdateFlipper(int side, unsigned int keyPress, unsigned int dt);
     void UpdateBumper(int scale);
-    void ScoreUpdate(int i, uint score);
+    void ScoreUpdate();
     void BallNumUpdate();
     void Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height);
     void setBodyTransform(btVector3);

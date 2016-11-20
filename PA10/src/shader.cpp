@@ -37,8 +37,10 @@ bool Shader::AddShader(GLenum ShaderType, std::string shaderName)
 {
   std::string s;
 
+  // load shader from the shader file
   s = loadShader("../shaders/" + shaderName);
 
+  // create shader
   GLuint ShaderObj = glCreateShader(ShaderType);
 
   if (ShaderObj == 0) 
@@ -56,8 +58,10 @@ bool Shader::AddShader(GLenum ShaderType, std::string shaderName)
 
   glShaderSource(ShaderObj, 1, p, Lengths);
 
+  // compile shader
   glCompileShader(ShaderObj);
 
+  // check for successful compliation
   GLint success;
   glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
 
@@ -69,6 +73,7 @@ bool Shader::AddShader(GLenum ShaderType, std::string shaderName)
     return false;
   }
 
+  // attach shader to the program
   glAttachShader(m_shaderProg, ShaderObj);
 
   return true;
@@ -82,6 +87,7 @@ bool Shader::Finalize()
   GLint Success = 0;
   GLchar ErrorLog[1024] = { 0 };
 
+  // link the shader to the program
   glLinkProgram(m_shaderProg);
 
   glGetProgramiv(m_shaderProg, GL_LINK_STATUS, &Success);
@@ -115,6 +121,7 @@ bool Shader::Finalize()
 
 void Shader::Enable()
 {
+    // enable the shader
     glUseProgram(m_shaderProg);
 }
 
@@ -142,16 +149,18 @@ std::string Shader::loadShader(std::string path){
     std::string buffer;
     std::string shader;
     
-    
+    // open the file
     fin.open(path);
+    // if not successful, print error
     if(!fin.good()){
         fprintf(stderr, "File Not Found");
-	return "";
+	   return "";
     }
     
+    // otherwise, read in til end of file
     while(!fin.eof()){
-        std::getline(fin, buffer);
-	shader += (buffer + "\n");
+      std::getline(fin, buffer);
+	    shader += (buffer + "\n");
     }
 
     return shader;
