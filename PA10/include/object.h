@@ -11,6 +11,7 @@
 #include <assimp/scene.h> //includes the aiScene object
 #include <assimp/postprocess.h> //includes the postprocessing variables for the importer
 #include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects 
+#include <Magick++.h>
 
 class Object
 {
@@ -46,9 +47,12 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+    std::vector<GLuint> TB;
 
     Assimp::Importer importer;
     const aiScene* scene;
+
+    std::vector<Magick::Blob> m_blob;
 
     glm::vec3 spec;
     

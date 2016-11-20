@@ -32,6 +32,18 @@ struct Color{
     Color(glm::vec3 a, glm::vec3 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Ka(a), Kd(d), Ks(s), emissive (e), transparent (t) {}
 };
 
+struct Texture : Color {
+    glm::vec3 Ks;
+    glm::vec2 texture;
+    glm::vec3 Ka;
+    glm::vec3 emissive;
+    glm::vec3 transparent;
+
+    Texture(glm::vec3 a, glm::vec2 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Color(a, glm::vec3(0.0f), s, e, t){
+      texture = d;
+    }
+};
+
 struct Vertex
 {
   glm::vec3 vertex;

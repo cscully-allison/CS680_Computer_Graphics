@@ -7,35 +7,58 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
 
-
+  std::cout << "Butts4" << std::endl;
 
   pressed = false;
+
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
-  aiVector3D textureCoords(0.0f, 0.0f, 0.0f);
+  aiVector3D textureCoords(0.0f,0.0f, 0.0f);
+
+  std::cout << filename << std::endl;
 
   btConvexHullShape* shape = new btConvexHullShape();
-  
+
+
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+
+
+    //texture loading from file
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+    std::cout << texturename.C_Str() << std::endl;
+
+    //get texture file
+    aiString filePath;
+    filePath.Append("../assets/texturethings/");
+    filePath.Append(texturename.C_Str());
+
+    m_image.push_back(Magick::Image(filePath.C_Str()));
+    Magick::Blob temp;
+    m_image[meshNums].write(&temp, "RGBA");
+    m_blob.push_back(temp);
+
+
     const aiMesh* mesh = scene->mMeshes[meshNums];
-    
+
     // get material properties per mesh
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
-    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), textureCoords);
-    glm::vec2 texture = glm::vec2(textureCoords.x, textureCoords.y);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
     glm::vec3 e = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
     glm::vec3 t = glm::vec3(color.r, color.g, color.b);
 
-    Color materialsColor (Ka,Kd, Ks, e, t);
-
+    Texture matTex(Ka, glm::vec2(0.0f), Ks, e, t);
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      //load tex coords per vertex
+      matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
                                       mesh->mVertices[vertex].y, 
@@ -43,7 +66,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                             glm::vec3(mesh->mNormals[vertex].x, 
                                       mesh->mNormals[vertex].y, 
                                       mesh->mNormals[vertex].z),
-                            materialsColor));
+                            matTex));
 
       shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
                                  mesh->mVertices[vertex].y, 
@@ -65,6 +88,46 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+
+      glGenTextures(1, &tempTB);
+      TB.push_back(tempTB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+   // create collision shape
+    shape->calculateLocalInertia(mass, inertia);
+    btDefaultMotionState* motion;
+    switch(rotate)
+    {
+      case 1:
+         motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), -.5235), startOrigin));
+      break;
+
+      case 2:
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+      break;
+        
+      default:
+        motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
+      break;
+    }
+    
+    // static bodies get a mass of 0
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
+    rigidBodyCI.m_friction = friction;
+    rigidBodyCI.m_restitution = restitution;
+    rigidBodyCI.m_angularDamping = damping;
+    body = new btRigidBody(rigidBodyCI);
+    body->setActivationState (DISABLE_DEACTIVATION);
+    //body->setUserIndex(rotate);
+
+
 
 }
 
@@ -126,45 +189,43 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 }*/
 
-   // create collision shape
-    shape->calculateLocalInertia(mass, inertia);
-    btDefaultMotionState* motion;
-    switch(rotate)
-    {
-      case 1:
-         motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), -.5235), startOrigin));
-      break;
-
-      case 2:
-          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
-      break;
-        
-      default:
-        motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
-      break;
-    }
-    
-    // static bodies get a mass of 0
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
-    rigidBodyCI.m_friction = friction;
-    rigidBodyCI.m_restitution = restitution;
-    rigidBodyCI.m_angularDamping = damping;
-    body = new btRigidBody(rigidBodyCI);
-    body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(rotate);
 
 }
 
 Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping)
 {  
 
+  aiString texturename;
+  GLuint tempTB;
+  std::vector <Magick::Image> m_image;
+
+
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/ball.obj", aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
+  aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+
+
+    //texture loading from file
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+    std::cout << texturename.C_Str() << std::endl;
+
+    //get texture file
+    aiString filePath;
+    filePath.Append("../assets/texturethings/");
+    filePath.Append(texturename.C_Str());
+
+    m_image.push_back(Magick::Image(filePath.C_Str()));
+    Magick::Blob temp;
+    m_image[meshNums].write(&temp, "RGBA");
+    m_blob.push_back(temp);
+
+
     const aiMesh* mesh = scene->mMeshes[meshNums];
+
     // get material properties per mesh
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
@@ -176,10 +237,12 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
     glm::vec3 t = glm::vec3(color.r, color.g, color.b);
 
-    Color materialsColor (Ka,Kd, Ks, e, t);
-
+    Texture matTex(Ka, glm::vec2(0.0f), Ks, e, t);
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      //load tex coords per vertex
+      matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
                                       mesh->mVertices[vertex].y, 
@@ -187,7 +250,9 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
                             glm::vec3(mesh->mNormals[vertex].x, 
                                       mesh->mNormals[vertex].y, 
                                       mesh->mNormals[vertex].z),
-                            materialsColor));
+                            matTex));
+
+      
     }
 
 
@@ -204,6 +269,16 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+
+      glGenTextures(1, &tempTB);
+      TB.push_back(tempTB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
    // create collision shape
@@ -225,6 +300,142 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 
 }
 
+
+
+
+
+/*********************
+STATIC OBJ CONTRUCTOR
+***************************/
+
+Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
+{  
+ aiString texturename;
+  GLuint tempTB;
+  std::vector <Magick::Image> m_image;
+
+
+  pressed = false;
+
+  //Verticies and indicies needs to be initilized for run
+  //Presumably we will call the assimp functions here
+  scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
+  aiColor3D color (0.0f,0.0f, 0.0f);
+  aiVector3D textureCoords(0.0f,0.0f, 0.0f);
+
+  std::cout << filename << std::endl;
+
+  for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+
+    std::cout << "butts 5" << std::endl;
+
+    //texture loading from file
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+    std::cout << texturename.C_Str() << std::endl;
+
+    //get texture file
+    aiString filePath;
+    filePath.Append("../assets/texturethings/");
+    filePath.Append(texturename.C_Str());
+
+
+    m_image.push_back(Magick::Image(filePath.C_Str()));
+    Magick::Blob temp;
+    m_image[meshNums].write(&temp, "RGBA");
+    m_blob.push_back(temp);
+
+    // create triangle mesh
+    mTriMesh = new btTriangleMesh();
+
+    const aiMesh* mesh = scene->mMeshes[meshNums];
+
+    // get material properties per mesh
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    glm::vec3 e = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+    glm::vec3 t = glm::vec3(color.r, color.g, color.b);
+
+    Texture matTex(Ka, glm::vec2(0.0f), Ks, e, t);
+
+    for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      //load tex coords per vertex
+      matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
+      Vertices.push_back(Vertex(
+                            glm::vec3(mesh->mVertices[vertex].x, 
+                                      mesh->mVertices[vertex].y, 
+                                      mesh->mVertices[vertex].z), 
+                            glm::vec3(mesh->mNormals[vertex].x, 
+                                      mesh->mNormals[vertex].y, 
+                                      mesh->mNormals[vertex].z),
+                            matTex));
+      
+    }
+
+    for(unsigned int index = 0; index < mesh->mNumFaces; index++){
+      Indices.push_back(mesh->mFaces[index].mIndices[0]);
+      Indices.push_back(mesh->mFaces[index].mIndices[1]);
+      Indices.push_back(mesh->mFaces[index].mIndices[2]);
+
+      btVector3 v0 = btVector3( mesh->mVertices[ mesh->mFaces[index].mIndices[0]].x,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[0]].y,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[0]].z);
+
+      btVector3 v1 = btVector3( mesh->mVertices[ mesh->mFaces[index].mIndices[1]].x,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[1]].y,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[1]].z);
+
+      btVector3 v2 = btVector3( mesh->mVertices[ mesh->mFaces[index].mIndices[2]].x,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[2]].y,
+                                mesh->mVertices[ mesh->mFaces[index].mIndices[2]].z);                            
+
+      mTriMesh->addTriangle (v0,v1,v2);
+    }
+
+      glGenBuffers(1, &VB);
+      glBindBuffer(GL_ARRAY_BUFFER, VB);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(),  &Vertices[0], GL_STATIC_DRAW);
+
+      glGenBuffers(1, &IB);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+      glGenTextures(1, &tempTB);
+      TB.push_back(tempTB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+   // create collision shape
+
+    btCollisionShape* shape = new btBvhTriangleMeshShape (mTriMesh, true);  
+    btVector3 interia (0,0,0);
+    shape->calculateLocalInertia(0, interia);
+    btTransform bodyTransform;
+    bodyTransform.setIdentity();
+    bodyTransform.setOrigin (startOrigin);
+    btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, interia);
+    rigidBodyCI.m_friction = friction;
+    rigidBodyCI.m_restitution = restitution;
+    rigidBodyCI.m_angularDamping = damping;
+    body = new btRigidBody(rigidBodyCI);
+    body->setActivationState (DISABLE_DEACTIVATION);
+    //body->setUserIndex(indexNumber);
+
+    std::cout << "do we make the obj" << std::endl;
+}
+
+/*
 
 Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
 {  
@@ -308,7 +519,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(indexNumber);
-}
+}*/
 
 Object::Object(std::string filename)
 {  

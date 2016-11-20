@@ -67,8 +67,12 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
   // Create the object
+
+  std::cout << "butts3" << std::endl;
+
+
   // index 1 for table
-  m_table = new Object("texturethings/textured_pinball_table.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_table = new Object("pt_divider_etc.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
@@ -128,7 +132,6 @@ bool Graphics::Initialize(int width, int height)
   wallBody = new btRigidBody(wallBodyCI);
   wallBody->setActivationState(DISABLE_DEACTIVATION);
   dynamicsWorld->addRigidBody(wallBody);
-
 
   numbers.push_back (new Object ("number0.obj"));
   numbers.push_back (new Object ("number1.obj"));

@@ -28,7 +28,8 @@
           // scalar to change ambient
           vec3 ambient = scalar;
 
-          out vec4 color;
+          out vec3 color;
+          out vec2 v_texture;
 
           void main(void) 
           { 
@@ -50,7 +51,7 @@
 
             //compute the diffuse and specular components for each
             //fragments
-            vec4 diffuse = texture2D(gSampler, texture.xy) * max(dot(N,L), 0.0);
+            vec3 diffuse = vec3(0.5,0.5,0.5) * max(dot(N,L), 0.0);
             
             // multiple here to increase specularity
             vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * spec;
@@ -79,5 +80,7 @@
                      }
             }
 
-            gl_Position = projectionMatrix * viewMatrix * p; 
+            gl_Position = projectionMatrix * viewMatrix * p;
+
+            v_texture = texture; 
           } 
