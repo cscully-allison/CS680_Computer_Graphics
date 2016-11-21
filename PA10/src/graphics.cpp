@@ -137,7 +137,7 @@ bool Graphics::Initialize(int width, int height)
   m_rightFlipper->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 
  //create the ball and add to dynamics world
-  m_ball = new Object(50, btVector3 (0,0,0), btVector3 (-13,.21,7),0,1, 0);
+  m_ball = new Object(50, btVector3 (0,0,0), btVector3 (-13,.20,7),0,1, 0);
   m_ball->GetRigidBody()->setLinearFactor(btVector3(1,0,1));
   dynamicsWorld->addRigidBody (m_ball->GetRigidBody());
 
