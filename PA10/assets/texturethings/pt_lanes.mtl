@@ -1,8 +1,8 @@
-# Blender MTL File: 'pinballtablewip.blend'
+# Blender MTL File: 'None'
 # Material Count: 3
 
-newmtl Material.001
-Ns 96.078431
+newmtl Material.002
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -13,7 +13,7 @@ illum 2
 map_Kd prodotti-156350-rele632d874ff3e40378d3dbb6b220c6df6.jpg
 
 newmtl Material.006
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -24,7 +24,7 @@ illum 2
 map_Kd prodotti-156350-rele632d874ff3e40378d3dbb6b220c6df6.jpg
 
 newmtl Material.013
-Ns 96.078431
+Ns 94.117647
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000

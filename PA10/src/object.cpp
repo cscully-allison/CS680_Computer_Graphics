@@ -7,7 +7,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
 
-  std::cout << "Butts4" << std::endl;
 
   pressed = false;
 
@@ -17,7 +16,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
-  std::cout << filename << std::endl;
 
   btConvexHullShape* shape = new btConvexHullShape();
 
@@ -27,14 +25,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
-    std::cout << filePath.C_Str() << std::endl; 
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -60,13 +56,11 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
 
-          std::cout << scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x << std::endl;  
 
       //load tex coords per vertex
       matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
                                   scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
 
-        std::cout << "dICKS" << std::endl;  
 
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
@@ -85,7 +79,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     }
 
       
-          std::cout << "dICKS" << std::endl;
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -140,7 +133,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     //body->setUserIndex(rotate);
 
 
-    std::cout << "fliier made" << std::endl;
 
 }
 
@@ -212,7 +204,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       break;
 
       case 2:
-          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .9), startOrigin));
       break;
         
       default:
@@ -250,7 +242,6 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
@@ -362,22 +353,18 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
-  std::cout << filename << std::endl;
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
-    std::cout << "butts 5" << std::endl;
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
-    std::cout << filePath.C_Str() << std::endl;  
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -472,7 +459,6 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(indexNumber);
 
-    std::cout << "do we make the obj" << std::endl;
 }
 
 /*
@@ -716,7 +702,7 @@ else if (side){
   }
    else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5))));
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .9), btVector3(-10.8, 0, 2.5))));
     body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
     body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     pressed = false;
