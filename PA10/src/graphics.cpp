@@ -87,6 +87,9 @@ bool Graphics::Initialize(int width, int height)
   m_bot_lanesL = new Object("bot_lanes_left.obj",btVector3 (0,0,0),0, .5, 0, 0);
   m_bot_lanesR = new Object("bot_lanes_right.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
+  m_plunger = new Object("plunger.obj",btVector3 (0,5,0),0, .5, 0, 0);
+  m_plunger->setPlunger();
+
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
   dynamicsWorld->addRigidBody (m_lanes1->GetRigidBody());
@@ -361,7 +364,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
       resetable = true;
   }
   // the ball has passed the wall and has fallen below the flippers
-  if (pos.x < -11.86  && pos.z < 5.5  && ballCleared && resetable){
+  if (pos.x < -11.76  && pos.z < 5.5  && ballCleared && resetable){
     resetable = false;
     // put the ball back in the starting position
     reinitateBall ();
@@ -509,7 +512,6 @@ void Graphics::reinitateBall(){
     m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(9999,-9999, 9999)));
     // end the program
     gamestate = false;
-    score = 0;
   }
 
 
@@ -636,6 +638,9 @@ for (int i =0; i < keyPress.size(); i++){
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
   m_table->Render(m_scalar, scalar, m_spec, m_table->getSpec(), m_spot, spot, m_height, height);
 
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_plunger->GetModel()));
+  m_plunger->Render(m_scalar, scalar, m_spec, m_plunger->getSpec(), m_spot, spot, m_height, height);
+
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_lanes1->GetModel()));
   m_lanes1->Render(m_scalar, scalar, m_spec, m_lanes1->getSpec(), m_spot, spot, m_height, height);
@@ -696,6 +701,11 @@ for (int i =0; i < keyPress.size(); i++){
     string val = ErrorString( error );
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
+}
+
+int Graphics::getScore()
+{
+  return score;
 }
 
 std::string Graphics::ErrorString(GLenum error)

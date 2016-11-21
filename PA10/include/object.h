@@ -35,6 +35,7 @@ class Object
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
     void applyForce (int force);
+    void setPlunger();
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();

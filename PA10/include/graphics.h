@@ -21,6 +21,7 @@ class Graphics
     int collisionDetection(unsigned int dt);
     void reinitateBall();
     bool getGameState();
+    int getScore();
     void highScore(int score);
 
     //void ScoreDisplay (int scoreVar, Object);
@@ -61,6 +62,7 @@ class Graphics
     Object *m_bump1;
     Object *m_bump2;
     Object *m_bump3;
+    Object *m_plunger;
     vector <Object*> numbers;
     vector <Object*> BallNum;
     // vector <Object*> Ones;

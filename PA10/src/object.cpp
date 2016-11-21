@@ -580,6 +580,12 @@ btRigidBody* Object::GetRigidBody(){
   return body;
 }
 
+void Object::setPlunger()
+{
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(-14.3f, 0.0f, 7.0f));
+  model *= glm::rotate(glm::mat4(1.0f), 1.5708f, glm::vec3(0.0f,0.0f, 1.0f));
+}
+
 void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height)
 {
   // loads the texture to the shaders

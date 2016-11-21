@@ -98,6 +98,75 @@ void Engine::Run()
     // Swap to the Window
     m_window->Swap();
   }
+
+  //gets score from graphics
+  int score = m_graphics->getScore();
+
+  //creates input stream variable
+  ifstream fin;
+
+  fin.open("../highScores.txt");
+
+  //gets old high score
+  for (int i=0; i<10; i++)
+  {
+    fin >> people[i].initials;
+    fin >> people[i].score;
+  }
+
+  fin.close();
+
+  int index = 9;
+
+
+  //checks if new score belongs on board
+  if (score > people[9].score)
+  {
+    while (people[index].score <= score && index != 0)
+    {
+      index--;
+    }
+
+    //finds where score belongs
+    for (int i=9; i>index; i--)
+    {
+      people[i].initials = people[i-1].initials;
+      people[i].score = people[i-1].score;
+    }
+
+    std::string temp;
+
+    //gets score from user
+    std::cout << "INPUT YOUR INITIALS: ";
+    std::cin >> temp;
+
+    //assigns score in proper spot
+    people[index].initials = temp;
+    people[index].score = score;
+
+    //prints new scoreboard to file
+    ofstream fout;
+
+    fout.open("../highScores.txt");
+
+    for (int i=0; i<10; i++)
+    {
+      fout << people[i].initials << " " << people[i].score << std::endl;
+    }
+
+    fout.close();
+
+  }
+
+  //prints current high score board
+  std::cout << "CURRENT SCORE BOARD:" << std::endl;
+  for (int i=1; i<11; i++)
+  {
+    std::cout << i << ".\t" << people[i-1].initials << "\t-\t" << people[i-1].score << std::endl;
+  }
+
+
+
 }
 
 unsigned int Engine::Keyboard()

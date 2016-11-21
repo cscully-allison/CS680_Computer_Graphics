@@ -3,9 +3,17 @@
 
 #include <sys/time.h>
 #include <assert.h>
+#include <fstream>
 
 #include "window.h"
 #include "graphics.h"
+
+
+struct Scores{
+    std::string initials;
+    int score;
+};
+
 
 class Engine
 {
@@ -38,6 +46,8 @@ class Engine
     std::vector <unsigned int> key;
     int force;
     int menu;
+
+    Scores people[10];
 };
 
 #endif // ENGINE_H
