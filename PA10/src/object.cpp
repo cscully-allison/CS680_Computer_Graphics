@@ -564,6 +564,7 @@ else if (side){
   //get transform
   body->getMotionState()->getWorldTransform(trans); 
 
+  //moves the flippers model to the position of its rigid body
   trans.getOpenGLMatrix(m);
   model = glm::make_mat4(m);
 }
