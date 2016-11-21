@@ -7,6 +7,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
 
+
   pressed = false;
 
   //Verticies and indicies needs to be initilized for run
@@ -14,6 +15,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
+
 
   btConvexHullShape* shape = new btConvexHullShape();
 
@@ -23,12 +25,14 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+   
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
+    
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -54,10 +58,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
 
+
       //load tex coords per vertex
       matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
                                   scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
 
+        
 
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
@@ -76,6 +82,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     }
 
       
+     
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -128,6 +135,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(rotate);
+
 
 
 }
@@ -200,7 +208,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       break;
 
       case 2:
-          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .9), startOrigin));
       break;
         
       default:
@@ -238,6 +246,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+
 
     //get texture file
     aiString filePath;
@@ -353,15 +362,16 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
+   
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
- 
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -456,6 +466,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(indexNumber);
 
+  
 }
 
 /*
@@ -585,6 +596,7 @@ Object::Object(std::string filename)
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
     glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_EMISSIVE, color);
     glm::vec3 e = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
     glm::vec3 t = glm::vec3(color.r, color.g, color.b);
@@ -606,7 +618,6 @@ Object::Object(std::string filename)
 
       
     }
-
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);

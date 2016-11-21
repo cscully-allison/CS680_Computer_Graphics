@@ -74,15 +74,34 @@ bool Graphics::Initialize(int width, int height)
   }
   // Create the object
 
+
+
    // Create the table object and add to the dynamicsWorld
-  m_table = new Object("pt_divider_etc.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_table = new Object("updatedTable.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_lanes1= new Object("lanes1.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_lanes2= new Object("lanes2.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_lanes3= new Object("lanes3.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_backboard= new Object("pt_backboard.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_curvesL= new Object("bot_curves_left.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_curvesR= new Object("bot_curves_right.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_bot_lanesL = new Object("bot_lanes_left.obj",btVector3 (0,0,0),0, .5, 0, 0);
+  m_bot_lanesR = new Object("bot_lanes_right.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
   // add collision shape
   dynamicsWorld->addRigidBody (m_table->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_lanes1->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_lanes2->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_lanes3->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_bot_lanesL->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_bot_lanesR->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_curvesL->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_curvesR->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_backboard->GetRigidBody());
 
   // Create a bumper object and add to the dynamicsWorld
   m_bump1 = new Object("bumper.obj", btVector3(4, 0.5, 4), 0, .5, 0, 3);
   dynamicsWorld->addRigidBody(m_bump1->GetRigidBody());
+
   // set bumpers position and bounciness
   m_bump1->setOrientation();
   m_bump1->GetRigidBody()->setRestitution(1.5);
@@ -469,7 +488,7 @@ void Graphics::reinitateBall(){
   if (ballsLeft > 0)
   {
     // put ball at starting position
-    m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-13,.5,7)));
+    m_ball->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(0.0f, 0.0f, 0.0f, 1.0f), btVector3(-13,.21,7)));
     // remove any velocity from the ball
     m_ball->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     m_ball->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
@@ -612,6 +631,32 @@ for (int i =0; i < keyPress.size(); i++){
   // Render the table object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_table->GetModel()));
   m_table->Render(m_scalar, scalar, m_spec, m_table->getSpec(), m_spot, spot, m_height, height);
+
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_lanes1->GetModel()));
+  m_lanes1->Render(m_scalar, scalar, m_spec, m_lanes1->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_lanes2->GetModel()));
+  m_lanes2->Render(m_scalar, scalar, m_spec, m_lanes2->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_lanes3->GetModel()));
+  m_lanes3->Render(m_scalar, scalar, m_spec, m_lanes3->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bot_lanesL->GetModel()));
+  m_bot_lanesL->Render(m_scalar, scalar, m_spec, m_bot_lanesL->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bot_lanesR->GetModel()));
+  m_bot_lanesR->Render(m_scalar, scalar, m_spec, m_bot_lanesR->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_backboard->GetModel()));
+  m_backboard->Render(m_scalar, scalar, m_spec, m_backboard->getSpec(), m_spot, spot, m_height, height);
+
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_curvesL->GetModel()));
+  m_curvesL->Render(m_scalar, scalar, m_spec, m_curvesL->getSpec(), m_spot, spot, m_height, height);
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_curvesR->GetModel()));
+  m_curvesR->Render(m_scalar, scalar, m_spec, m_curvesR->getSpec(), m_spot, spot, m_height, height);
 
  // Render the bumpers object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_bump1->GetModel()));

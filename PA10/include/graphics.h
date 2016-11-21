@@ -47,6 +47,14 @@ class Graphics
     GLfloat height;
 
     Object *m_table;
+    Object *m_lanes1;
+    Object *m_lanes2;
+    Object *m_lanes3;
+    Object *m_bot_lanesR;
+    Object *m_bot_lanesL;
+    Object *m_backboard;
+    Object *m_curvesR;
+    Object *m_curvesL;
     Object *m_ball;
     Object *m_leftFlipper;
     Object *m_rightFlipper;
