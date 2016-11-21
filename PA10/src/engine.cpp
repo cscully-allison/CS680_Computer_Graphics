@@ -73,7 +73,6 @@ void Engine::Run()
     while(SDL_PollEvent(&m_event) != 0)
     {
       key.push_back(Keyboard());
-     //std::cout << key << std::endl;
     }
 
     // Update and render the graphics
@@ -133,7 +132,7 @@ unsigned int Engine::Keyboard()
   // when the key is released
   else if (m_event.type == SDL_KEYUP)
   {
-    // when space is released
+    // when 0space is released
     if (m_event.key.keysym.sym == 32)
     {
       // return the space key

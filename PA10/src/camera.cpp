@@ -57,6 +57,12 @@ void Camera::Update(int input){
       case 1073741905:
         view = glm::translate(view, glm::vec3(1.0,0.0,0.0));
       break;
+
+      case 114:
+        view = glm::lookAt( glm::vec3(-17.0, 12.0, 0.0), //Eye Position
+                      glm::vec3(0.0, -5.0, 0.0), //Focus point
+                      glm::vec3(0.0, 1.0, 0.0));
+      break;
    }
 }
 

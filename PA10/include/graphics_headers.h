@@ -36,10 +36,8 @@ struct Texture{
     glm::vec3 Ks;
     glm::vec2 texture;
     glm::vec3 Ka;
-    glm::vec3 emissive;
-    glm::vec3 transparent;
 
-    Texture(glm::vec3 a, glm::vec2 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Ka(a), texture(d), Ks(s), emissive(e), transparent(t) {}
+    Texture(glm::vec3 a, glm::vec3 s): Ka(a),Ks(s) {}
 };
 
 struct Vertex

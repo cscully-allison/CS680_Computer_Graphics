@@ -9,12 +9,11 @@
           	vec3 N;
           	vec3 L;
           	vec3 V;
+            vec3 L2;
 
             vec3 Ka;
             vec2 texture;
             vec3 Ks;
-            vec3 e;
-            vec3 t;
 
             vec3 diffuse;
             vec3 scalar;
@@ -28,13 +27,11 @@
 
 
           //material properties
-          uniform float specular_power = 16.0;
+          uniform float specular_power = 128.0;
           uniform sampler2D gSampler;
 
           void main(void)
           { 
-            float intensity = 0.0;
-            vec3 spec = vec3 (0.0);
           	//normalize the incoming N, L, and V vectors
           	vec3 N = normalize(fs_in.N);
           	vec3 L = normalize(fs_in.L);
@@ -50,6 +47,18 @@
           	//compute the diffuse and specular components for each fragment;
           	vec3 specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
             color = vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
+
+            vec3 L2 = normalize(fs_in.L2);
+
+            //calculate the halfway
+            R = normalize( reflect(-L2, N) );    
+            diffuse = texel.rgb * max(dot(N,L2), 0.0);
+
+            //compute the diffuse and specular components for each fragment;
+            specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
+            color += vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
+
+
 
               float NdotL = max (dot(N,L),0.0);
                 if ( NdotL > 0.0){

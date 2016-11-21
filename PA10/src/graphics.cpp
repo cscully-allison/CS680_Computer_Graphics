@@ -196,6 +196,35 @@ bool Graphics::Initialize(int width, int height)
   BallNum.push_back (numbers[1]);
   BallNum.push_back (numbers[2]);
   BallNum.push_back (numbers[3]);
+
+  // Initalize the Gouraund Shader
+  gouraund_shader = new Shader();
+  if(!gouraund_shader->Initialize())
+  {
+    printf("Shader Failed to Initialize\n");
+    return false;
+  }
+
+  // Add the vertex shader to the Gouraund Shader
+  if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
+  {
+    printf("Vertex Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Add the fragment shader to the Gouraund Shader
+  if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
+  {
+    printf("Fragment Shader failed to Initialize\n");
+    return false;
+  }
+
+  // Connect the Gouraund Shader to the program
+  if(!gouraund_shader->Finalize())
+  {
+    printf("Program to Finalize\n");
+    return false;
+  }
   
   // Initialize the Phong Shader
   phong_shader = new Shader();
@@ -226,40 +255,13 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
-  // Initalize the Gouraund Shader
-  gouraund_shader = new Shader();
-  if(!gouraund_shader->Initialize())
-  {
-    printf("Shader Failed to Initialize\n");
-    return false;
-  }
 
-  // Add the vertex shader to the Gouraund Shader
-  if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
-  {
-    printf("Vertex Shader failed to Initialize\n");
-    return false;
-  }
 
-  // Add the fragment shader to the Gouraund Shader
-  if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
-  {
-    printf("Fragment Shader failed to Initialize\n");
-    return false;
-  }
-
-  // Connect the Gouraund Shader to the program
-  if(!gouraund_shader->Finalize())
-  {
-    printf("Program to Finalize\n");
-    return false;
-  }
-
-  // Enable Gouraund Shader as inital shader
-  gouraund_shader->Enable();
+  // Enable Phong Shader as inital shader
+  phong_shader->Enable();
 
   // Locate the projection matrix in the shader
-  m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
+  m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
   if (m_projectionMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_projectionMatrix not found\n");
@@ -267,7 +269,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the view matrix in the shader
-  m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
+  m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
   if (m_viewMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_viewMatrix not found\n");
@@ -275,47 +277,47 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Locate the model matrix in the shader
-  m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
+  m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
   if (m_modelMatrix == INVALID_UNIFORM_LOCATION) 
   {
     printf("m_modelMatrix not found\n");
     return false;
   }
   
-  // locates the ball position in the Gouraund Shader
-  ball = gouraund_shader->GetUniformLocation("ballPosition");
+  // locates the ball position in the Phong Shader
+  ball = phong_shader->GetUniformLocation("ballPosition");
   if (ball == INVALID_UNIFORM_LOCATION)
   {
     printf("ball not found\n");
     return false;
   }
 
-  //Locate the scalar variable in the Gouraund Shader
-  m_scalar = gouraund_shader->GetUniformLocation("scalar");
+  //Locate the scalar variable in the Phong Shader
+  m_scalar = phong_shader->GetUniformLocation("scalar");
   if (m_scalar == INVALID_UNIFORM_LOCATION)
   {
     printf("m_scalar not found\n");
     return false;
   }
   
-  //Locate the height variable in the Gouraund Shader
-   m_height = gouraund_shader->GetUniformLocation("height");
+  //Locate the height variable in the Phong Shader
+   m_height = phong_shader->GetUniformLocation("height");
   if (m_height == INVALID_UNIFORM_LOCATION)
   {
     printf("m_height not found\n");
     return false;
   }
   
-  //Locate the spot variable in the Gouraund Shader
-  m_spot = gouraund_shader->GetUniformLocation("spot");
+  //Locate the spot variable in the Phong Shader
+  m_spot = phong_shader->GetUniformLocation("spot");
   if (m_spot == INVALID_UNIFORM_LOCATION)
   {
     printf("m_spot not found\n");
     return false;
   }
   
-  //Locate the spec variable in the Gouraund Shader
-  m_spec = gouraund_shader->GetUniformLocation("spec");
+  //Locate the spec variable in the Phong Shader
+  m_spec = phong_shader->GetUniformLocation("spec");
   if (m_spec == INVALID_UNIFORM_LOCATION)
   {
     printf("m_spec not found\n");
@@ -573,13 +575,13 @@ for (int i =0; i < keyPress.size(); i++){
       }
       
       //numpad 6 spotlight height
-      else if (keyPress[i] == 1073741918 && height < 10){
-          height +=.1;
+      else if (keyPress[i] == 1073741918 && height > 1){
+          height -=.1;
         }
         
       // numpad 9 spotlight height 
-      else if (keyPress[i]== 1073741921 && height > 1){
-          height -=.1;
+      else if (keyPress[i]== 1073741921 && height < 20){
+          height +=.1;
         }
        //numpad 0 + for table 
         if (keyPress[i] == 1073741922){

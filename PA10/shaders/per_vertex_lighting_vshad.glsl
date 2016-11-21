@@ -5,8 +5,6 @@
           layout (location = 2) in vec2 texture; 
           layout (location = 3) in vec3 Ka;
           layout (location = 4) in vec3 Ks;
-          layout (location = 5) in vec3 emissive;
-          layout (location = 6) in vec3 transparent;
 
           uniform mat4 projectionMatrix; 
           uniform mat4 viewMatrix; 
@@ -24,8 +22,10 @@
           uniform vec3 light_pos = vec3(0.0, 10.0, 5.0);
           vec3 spotlight_pos = vec3 (ballPosition.x, height, ballPosition.z);
 
+          uniform vec3 light_pos2 = vec3(0.0, 0.0, 0.0);
+
           //material properties
-          uniform float specular_power = 16.0;
+          uniform float specular_power = 128.0;
           
           // scalar to change ambient
           vec3 ambient = scalar;
@@ -61,6 +61,22 @@
             vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * spec;
 
             color = ambient + diffuse + specular;
+
+
+            //Caluclate 2nd light vector
+            L = normalize(light_pos2 - p.xyz);
+
+            //calculate 2nd R locally
+             R = normalize( reflect(-L, N) );    
+
+            //compute the diffuse and specular components for each
+            //fragments
+            diffuse = texel.rgb * max(dot(N,L), 0.0);
+            
+            // multiple here to increase specularity
+            specular = pow(max(dot(R, V), 0.0), specular_power) * spec;
+
+            color += ambient + diffuse + specular;
 
 
             // spotlight
