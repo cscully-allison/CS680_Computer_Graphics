@@ -21,7 +21,7 @@
 
 
           //light position
-          uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
+          uniform vec3 light_pos = vec3(0.0, 10.0, 5.0);
           vec3 spotlight_pos = vec3 (ballPosition.x, height, ballPosition.z);
 
           //material properties
@@ -73,9 +73,6 @@
                 
                 float spotLight = dot (L,V);
                 if (spotLight < 0.01){
-                   // spot = pow (spot, 4);
-                   // float dist = length (L);
-                    //float att = spot / (1 +1*dist+1*dist*dist);
 
                     diffuse = diffuse * max(dot(N,L), 0.0);
                     specular = pow(max(dot(R, V), 0.0), 100) * vec3 (1.0);

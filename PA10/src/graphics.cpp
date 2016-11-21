@@ -392,6 +392,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
      
   // see which keys have been pressed 
   for (int i = 0; i < keyPress.size(); i ++){
+    // move the camera
+    m_camera->Update(keyPress[i]);
     // the space key is has been released, apply force to the ball  
     // but only if the ball is in starting position
     if (!ballCleared){
@@ -553,21 +555,21 @@ for (int i =0; i < keyPress.size(); i++){
 
       //numpad + ambient lighting
       if(keyPress[i] == 1073741911 && scalar.x < 10.0){
-        scalar += glm::vec3(0.1);
+        scalar += glm::vec3(0.01);
       }
       // numpad - ambient lighting
       else if(keyPress[i] == 1073741910 && scalar.x > 0){
-        scalar -= glm::vec3(0.1);
+        scalar -= glm::vec3(0.01);
       }
       
       // numpad * spotlight ambient
        else if(keyPress[i] == 1073741909 && spot.x < 10.0){
-        spot += 0.1;
+        spot += 0.01;
       }
       
       // numpad / spotlight ambient
       else if(keyPress[i] == 1073741908 && spot.x > 0){
-        spot -= 0.1;
+        spot -= 0.01;
       }
       
       //numpad 6 spotlight height
@@ -579,8 +581,7 @@ for (int i =0; i < keyPress.size(); i++){
       else if (keyPress[i]== 1073741921 && height > 1){
           height -=.1;
         }
-          // std::cout <<  height<< std::endl;
-       //numpad 0 + for table (1073741913)
+       //numpad 0 + for table 
         if (keyPress[i] == 1073741922){
           m_table->setSpec (glm::vec3(0.1));
         }
@@ -589,13 +590,13 @@ for (int i =0; i < keyPress.size(); i++){
         else if (keyPress[i]== 1073741923){
           m_table->setSpec (glm::vec3(-0.1));
         }
-       //numpad 1 + for cylinder
+       //numpad 1 + for bumper
        else if (keyPress[i] == 1073741913){
               m_bump1->setSpec (glm::vec3(0.1));
               m_bump2->setSpec (glm::vec3(0.1));
               m_bump3->setSpec (glm::vec3(0.1));
         }
-        //numpad 2 - for cylinder
+        //numpad 2 - for bumper
        else if (keyPress[i] == 1073741914){
           m_bump1->setSpec (glm::vec3(-0.1));
           m_bump2->setSpec (glm::vec3(-0.1));
@@ -612,13 +613,13 @@ for (int i =0; i < keyPress.size(); i++){
           m_ball->setSpec (glm::vec3(-0.1));
         }   
        
-       //numpad 7 + for cube
+       //numpad 7 + for flippers
         else if (keyPress[i] == 1073741919){
           m_leftFlipper->setSpec (glm::vec3(0.1));
           m_rightFlipper->setSpec (glm::vec3(0.1));
         } 
         
-         //numpad 8 - for cube
+         //numpad 8 - for flippers
         else if (keyPress[i] == 1073741920){
           m_leftFlipper->setSpec (glm::vec3(-0.1));
           m_rightFlipper->setSpec (glm::vec3(-0.1));

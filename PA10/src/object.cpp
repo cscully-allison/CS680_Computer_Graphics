@@ -134,7 +134,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(rotate);
+    body->setUserIndex(rotate);
 
 
 
@@ -223,7 +223,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(rotate);
+    body->setUserIndex(rotate);
 
 }
 
@@ -331,7 +331,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(10);
+    body->setUserIndex(10);
 
 }
 
@@ -464,7 +464,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     rigidBodyCI.m_angularDamping = damping;
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
-    //body->setUserIndex(indexNumber);
+    body->setUserIndex(indexNumber);
 
   
 }
@@ -688,8 +688,9 @@ void Object::ScoreUpdate(){
 }
 
 void Object::BallNumUpdate(){
-    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , -7));
 
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(14.0f, 2.0f , -7));
+    model *= glm::rotate(glm::mat4(1.0f), 1.5708f, glm::vec3(0.0f,0.0f,1.0f));
 }
 
 void Object::UpdateBumper(int scale){
