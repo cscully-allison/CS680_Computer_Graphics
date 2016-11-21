@@ -11,7 +11,7 @@
           	vec3 V;
 
             vec3 Ka;
-            vec3 Kd;
+            vec2 texture;
             vec3 Ks;
             vec3 e;
             vec3 t;
@@ -28,8 +28,9 @@
 
 
           //material properties
-          uniform float specular_power = 128.0;
-          
+          uniform float specular_power = 16.0;
+          uniform sampler2D gSampler;
+
           void main(void)
           { 
             float intensity = 0.0;
@@ -40,26 +41,26 @@
           	vec3 V = normalize(fs_in.V);
 
           	//calculate the halfway
-          	vec3 H = normalize (L + V);
+          	vec3 R = normalize( reflect(-L, N) );    
 
-          	//compute the diffuse and specular components for each fragment
-          	vec3 diffuse = max(dot(N,L), 0.0) * fs_in.Kd * fs_in.diffuse;
-            diffuse = clamp (diffuse, 0.0,1.0);
-          	vec3 specular = pow(max(dot(N, H), 0.0),  specular_power) * fs_in.spec;
-            specular = clamp (specular, 0.0, 1.0);
+            vec4 texel = texture2D(gSampler, fs_in.texture.xy); 
 
-          	color = vec4(diffuse + specular, 1.0);
+            vec3 diffuse = texel.rgb * max(dot(N,L), 0.0);
+
+          	//compute the diffuse and specular components for each fragment;
+          	vec3 specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
+            color = vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
 
               float NdotL = max (dot(N,L),0.0);
                 if ( NdotL > 0.0){
                    L = normalize(fs_in.spotlightL);
-                   H = normalize(L + V);
-                   float spotLight = degrees(acos(dot (L,V)));
-                   if (spotLight > 90){
+                   R = normalize( reflect(-L, N) );
+                   float spotLight = dot (L,V);
+                   if (spotLight < 0.01){
                       V = normalize(fs_in.spotlightV);
-                      diffuse = max(dot(N,L), 0.0) * fs_in.Kd + fs_in.diffuse;
-                      specular = pow(max(dot(H, V), 0.0), 5.0) * vec3 (0.2);
-                      color += vec4(NdotL * diffuse + specular + fs_in.spot, 1.0);
+                      diffuse = max(dot(N,L), 0.0) *  fs_in.diffuse;
+                      specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
+                      color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
                    }
               }
 
