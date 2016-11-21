@@ -79,7 +79,12 @@ Numpad Shader Controls:
 '/' - decrease spotlight ambient lighting.
 ```
 
-# Misc Notes
-
-
+# Extra Credit
+```
+Top 10
+Bouncy Bumpers
+Press and hold space bar to increase ball power for launch
+Ball count display in game
+Used all btConvexHullShape and btTriangleMesh for all objects with rigidBodies
+```
 
