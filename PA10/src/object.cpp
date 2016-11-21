@@ -119,7 +119,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       break;
 
       case 2:
-          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .5235), startOrigin));
+          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .9), startOrigin));
       break;
         
       default:
@@ -724,7 +724,7 @@ void Object::UpdateFlipper(int side, unsigned int keyPress, unsigned int dt)
   }
   else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.8, 0, -3.3))));
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), -.5235), btVector3(-10.9, 0, -3.3))));
     body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
     body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     pressed = false;
@@ -748,7 +748,7 @@ else if (side){
   }
    else if (keyPress != 1073742053 && keyPress != 1073742049 && ((dt - dtInitial) > 50) )
   {
-    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .5235), btVector3(-10.8, 0, 2.5))));
+    body->setMotionState(new btDefaultMotionState(btTransform(btQuaternion(btVector3(0.0, 1, 0.0), .9), btVector3(-10.9, 0, 2.5))));
     body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
     body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
     pressed = false;
