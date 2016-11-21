@@ -26,7 +26,7 @@ mkdir build
 cd build
 cmake ..
 make
-./Tutorial
+./Haramball
 ```
 
 # Operation Instructions
@@ -41,9 +41,42 @@ make
 ## Controls
 
 ```
-Enter - Hold and release to eject the ball from the starting lane. Force increases with longer hold.
-Left Shift - Left Flipper
-Right Shift - RIght Flipper
+Spacebar - press and hold to add force to launch the ball, release to launch ball
+Left shift – moves left paddle, press and hold to stay in up position
+Right shift – moves right paddle, press and hold to stay in up position
+Esc – Quits the game.
+```
+
+Camera Controls
+```
+Left Arrow – pans the camera to the left.
+Right Arrow – pans the camera to the right.
+Up Arrow – pans the camera upwards.
+Down Arrow – pans the camera downwards.
+'r' – reset camera position.
+```
+
+Shader Controls:
+```
+'p' – switch to Phong shading.
+'g' – switch to Gourand shading.
+```
+Numpad Shader Controls:
+```
+'0' – increases specularity on table. 
+'.' - decreases specularity on table. 
+'1' – increases bumper specularity.
+'2' – decreases bumper specularity.
+'4' – increases ball specularity. 
+'5' – decrease ball specularity. 
+'7' – increases flipper specularity.
+'8' – decrease flipper specularity.
+'6' – decrease spotlight height. 
+'9' – increase spotlight height. 
+'+' - increase ambient lighting. 
+'-' - decrease ambient lighting. 
+'*' -  increase spotlight ambient lighting. 
+'/' - decrease spotlight ambient lighting.
 ```
 
 # Misc Notes
