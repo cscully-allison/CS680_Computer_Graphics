@@ -347,7 +347,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // update the ball
   m_ball->Update ();
 
-
   // figure out the position of the wall blocking the ball
   btDefaultMotionState* wallPosActive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,0.0f,6.0f)));
   btDefaultMotionState* wallPosInactive = new btDefaultMotionState (btTransform(btQuaternion(0,0,0,1), btVector3(0.0f,-5.0f,6.0f)));
@@ -377,12 +376,11 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     wallBody->setMotionState(wallPosInactive);
   }
 
-
-  // not used
+  //not used
   // switch (update){
   //   case 3:
   //       //1cout = 1;
-  //  // m_bump1->UpdateBumper(2);
+  //   m_bump1->UpdateBumper(2);
   //   break;
   //   case 4:
   //       //2cout = 1;
@@ -511,7 +509,6 @@ void Graphics::reinitateBall(){
     gamestate = false;
     score = 0;
   }
-
 
 }
 

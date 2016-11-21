@@ -21,7 +21,6 @@ class Graphics
     int collisionDetection(unsigned int dt);
     void reinitateBall();
     bool getGameState();
-    void highScore(int score);
 
     //void ScoreDisplay (int scoreVar, Object);
 
