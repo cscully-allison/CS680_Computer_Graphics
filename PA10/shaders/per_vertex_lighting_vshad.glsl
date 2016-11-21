@@ -52,7 +52,10 @@
 
             //compute the diffuse and specular components for each
             //fragments
-            vec3 diffuse = vec3(0.5,0.5,0.5) * max(dot(N,L), 0.0);
+
+            vec4 texel = texture2D(gSampler, texture.xy); 
+
+            vec3 diffuse = texel.rgb * max(dot(N,L), 0.0);
             
             // multiple here to increase specularity
             vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * spec;

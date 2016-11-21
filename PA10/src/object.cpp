@@ -7,8 +7,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
 
-  std::cout << "Butts4" << std::endl;
-
   pressed = false;
 
   //Verticies and indicies needs to be initilized for run
@@ -16,8 +14,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
-
-  std::cout << filename << std::endl;
 
   btConvexHullShape* shape = new btConvexHullShape();
 
@@ -27,14 +23,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
-    std::cout << filePath.C_Str() << std::endl; 
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -60,13 +54,10 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
 
-          std::cout << scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x << std::endl;  
-
       //load tex coords per vertex
       matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
                                   scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
 
-        std::cout << "dICKS" << std::endl;  
 
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
@@ -85,7 +76,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     }
 
       
-          std::cout << "dICKS" << std::endl;
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -139,8 +129,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(rotate);
 
-
-    std::cout << "fliier made" << std::endl;
 
 }
 
@@ -250,7 +238,6 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
@@ -362,22 +349,19 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
-  std::cout << filename << std::endl;
+
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
-    std::cout << "butts 5" << std::endl;
 
     //texture loading from file
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-    std::cout << texturename.C_Str() << std::endl;
 
     //get texture file
     aiString filePath;
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
-
-    std::cout << filePath.C_Str() << std::endl;  
+ 
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -472,7 +456,6 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     body->setActivationState (DISABLE_DEACTIVATION);
     //body->setUserIndex(indexNumber);
 
-    std::cout << "do we make the obj" << std::endl;
 }
 
 /*
@@ -565,13 +548,36 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
 Object::Object(std::string filename)
 {  
 
+  aiString texturename;
+  GLuint tempTB;
+  std::vector <Magick::Image> m_image;
+
+
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
   scene = importer.ReadFile("../assets/Numbers/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
+  aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
+
+
+    //texture loading from file
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+
+    //get texture file
+    aiString filePath;
+    filePath.Append("../assets/");
+    filePath.Append(texturename.C_Str());
+
+    m_image.push_back(Magick::Image(filePath.C_Str()));
+    Magick::Blob temp;
+    m_image[meshNums].write(&temp, "RGBA");
+    m_blob.push_back(temp);
+
+
     const aiMesh* mesh = scene->mMeshes[meshNums];
+
     // get material properties per mesh
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
@@ -579,14 +585,16 @@ Object::Object(std::string filename)
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
     glm::vec3 Kd = glm::vec3(color.r, color.g, color.b);
-    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_EMISSIVE, color);
     glm::vec3 e = glm::vec3(color.r, color.g, color.b);
     scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
     glm::vec3 t = glm::vec3(color.r, color.g, color.b);
 
-    Color materialsColor (Ka,Kd, Ks, e, t);
+    Texture matTex(Ka, glm::vec2(0.0f), Ks, e, t);
 
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+      //load tex coords per vertex
+      matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
                                       mesh->mVertices[vertex].y, 
@@ -594,8 +602,11 @@ Object::Object(std::string filename)
                             glm::vec3(mesh->mNormals[vertex].x, 
                                       mesh->mNormals[vertex].y, 
                                       mesh->mNormals[vertex].z),
-                            materialsColor));
+                            matTex));
+
+      
     }
+
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -610,6 +621,16 @@ Object::Object(std::string filename)
       glGenBuffers(1, &IB);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+
+      glGenTextures(1, &tempTB);
+      TB.push_back(tempTB);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, TB[TB.size()-1]);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image[TB.size()-1].columns(), m_image[TB.size()-1].rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob[TB.size()-1].data());
+      
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 }
 
@@ -748,6 +769,12 @@ btRigidBody* Object::GetRigidBody(){
 
 void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height)
 {
+    for (int i=0; i<TB.size(); i++)
+  {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, TB[i]);
+  }
+
 
   glUniform3fv(scalarLoc, 1, glm::value_ptr(scalar));
   glUniform3fv(specLoc, 1, glm::value_ptr(spec));
@@ -765,7 +792,7 @@ void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normals));
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Kd));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.texture));
   glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ka));
   glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ks));
   glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.emissive));

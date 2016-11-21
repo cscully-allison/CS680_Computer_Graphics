@@ -32,25 +32,23 @@ struct Color{
     Color(glm::vec3 a, glm::vec3 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Ka(a), Kd(d), Ks(s), emissive (e), transparent (t) {}
 };
 
-struct Texture : Color {
+struct Texture{
     glm::vec3 Ks;
     glm::vec2 texture;
     glm::vec3 Ka;
     glm::vec3 emissive;
     glm::vec3 transparent;
 
-    Texture(glm::vec3 a, glm::vec2 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Color(a, glm::vec3(0.0f), s, e, t){
-      texture = d;
-    }
+    Texture(glm::vec3 a, glm::vec2 d, glm::vec3 s, glm::vec3 e, glm::vec3 t): Ka(a), texture(d), Ks(s), emissive(e), transparent(t) {}
 };
 
 struct Vertex
 {
   glm::vec3 vertex;
   glm::vec3 normals;
-  Color properties;
+  Texture properties;
 
-  Vertex(glm::vec3 v, glm::vec3 n, Color p): vertex(v), normals (n), properties(p) {}
+  Vertex(glm::vec3 v, glm::vec3 n, Texture p): vertex(v), normals (n), properties(p) {}
 };
 
 #endif /* GRAPHICS_HEADERS_H */

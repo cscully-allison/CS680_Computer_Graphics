@@ -40,12 +40,9 @@ bool Engine::Initialize()
     return false;
   }
 
-  std::cout << "butts1" << std::endl;
-
   // Start the graphics
   m_graphics = new Graphics();
 
-  std::cout << "butts1" << std::endl;
 
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT))
   {

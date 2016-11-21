@@ -74,9 +74,6 @@ bool Graphics::Initialize(int width, int height)
   }
   // Create the object
 
-  std::cout << "butts3" << std::endl;
-
-
    // Create the table object and add to the dynamicsWorld
   m_table = new Object("pt_divider_etc.obj",btVector3 (0,0,0),0, .5, 0, 0);
 
