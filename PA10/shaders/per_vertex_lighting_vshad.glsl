@@ -17,6 +17,8 @@
           uniform vec4 ballPosition;
           uniform float height;
 
+          uniform sampler2D gSampler;
+
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 50.0, -50.0);
@@ -29,7 +31,6 @@
           vec3 ambient = scalar;
 
           out vec3 color;
-          out vec2 v_texture;
 
           void main(void) 
           { 
@@ -80,7 +81,5 @@
                      }
             }
 
-            gl_Position = projectionMatrix * viewMatrix * p;
-
-            v_texture = texture; 
+            gl_Position = projectionMatrix * viewMatrix * p; 
           } 

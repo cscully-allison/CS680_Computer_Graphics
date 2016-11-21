@@ -13,7 +13,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
@@ -34,11 +34,12 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
+    std::cout << filePath.C_Str() << std::endl; 
+
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
     m_image[meshNums].write(&temp, "RGBA");
     m_blob.push_back(temp);
-
 
     const aiMesh* mesh = scene->mMeshes[meshNums];
 
@@ -55,10 +56,18 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     Texture matTex(Ka, glm::vec2(0.0f), Ks, e, t);
 
+
+
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
+
+          std::cout << scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x << std::endl;  
+
       //load tex coords per vertex
       matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
                                   scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
+
+        std::cout << "dICKS" << std::endl;  
+
       Vertices.push_back(Vertex(
                             glm::vec3(mesh->mVertices[vertex].x, 
                                       mesh->mVertices[vertex].y, 
@@ -68,12 +77,15 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                                       mesh->mNormals[vertex].z),
                             matTex));
 
+
       shape->addPoint (btVector3(mesh->mVertices[vertex].x, 
                                  mesh->mVertices[vertex].y, 
                                  mesh->mVertices[vertex].z));
       
     }
 
+      
+          std::cout << "dICKS" << std::endl;
 
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
       Indices.push_back(mesh->mFaces[index].mIndices[0]);
@@ -128,6 +140,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     //body->setUserIndex(rotate);
 
 
+    std::cout << "fliier made" << std::endl;
 
 }
 
@@ -228,7 +241,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/ball.obj", aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/texturethings/ball.obj", aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
@@ -364,6 +377,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     filePath.Append("../assets/texturethings/");
     filePath.Append(texturename.C_Str());
 
+    std::cout << filePath.C_Str() << std::endl;  
 
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
@@ -636,8 +650,8 @@ void Object::applyForce(int force){
       body->applyForce(btVector3(force*200.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
 }
 
-void Object::ScoreUpdate(int i, uint score){
-    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , 2*i));
+void Object::ScoreUpdate(){
+    model = glm::translate (glm::mat4(1.0f), glm::vec3(15.0f, 0.0f , 2));
 
 }
 

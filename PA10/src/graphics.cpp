@@ -439,7 +439,7 @@ int Graphics::collisionDetection (unsigned int dt){
           notBall = min (collisionObject ->getUserIndex(), collisionObject2 ->getUserIndex());
           // assign score based on object hit
           switch (notBall){
-            left flipper
+            //left flipper
             case 1:
                 score += 50;
             break;
