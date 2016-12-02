@@ -40,13 +40,9 @@ bool Engine::Initialize()
     return false;
   }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 750fe72697f224459cf8276727179ddd8e0d01c7
   // Start the graphics
   m_graphics = new Graphics();
-
 
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT))
   {
@@ -65,7 +61,7 @@ void Engine::Run()
 {
 
   m_running = true;
-  force = 0;
+
   while(m_running)
   {
     // Update the DT
@@ -75,7 +71,6 @@ void Engine::Run()
     while(SDL_PollEvent(&m_event) != 0)
     {
       key.push_back(Keyboard());
-     //std::cout << key << std::endl;
     }
 
     // Update and render the graphics
@@ -83,24 +78,78 @@ void Engine::Run()
     // pass the key to render
     m_graphics->Render(key);
 
-    // look for space being released
-    for (int i = 0; i < key.size(); i++ ){
-      // if released
-       if (key[i] == 32){
-          // set force to 0
-          force = 0;
-          // erase key
-          key.erase (key.begin() + i);
-      }
-    }
-
-    if (m_graphics->getGameState() == false)
-    {
-      m_running = false;
-    }
     // Swap to the Window
     m_window->Swap();
   }
+
+  //gets score from graphics
+  int score = m_graphics->getScore();
+
+  //creates input stream variable
+  ifstream fin;
+
+  fin.open("../highScores.txt");
+
+  //gets old high score
+  for (int i=0; i<10; i++)
+  {
+    fin >> people[i].initials;
+    fin >> people[i].score;
+  }
+
+  fin.close();
+
+  int index = 9;
+
+
+  //checks if new score belongs on board
+  if (score > people[9].score)
+  {
+    while (people[index].score <= score && index != 0)
+    {
+      index--;
+    }
+
+    //finds where score belongs
+    for (int i=9; i>index; i--)
+    {
+      people[i].initials = people[i-1].initials;
+      people[i].score = people[i-1].score;
+    }
+
+    std::string temp;
+
+    //gets score from user
+    std::cout << "INPUT YOUR INITIALS: ";
+    std::cin >> temp;
+
+    //assigns score in proper spot
+    people[index].initials = temp;
+    people[index].score = score;
+
+    //prints new scoreboard to file
+    ofstream fout;
+
+    fout.open("../highScores.txt");
+
+    for (int i=0; i<10; i++)
+    {
+      fout << people[i].initials << " " << people[i].score << std::endl;
+    }
+
+    fout.close();
+
+  }
+
+  //prints current high score board
+  std::cout << "CURRENT SCORE BOARD:" << std::endl;
+  for (int i=1; i<11; i++)
+  {
+    std::cout << i << ".\t" << people[i-1].initials << "\t-\t" << people[i-1].score << std::endl;
+  }
+
+
+
 }
 
 unsigned int Engine::Keyboard()
@@ -119,12 +168,6 @@ unsigned int Engine::Keyboard()
     {
       m_running = false;
     }
-    // if space
-    else if (m_event.key.keysym.sym == 32)
-    {
-      // add force
-      force ++;
-    }
     else
     {
       // otherwise, return the key
@@ -135,21 +178,13 @@ unsigned int Engine::Keyboard()
   // when the key is released
   else if (m_event.type == SDL_KEYUP)
   {
-    // when space is released
-    if (m_event.key.keysym.sym == 32)
-    {
-      // return the space key
-      return m_event.key.keysym.sym;
-    }
-    // otherwise
-    else{
-      // cycle through keys and delete released key
+
+    // cycle through keys and delete released key
     for (int i = 0; i < key.size(); i++){
-        if (key[i] == m_event.key.keysym.sym){
-          key.erase (key.begin()+ i);
-        }
+      if (key[i] == m_event.key.keysym.sym){
+        key.erase (key.begin()+ i);
+      } 
     }
-  }
   }
 }
 
