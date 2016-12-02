@@ -18,24 +18,22 @@ class Object
   public:
     Object();
     //dynamic object
-    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate);
+    Object(std::string filename,btScalar mass, btVector3 interia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int index);
     // ball
     Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
     //static object
-    Object (std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
+    Object (std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
     Object (std::string filename);
     ~Object();
     void setOrientation();
     void Update();
-    void UpdateFlipper(int side, unsigned int keyPress, unsigned int dt);
-    void UpdateBumper(int scale);
     void ScoreUpdate();
-    void BallNumUpdate();
+
     void Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
     void applyForce (int force);
-    void setPlunger();
+
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();
@@ -62,7 +60,6 @@ class Object
     btRigidBody* body;
 
     unsigned int dtInitial;
-    bool pressed;
 
 };
 

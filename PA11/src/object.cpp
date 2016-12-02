@@ -1,17 +1,15 @@
 #include "object.h"
 
 
-Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int rotate)
+Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int index)
 {
   aiString texturename;
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
 
-  pressed = false;
-
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
@@ -26,7 +24,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
    
     //get texture file
     aiString filePath;
-    filePath.Append("../assets/texturethings/");
+    filePath.Append("../assets/");
     filePath.Append(texturename.C_Str());
 
     // load the texture
@@ -98,22 +96,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
    // create collision shape
     shape->calculateLocalInertia(mass, inertia);
     btDefaultMotionState* motion;
-    switch(rotate)
-    {
-      case 1:
-         motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), -.5235), startOrigin));
-      break;
 
-      case 2:
-          motion = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,1,0), .9), startOrigin));
-      break;
-        
-      default:
-        motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
-      break;
-    }
-    
-    // static bodies get a mass of 0
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
     rigidBodyCI.m_friction = friction;
     rigidBodyCI.m_restitution = restitution;
@@ -121,7 +104,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     body = new btRigidBody(rigidBodyCI);
     body->setActivationState (DISABLE_DEACTIVATION);
     // set user index for collision
-    body->setUserIndex(rotate);
+    body->setUserIndex(index);
 }
 
 }
@@ -232,17 +215,18 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 STATIC OBJ CONTRUCTOR
 ***************************/
 
-Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
+Object::Object(std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
 {  
+
  aiString texturename;
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
-  pressed = false;
 
   // get object
-  scene = importer.ReadFile("../assets/texturethings/" + filename, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
+      std::cout << "hello" << std::endl;
 
   // cycle through the meshes
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
@@ -252,9 +236,8 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
 
     //get texture file
     aiString filePath;
-    filePath.Append("../assets/texturethings/");
+    filePath.Append("../assets/");
     filePath.Append(texturename.C_Str());
-
     m_image.push_back(Magick::Image(filePath.C_Str()));
     Magick::Blob temp;
     m_image[meshNums].write(&temp, "RGBA");
@@ -340,7 +323,7 @@ Object::Object(std::string filename, btVector3 startOrigin, btScalar friction, b
     shape->calculateLocalInertia(0, interia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
-    bodyTransform.setOrigin (startOrigin);
+    bodyTransform.setOrigin (btVector3(0,0,0));
     btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, interia);
     rigidBodyCI.m_friction = friction;

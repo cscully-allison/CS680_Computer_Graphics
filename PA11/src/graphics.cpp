@@ -69,8 +69,9 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-  // Create the object
 
+  // Create the object
+  m_land = new Object ("ground.obj", 0, 0, 0, 0);
 
  //create the ball and add to dynamics world
   // Initalize the Gouraund Shader

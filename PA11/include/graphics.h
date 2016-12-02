@@ -37,6 +37,8 @@ class Graphics
     GLint m_modelMatrix;
     GLint ball;
 
+    Object *m_land;
+
     GLint m_scalar;
     GLint m_spot;
     GLint m_spec;
