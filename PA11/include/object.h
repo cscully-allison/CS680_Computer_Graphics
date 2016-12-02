@@ -29,7 +29,7 @@ class Object
     void Update();
     void ScoreUpdate();
 
-    void Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height);
+    void Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
     void applyForce (int force);

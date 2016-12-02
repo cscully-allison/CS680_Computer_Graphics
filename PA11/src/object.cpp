@@ -3,6 +3,7 @@
 
 Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int index)
 {
+
   aiString texturename;
   GLuint tempTB;
   std::vector <Magick::Image> m_image;
@@ -20,8 +21,9 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
     //texture loading from file
-    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-   
+    scene->mMaterials[1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
+      
+
     //get texture file
     aiString filePath;
     filePath.Append("../assets/");
@@ -37,9 +39,9 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     const aiMesh* mesh = scene->mMeshes[meshNums];
 
     // get material properties per mesh
-    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    scene->mMaterials[1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
-    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    scene->mMaterials[1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     // load into texture variable
     Texture matTex(Ka, Ks);
@@ -91,21 +93,23 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+}
 
    // create collision shape
     shape->calculateLocalInertia(mass, inertia);
-    btDefaultMotionState* motion;
-
+    btDefaultMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), startOrigin));
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motion, shape, inertia);
     rigidBodyCI.m_friction = friction;
     rigidBodyCI.m_restitution = restitution;
     rigidBodyCI.m_angularDamping = damping;
+
     body = new btRigidBody(rigidBodyCI);
+
     body->setActivationState (DISABLE_DEACTIVATION);
+
     // set user index for collision
     body->setUserIndex(index);
-}
+
 
 }
 
@@ -226,7 +230,6 @@ Object::Object(std::string filename, btScalar friction, btScalar restitution, bt
   scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
-      std::cout << "hello" << std::endl;
 
   // cycle through the meshes
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
@@ -477,7 +480,7 @@ btRigidBody* Object::GetRigidBody(){
 }
 
 
-void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 spec, GLint spotLoc, glm::vec3 spot, GLint heightLoc, GLfloat height)
+void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height)
 {
   // loads the texture to the shaders
   for (int i=0; i<TB.size(); i++)
@@ -487,10 +490,10 @@ void Object::Render(GLint scalarLoc, glm::vec3 scalar, GLint specLoc, glm::vec3 
   }
 
   // loads the lighting values to the shader
-  glUniform3fv(scalarLoc, 1, glm::value_ptr(scalar));
-  glUniform3fv(specLoc, 1, glm::value_ptr(spec));
-  glUniform3fv(spotLoc, 1, glm::value_ptr(spot));
-  glUniform1f (heightLoc, height);
+  glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));
+  glUniform3fv(spec.location, 1, glm::value_ptr(spec.value));
+  glUniform3fv(spot.location, 1, glm::value_ptr(spot.value));
+  glUniform3fv (height.location, 1, glm::value_ptr(height.value));
 
   // enables attributes
   glEnableVertexAttribArray(0);

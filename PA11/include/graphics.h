@@ -9,6 +9,7 @@ using namespace std;
 #include "camera.h"
 #include "shader.h"
 #include "object.h"
+#include "tankAI.h"
 
 class Graphics
 {
@@ -23,14 +24,13 @@ class Graphics
     int getScore();
     void highScore(int score);
 
-    //void ScoreDisplay (int scoreVar, Object);
-
   private:
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
     Shader *gouraund_shader;
     Shader *phong_shader;
+    TankAI *m_AI;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
@@ -39,15 +39,10 @@ class Graphics
 
     Object *m_land;
 
-    GLint m_scalar;
-    GLint m_spot;
-    GLint m_spec;
-    GLint m_height;
-
-    glm::vec3 scalar;
-    glm::vec3 spot;
-    GLfloat height;
-
+    Uniform scalar;
+    Uniform spotlight;
+    Uniform specularity;
+    Uniform spotlightHeight;
 
     uint score;
 

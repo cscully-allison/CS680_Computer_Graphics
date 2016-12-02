@@ -49,4 +49,11 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec3 n, Texture p): vertex(v), normals (n), properties(p) {}
 };
 
+struct Uniform {
+  GLint location;
+  glm::vec3 value;
+
+ // Uniform (GLint l, glm:: vec3 v): location (l), value (v){}
+};
+
 #endif /* GRAPHICS_HEADERS_H */

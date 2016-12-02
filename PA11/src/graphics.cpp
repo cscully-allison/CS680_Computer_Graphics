@@ -72,8 +72,14 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_land = new Object ("ground.obj", 0, 0, 0, 0);
+  dynamicsWorld->addRigidBody (m_land->GetRigidBody());
 
- //create the ball and add to dynamics world
+  m_AI = new TankAI();
+  dynamicsWorld->addRigidBody (m_AI->GetAIBase()->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_AI->GetAIHead()->GetRigidBody());
+
+
+  
   // Initalize the Gouraund Shader
   gouraund_shader = new Shader();
   if(!gouraund_shader->Initialize())
@@ -160,42 +166,35 @@ bool Graphics::Initialize(int width, int height)
     printf("m_modelMatrix not found\n");
     return false;
   }
-  
-  // locates the ball position in the Phong Shader
-  ball = phong_shader->GetUniformLocation("ballPosition");
-  if (ball == INVALID_UNIFORM_LOCATION)
-  {
-    printf("ball not found\n");
-    return false;
-  }
+
 
   //Locate the scalar variable in the Phong Shader
-  m_scalar = phong_shader->GetUniformLocation("scalar");
-  if (m_scalar == INVALID_UNIFORM_LOCATION)
+  scalar.location = phong_shader->GetUniformLocation("scalar");
+  if (scalar.location == INVALID_UNIFORM_LOCATION)
   {
-    printf("m_scalar not found\n");
+    printf("scalar not found\n");
     return false;
   }
   
   //Locate the height variable in the Phong Shader
-   m_height = phong_shader->GetUniformLocation("height");
-  if (m_height == INVALID_UNIFORM_LOCATION)
+   spotlightHeight.location = phong_shader->GetUniformLocation("height");
+  if (spotlightHeight.location == INVALID_UNIFORM_LOCATION)
   {
-    printf("m_height not found\n");
+    printf("spotlight height not found\n");
     return false;
   }
   
   //Locate the spot variable in the Phong Shader
-  m_spot = phong_shader->GetUniformLocation("spot");
-  if (m_spot == INVALID_UNIFORM_LOCATION)
+  spotlight.location = phong_shader->GetUniformLocation("spot");
+  if (spotlight.location == INVALID_UNIFORM_LOCATION)
   {
-    printf("m_spot not found\n");
+    printf("spotlight not found\n");
     return false;
   }
   
   //Locate the spec variable in the Phong Shader
-  m_spec = phong_shader->GetUniformLocation("spec");
-  if (m_spec == INVALID_UNIFORM_LOCATION)
+  specularity.location = phong_shader->GetUniformLocation("spec");
+  if (specularity.location == INVALID_UNIFORM_LOCATION)
   {
     printf("m_spec not found\n");
     return false;
@@ -261,11 +260,10 @@ for (int i =0; i < keyPress.size(); i++){
       // Locate the model matrix in the shader
       m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
       //Locate the scalar in the shader
-      m_scalar = gouraund_shader->GetUniformLocation("scalar");
-      m_height = gouraund_shader->GetUniformLocation("height");
-      m_spot = gouraund_shader->GetUniformLocation("spot");
-      m_spec = gouraund_shader->GetUniformLocation("spec");
-      ball = gouraund_shader->GetUniformLocation("ballPosition");
+      scalar.location = gouraund_shader->GetUniformLocation("scalar");
+      spotlightHeight.location = gouraund_shader->GetUniformLocation("height");
+      spotlight.location = gouraund_shader->GetUniformLocation("spot");
+      specularity.location = gouraund_shader->GetUniformLocation("spec");
 
       }
       //keyboard input p
@@ -277,47 +275,52 @@ for (int i =0; i < keyPress.size(); i++){
       // Locate the model matrix in the shader
       m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
       //Locate the scalar in the shader
-      m_scalar = phong_shader->GetUniformLocation("scalar");
-      m_height = phong_shader->GetUniformLocation("height");
-      m_spot = phong_shader->GetUniformLocation("spot");
-      m_spec = phong_shader->GetUniformLocation("spec");
-      ball = phong_shader->GetUniformLocation("ballPosition");
+      scalar.location = phong_shader->GetUniformLocation("scalar");
+      spotlightHeight.location = phong_shader->GetUniformLocation("height");
+      spotlight.location = phong_shader->GetUniformLocation("spot");
+      specularity.location = phong_shader->GetUniformLocation("spec");
       }
 
       //numpad + ambient lighting
-      if(keyPress[i] == 1073741911 && scalar.x < 10.0){
-        scalar += glm::vec3(0.01);
+      if(keyPress[i] == 1073741911 && scalar.value.x < 10.0){
+        scalar.value += glm::vec3(0.01);
       }
       // numpad - ambient lighting
-      else if(keyPress[i] == 1073741910 && scalar.x > 0){
-        scalar -= glm::vec3(0.01);
+      else if(keyPress[i] == 1073741910 && scalar.value.x > 0){
+        scalar.value -= glm::vec3(0.01);
       }
       
       // numpad * spotlight ambient
-       else if(keyPress[i] == 1073741909 && spot.x < 10.0){
-        spot += 0.01;
+       else if(keyPress[i] == 1073741909 && spotlight.value.x < 10.0){
+        spotlight.value += glm::vec3(0.01);
       }
       
       // numpad / spotlight ambient
-      else if(keyPress[i] == 1073741908 && spot.x > 0){
-        spot -= 0.01;
+      else if(keyPress[i] == 1073741908 && spotlight.value.x > 0){
+        spotlight.value -= glm::vec3(0.01);
       }
       
       //numpad 6 spotlight height
-      else if (keyPress[i] == 1073741918 && height > 1){
-          height -=.1;
+      else if (keyPress[i] == 1073741918 && spotlightHeight.value.x > 1){
+          spotlightHeight.value -= glm::vec3(0.01);
         }
         
       // numpad 9 spotlight height 
-      else if (keyPress[i]== 1073741921 && height < 20){
-          height +=.1;
-        }
-      
+      else if (keyPress[i]== 1073741921 && spotlightHeight.value.x < 20){
+          spotlightHeight.value += glm::vec3(0.01);
+      }
   }
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+
+  // render land
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
+  m_land->Render(scalar, specularity, spotlight, spotlightHeight);
+
+  m_AI->Render(scalar, specularity, spotlight, spotlightHeight);
+
 
   // Render the table object
   
