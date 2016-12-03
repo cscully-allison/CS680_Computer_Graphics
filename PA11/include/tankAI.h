@@ -13,7 +13,7 @@ class TankAI{
 	public:
 		TankAI();
 		~TankAI();
-		void Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
 		Object* GetAIBase();
 		Object* GetAIHead();
 

@@ -21,8 +21,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
   for(unsigned int meshNums = 0; meshNums < scene->mNumMeshes; meshNums++){
 
     //texture loading from file
-    scene->mMaterials[1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
-      
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_TEXTURE (aiTextureType_DIFFUSE, 0), texturename);
 
     //get texture file
     aiString filePath;
@@ -39,9 +38,9 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
     const aiMesh* mesh = scene->mMeshes[meshNums];
 
     // get material properties per mesh
-    scene->mMaterials[1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_AMBIENT, color);
     glm::vec3 Ka = glm::vec3(color.r, color.g, color.b);
-    scene->mMaterials[1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    scene->mMaterials[meshNums+1]->Get(AI_MATKEY_COLOR_SPECULAR, color);
     glm::vec3 Ks = glm::vec3(color.r, color.g, color.b);
     // load into texture variable
     Texture matTex(Ka, Ks);
@@ -66,6 +65,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                                  mesh->mVertices[vertex].z));
       
     }
+   std::cout << filename << " " << texturename.C_Str()<< " " << meshNums << std::endl;
 
     // push back faces  
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){
@@ -73,7 +73,7 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
       Indices.push_back(mesh->mFaces[index].mIndices[1]);
       Indices.push_back(mesh->mFaces[index].mIndices[2]);
     }
-
+  
       // fill vertices buffer
       glGenBuffers(1, &VB);
       glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -109,7 +109,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
 
     // set user index for collision
     body->setUserIndex(index);
-
 
 }
 

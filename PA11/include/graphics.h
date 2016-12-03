@@ -23,6 +23,7 @@ class Graphics
     bool getGameState();
     int getScore();
     void highScore(int score);
+    GLint GetModelMatrix ();
 
   private:
     std::string ErrorString(GLenum error);
