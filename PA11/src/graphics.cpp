@@ -216,6 +216,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
+  m_AI->Update(dt);
+
 }
 
 void Graphics::collisionDetection (unsigned int dt){
@@ -326,12 +328,12 @@ for (int i =0; i < keyPress.size(); i++){
   // Render the table object
   
   // Get any errors from OpenGL
-  auto error = glGetError();
-  if ( error != GL_NO_ERROR )
-  {
-    string val = ErrorString( error );
-    std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-  }
+  // auto error = glGetError();
+  // if ( error != GL_NO_ERROR )
+  // {
+  //   string val = ErrorString( error );
+  //   std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+  // }
 }
 
 GLint Graphics::GetModelMatrix(){
