@@ -10,12 +10,11 @@
           uniform mat4 viewMatrix; 
           uniform mat4 modelMatrix;
           
-          uniform vec4 ballPosition;
           uniform vec3 diffuse;
           uniform vec3 scalar;
           uniform vec3 spec;
           uniform vec3 spot;
-          uniform float height;  
+          uniform vec3 height;  
 
           out VS_OUT{
             vec3 N;  //normal
@@ -34,13 +33,12 @@
             vec3 spot;            
 
             // spotlight
-            vec3 spotlightL;
-            vec3 spotlightV;
+           // vec3 spotlightL;
+           // vec3 spotlightV;
           } vs_out;
 
           //light position
           vec3 light_pos = vec3(0, 10.0, 5.0);
-          vec3 spotlight_pos = vec3(ballPosition.x, height, ballPosition.z);
           vec3 light_pos2 = vec3(0, 0.0, 0.0);
 
           void main(void) 
@@ -60,8 +58,8 @@
             //calculate view vector
             vs_out.V = -p.xyz;
 
-            vs_out.spotlightL = spotlight_pos - p.xyz;
-            vs_out.spotlightV = -ballPosition.xyz;
+            //vs_out.spotlightL = spotlight_pos - p.xyz;
+            //vs_out.spotlightV = -ballPosition.xyz;
 
             gl_Position = projectionMatrix * viewMatrix * p;
 

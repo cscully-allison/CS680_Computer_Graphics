@@ -12,6 +12,8 @@ struct Tank{
 		int ammo;
 		int direction;
 		int timeLeft;
+		int initialTime;
+		int compassPosition;
 };
 
 class TankAI{

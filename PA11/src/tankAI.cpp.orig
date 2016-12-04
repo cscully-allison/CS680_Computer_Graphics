@@ -1,18 +1,20 @@
 #include "tankAI.h"
 #define MAXLIFES 3;
 #define MAXAMMO 5;
-//#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
 TankAI::TankAI(){
 	AI.base = new Object("tankbase.obj", 50, btVector3(0, 0, 0), btVector3(0, .5, 0), 0, 0, 0, 1);
 	//adjust so that it lied on top of the base
-	AI.head = new Object("turret.obj", 50, btVector3(0, 0, 0), btVector3(0, 10, 0), 0, 0, 0, 1);
+<<<<<<< HEAD
+	AI.head = new Object("tankbase.obj", 50, btVector3(0, 0, 0), btVector3(0, 10, 0), 0, 0, 0, 2);
+=======
+	AI.head = new Object("turret.obj", 500, btVector3(0, 0, 0), btVector3(0, 10, 0), 0, 0, 0, 1);
+>>>>>>> 8e06cea9e7ac7a6b3ef140e4fc9dc976c38581f8
 	SetOrientation();
 
 	AI.lives = MAXLIFES;
 	AI.ammo = MAXAMMO;
 	AI.initialTime = 0;
-	AI.compassPosition = 0; 
 	// left, right, forwards, backward, stop
 	
 	// in seconds
@@ -38,18 +40,6 @@ void TankAI::Update(unsigned int dt){
 	if (dt-AI.initialTime >= AI.timeLeft){
 		AI.timeLeft = (rand() % 2000)+2000;
 		AI.direction = rand() % 5;
-		switch (AI.direction){
-			case 1:
-				AI.compassPosition --;
-				if (AI.compassPosition < 0)
-					AI.compassPosition = 4;
-			break;
-			case 2:
-				AI.compassPosition ++;
-				if (AI.compassPosition > 4)
-					AI.compassPosition = 0;
-			break;
-		}
 		AI.initialTime = dt;
 		AI.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
 		AI.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
@@ -59,43 +49,26 @@ void TankAI::Update(unsigned int dt){
 	switch (AI.direction){
 		// Left
 		case 1:
-			AI.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+		AI.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
 		break;
 		//Right
 		case 2:
-			AI.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+		AI.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
 		break;
 		//Forward
 		case 3:
-			switch (AI.compassPosition){
-				//North
-				case 1:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
-				break;
-				//West
-				case 2:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
-				break;
-				//East
-				case 3:
-					AI.base->translate(glm::vec3 (1.0f, 0.0, 0.0f));
-				break;
-				//South
-				case 4:
-					AI.base->translate(glm::vec3 (-1.0f, 0.0, 0.0f));
-				break;
-			}
+		AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
 		break;
 		//Backwards
 		case 4:
-			AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+		AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
 		break; 
 		//Nothing
 		case 5:
 		break;
 	}
 	SetOrientation();
-	std:: cout << AI.compassPosition << " " << AI.direction << std:: endl; 
+	std:: cout << AI.timeLeft << " " << AI.direction << std:: endl; 
 }
 
 Object* TankAI::GetAIBase(){

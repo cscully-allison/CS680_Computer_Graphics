@@ -33,12 +33,15 @@ class Object
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
     void applyForce (int force);
-
+    void rotate(const glm::vec3);
+    void translate(const glm::vec3);
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();
     glm::vec3 getSpec();
     void setSpec (glm::vec3 s);
+
+    glm::vec4 getPosition();
 
   private:
     glm::mat4 model;

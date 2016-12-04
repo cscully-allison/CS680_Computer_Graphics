@@ -8,7 +8,7 @@ Graphics::Graphics()
   dispatcher = new btCollisionDispatcher(collisionConfig);
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-  dynamicsWorld->setGravity(btVector3(-.333,-1,0));
+  dynamicsWorld->setGravity(btVector3(0,-1,0));
 
   // set inital game variables
   score = 0;
@@ -339,13 +339,13 @@ for (int i =0; i < keyPress.size(); i++){
 
   // Render the table object
   
-  // Get any errors from OpenGL
-  // auto error = glGetError();
-  // if ( error != GL_NO_ERROR )
-  // {
-  //   string val = ErrorString( error );
-  //   std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-  // }
+  //Get any errors from OpenGL
+  auto error = glGetError();
+  if ( error != GL_NO_ERROR )
+  {
+    string val = ErrorString( error );
+    std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+  }
 }
 
 GLint Graphics::GetModelMatrix(){
