@@ -21,8 +21,8 @@
             vec3 spot;
 
             // spotlight
-            vec3 spotlightL;
-            vec3 spotlightV;
+          //  vec3 spotlightL;
+          //  vec3 spotlightV;
           } fs_in;
 
 
@@ -60,7 +60,7 @@
 
 
 
-              float NdotL = max (dot(N,L),0.0);
+/*              float NdotL = max (dot(N,L),0.0);
                 if ( NdotL > 0.0){
                    L = normalize(fs_in.spotlightL);
                    R = normalize( reflect(-L, N) );
@@ -71,6 +71,6 @@
                       specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
                       color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
                    }
-              }
+              }*/
 
           }

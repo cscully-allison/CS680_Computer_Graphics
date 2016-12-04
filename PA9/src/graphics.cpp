@@ -292,6 +292,9 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, float mouseX, float mouseY)
 {
+  glm::vec4 pos = m_ball->GetModel() * glm::vec4 (1.0,1.0,1.0,1.0);
+  m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z));
+  // update the ball
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   // Update the object
   m_ball->Update(dt, dynamicsWorld);

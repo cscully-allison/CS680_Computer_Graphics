@@ -12,15 +12,13 @@
           uniform vec3 scalar;
           uniform vec3 spec;
           uniform vec3 spot;
-          uniform vec4 ballPosition;
-          uniform float height;
+          uniform vec3 height;
 
           uniform sampler2D gSampler;
 
 
           //light position
           uniform vec3 light_pos = vec3(0.0, 10.0, 5.0);
-          vec3 spotlight_pos = vec3 (ballPosition.x, height, ballPosition.z);
 
           uniform vec3 light_pos2 = vec3(0.0, 0.0, 0.0);
 
@@ -81,7 +79,7 @@
 
             // spotlight
 
-            float NdotL = max (dot(N,L),0.0);
+  /*          float NdotL = max (dot(N,L),0.0);
             if ( NdotL > 0.0){    
                 L = normalize(spotlight_pos - p.xyz);
                 //calculate R locally
@@ -96,6 +94,6 @@
                      color += spot + diffuse + specular;
                      }
             }
-
+*/
             gl_Position = projectionMatrix * viewMatrix * p; 
           } 

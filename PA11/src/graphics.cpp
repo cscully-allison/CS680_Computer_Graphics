@@ -8,7 +8,7 @@ Graphics::Graphics()
   dispatcher = new btCollisionDispatcher(collisionConfig);
   solver = new btSequentialImpulseConstraintSolver;
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-  dynamicsWorld->setGravity(btVector3(-.333,-1,0));
+  dynamicsWorld->setGravity(btVector3(0,-1,0));
 
   // set inital game variables
   score = 0;
@@ -211,6 +211,12 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
 
+  //default camera position and point to look
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 5.0f, -100.0f));
+
+  //once tank is loaded and available with movement
+  //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
+
   // update the dynamics world step
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   // senses any collision; returned variable not used
@@ -325,15 +331,15 @@ for (int i =0; i < keyPress.size(); i++){
   m_AI->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
 
-  // Render the table object
+ // Render the table object
   
-  // Get any errors from OpenGL
-  // auto error = glGetError();
-  // if ( error != GL_NO_ERROR )
-  // {
-  //   string val = ErrorString( error );
-  //   std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-  // }
+  //Get any errors from OpenGL
+  auto error = glGetError();
+  if ( error != GL_NO_ERROR )
+  {
+    string val = ErrorString( error );
+    std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+  }
 }
 
 GLint Graphics::GetModelMatrix(){

@@ -464,8 +464,6 @@ void Object::applyForce(int force){
 }
 
 
-
-
 glm::mat4 Object::GetModel()
 {
   // get model
@@ -492,7 +490,7 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height)
   glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));
   glUniform3fv(spec.location, 1, glm::value_ptr(spec.value));
   glUniform3fv(spot.location, 1, glm::value_ptr(spot.value));
-  glUniform3fv (height.location, 1, glm::value_ptr(height.value));
+  glUniform3fv(height.location, 1, glm::value_ptr(height.value));
 
   // enables attributes
   glEnableVertexAttribArray(0);
@@ -530,4 +528,19 @@ glm::vec3 Object::getSpec(){
 void Object::setSpec (glm::vec3 s){
         // sets specularity
         spec += s;
+}
+
+glm::vec4 Object::getPosition()
+{
+  return model * glm::vec4 (1.0,1.0,1.0,1.0);
+}
+
+void Object::rotate(const glm::vec3 direction)
+{
+  body->applyTorque(btVector3(1.0*direction.y*10.0f, 1.0*direction.y*10.0f, 1.0*direction.y*10.0f));
+}
+
+void Object::translate(const glm::vec3 direction)
+{
+  body->applyForce(btVector3(0.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
 }
