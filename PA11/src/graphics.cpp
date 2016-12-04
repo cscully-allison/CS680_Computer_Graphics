@@ -74,11 +74,19 @@ bool Graphics::Initialize(int width, int height)
   m_land = new Object ("ground.obj", 0, 0, 0, 0);
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
 
+  bldg = new Object("bldg.obj", 0, 0, 0, 0);
+  dynamicsWorld->addRigidBody(bldg->GetRigidBody());
+
+
   m_AI = new TankAI();
 
   dynamicsWorld->addRigidBody (m_AI->GetAIBase()->GetRigidBody());
 
   dynamicsWorld->addRigidBody (m_AI->GetAIHead()->GetRigidBody());
+
+
+
+
 
   
   // Initalize the Gouraund Shader
@@ -322,8 +330,12 @@ for (int i =0; i < keyPress.size(); i++){
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
   m_land->Render(scalar, specularity, spotlight, spotlightHeight);
 
+
+
   m_AI->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
+
+  bldg->Render(scalar, specularity, spotlight, spotlightHeight);
 
   // Render the table object
   

@@ -33,12 +33,14 @@ class Graphics
     Shader *phong_shader;
     TankAI *m_AI;
 
+
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint ball;
 
     Object *m_land;
+    Object *bldg;
 
     Uniform scalar;
     Uniform spotlight;

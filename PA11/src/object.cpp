@@ -345,7 +345,7 @@ Object::Object(std::string filename)
 
   //Verticies and indicies needs to be initilized for run
   //Presumably we will call the assimp functions here
-  scene = importer.ReadFile("../assets/Numbers/" + filename, aiProcess_Triangulate);
+  scene = importer.ReadFile("../assets/" + filename, aiProcess_Triangulate);
   aiColor3D color (0.0f,0.0f, 0.0f);
   aiVector3D textureCoords(0.0f,0.0f, 0.0f);
 
