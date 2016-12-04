@@ -212,7 +212,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 { 
 
   //default camera position and point to look
-  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 5.0f, -100.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 5.0f, -50.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));

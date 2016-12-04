@@ -13,6 +13,7 @@ struct Tank{
 		int direction;
 		int timeLeft;
 		int initialTime;
+		int compassPosition;
 };
 
 class TankAI{
