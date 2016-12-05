@@ -539,10 +539,10 @@ glm::vec4 Object::getPosition()
 
 void Object::rotate(const glm::vec3 direction)
 {
-  body->applyTorque(btVector3(1.0*direction.y*10.0f, 1.0*direction.y*10.0f, 1.0*direction.y*10.0f));
+  body->applyTorqueImpulse(btVector3(direction.y*1.08f, direction.y*1.08f, direction.y*1.08f));
 }
 
 void Object::translate(const glm::vec3 direction)
 {
-  body->applyForce(btVector3(0.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
+  body->applyForce(btVector3(direction.x*10.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
 }

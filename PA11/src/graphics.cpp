@@ -87,8 +87,9 @@ bool Graphics::Initialize(int width, int height)
 
   dynamicsWorld->addRigidBody (m_AI->GetAIHead()->GetRigidBody());
 
-
-
+  m_user = new UserTank();
+  dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
 
   
@@ -222,12 +223,20 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int force)
 { 
 
+  //default camera position and point to look
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -100.0f));
+
+  //once tank is loaded and available with movement
+  //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
+
   // update the dynamics world step
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
   m_AI->Update(dt);
+  m_user->Update();
+  //m_user->Update();
 
 }
 
@@ -338,6 +347,7 @@ for (int i =0; i < keyPress.size(); i++){
   m_sky->Render(scalar, specularity, spotlight, spotlightHeight);
 
   m_AI->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
 
   //bldg->Render(scalar, specularity, spotlight, spotlightHeight);
