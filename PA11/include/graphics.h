@@ -35,12 +35,15 @@ class Graphics
     TankAI *m_AI;
     UserTank *m_user;
 
+
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint ball;
 
     Object *m_land;
+    Object *m_sky;
+    Object *bldg;
 
     Uniform scalar;
     Uniform spotlight;
