@@ -10,6 +10,7 @@ using namespace std;
 #include "shader.h"
 #include "object.h"
 #include "tankAI.h"
+#include "UserTank.h"
 
 class Graphics
 {
@@ -32,6 +33,7 @@ class Graphics
     Shader *gouraund_shader;
     Shader *phong_shader;
     TankAI *m_AI;
+    UserTank *m_user;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;

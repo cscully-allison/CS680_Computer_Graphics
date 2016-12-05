@@ -74,11 +74,14 @@ bool Graphics::Initialize(int width, int height)
   m_land = new Object ("ground.obj", 0, 0, 0, 0);
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
 
-  m_AI = new TankAI();
-
+  m_AI = new TankAI();  
   dynamicsWorld->addRigidBody (m_AI->GetAIBase()->GetRigidBody());
-
   dynamicsWorld->addRigidBody (m_AI->GetAIHead()->GetRigidBody());
+
+  m_user = new UserTank();
+  dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
+
 
   
   // Initalize the Gouraund Shader
@@ -212,7 +215,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 { 
 
   //default camera position and point to look
-  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 5.0f, -50.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -100.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
@@ -223,6 +226,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   collisionDetection(dt);
 
   m_AI->Update(dt);
+  m_user->Update();
+  //m_user->Update();
 
 }
 
@@ -254,7 +259,7 @@ void Graphics::collisionDetection (unsigned int dt){
 void Graphics::Render(vector <unsigned int>  keyPress)
 {
   //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClearColor(0.5, .5, .5, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 for (int i =0; i < keyPress.size(); i++){
@@ -329,6 +334,7 @@ for (int i =0; i < keyPress.size(); i++){
   m_land->Render(scalar, specularity, spotlight, spotlightHeight);
 
   m_AI->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
 
  // Render the table object
