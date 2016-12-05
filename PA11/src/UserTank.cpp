@@ -11,6 +11,7 @@ UserTank::UserTank(){
 	user.lives = MAXLIVES;
 	user.ammo = MAXAMMO;
 	user.compassPosition = 4; 
+	
 	// left, right, forwards, backward, stop
 
 	//set restrictions for body movement
