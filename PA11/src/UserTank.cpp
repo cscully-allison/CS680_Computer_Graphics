@@ -9,7 +9,6 @@ UserTank::UserTank(){
 	SetOrientation();
 
 	user.lives = MAXLIVES;
-	user.ammo = MAXAMMO;
 	user.compassPosition = 4; 
 	// left, right, forwards, backward, stop
 
@@ -36,6 +35,19 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
 }
 
 void UserTank::Update(){
+	btTransform lower;
+	btTransform upper;
+	btVector3 upperPos;
+	btQuaternion rotato;
+
+
+	user.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
+	upper = lower;
+	upperPos = upper.getOrigin();
+	upperPos.setY(upperPos.getY()+6.6); 
+	upper.setOrigin(upperPos);
+	user.head->GetRigidBody()->proceedToTransform(upper);
+
 	SetOrientation(); 
 }
 

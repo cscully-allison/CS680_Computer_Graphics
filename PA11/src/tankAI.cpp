@@ -1,7 +1,6 @@
 #include "tankAI.h"
 #include <time.h>
 #define MAXLIVES 3;
-#define MAXAMMO 5;
 //#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
 TankAI::TankAI(){
@@ -12,7 +11,6 @@ TankAI::TankAI(){
 	SetOrientation();
 
 	AI.lives = MAXLIVES;
-	AI.ammo = MAXAMMO;
 	AI.initialTime = 0;
 	AI.compassPosition = 4; 
 	// left, right, forwards, backward, stop
@@ -147,8 +145,6 @@ void TankAI::Update(unsigned int dt){
 	upperPos.setY(upperPos.getY()+6.6); 
 	upper.setOrigin(upperPos);
 	AI.head->GetRigidBody()->proceedToTransform(upper);
-
-
 
 	SetOrientation(); 
 }
