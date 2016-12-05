@@ -40,6 +40,7 @@ class Graphics
     GLint ball;
 
     Object *m_land;
+    Object *m_sky;
     Object *bldg;
 
     Uniform scalar;

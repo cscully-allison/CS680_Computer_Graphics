@@ -262,7 +262,7 @@ Object::Object(std::string filename, btScalar friction, btScalar restitution, bt
     for(unsigned int vertex = 0; vertex < mesh->mNumVertices; vertex++){
       //load tex coords per vertex
       matTex.texture = glm::vec2(scene->mMeshes[meshNums]->mTextureCoords[0][vertex].x,
-                                  1-scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
+                                  scene->mMeshes[meshNums]->mTextureCoords[0][vertex].y);
 
       // push back vertices, normal, and textures
       Vertices.push_back(Vertex(
@@ -464,8 +464,6 @@ void Object::applyForce(int force){
 }
 
 
-
-
 glm::mat4 Object::GetModel()
 {
   // get model
@@ -531,6 +529,8 @@ void Object::setSpec (glm::vec3 s){
         // sets specularity
         spec += s;
 }
+<<<<<<< HEAD
+=======
 
 glm::vec4 Object::getPosition()
 {
@@ -546,3 +546,4 @@ void Object::translate(const glm::vec3 direction)
 {
   body->applyForce(btVector3(0.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
 }
+>>>>>>> 64b4ac15bf7067c6eeee00f49952c1750a4bce91
