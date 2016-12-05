@@ -11,8 +11,6 @@ UserTank::UserTank(){
 
 	user.lives = MAXLIVES;
 	user.compassPosition = 4; 
-	
-	// left, right, forwards, backward, stop
 
 	//set restrictions for body movement
 	user.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));

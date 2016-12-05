@@ -81,11 +81,7 @@ bool Graphics::Initialize(int width, int height)
   //dynamicsWorld->addRigidBody(bldg->GetRigidBody());
 
 
-  m_AI = new TankAI();
-
-  dynamicsWorld->addRigidBody (m_AI->GetAIBase()->GetRigidBody());
-
-  dynamicsWorld->addRigidBody (m_AI->GetAIHead()->GetRigidBody());
+  m_AI = new TankAI(dynamicsWorld);
 
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
@@ -235,10 +231,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  m_AI->Update(dt);
+  m_AI->UpdateWrapper(dt);
   m_user->Update(keyPress);
-  //m_user->Update();
-
 }
 
 void Graphics::collisionDetection (unsigned int dt){
@@ -347,7 +341,7 @@ for (int i =0; i < keyPress.size(); i++){
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
   m_sky->Render(scalar, specularity, spotlight, spotlightHeight);
 
-  m_AI->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
 

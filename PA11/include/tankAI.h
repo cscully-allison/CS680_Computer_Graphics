@@ -18,16 +18,23 @@ struct Tank{
 
 class TankAI{
 	public:
-		TankAI();
+		TankAI(btDiscreteDynamicsWorld* dynamicsWorld);
 		~TankAI();
-		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
-		Object* GetAIBase();
-		Object* GetAIHead();
-		void SetOrientation();
-		void Update(unsigned int dt);
+		void Initialize (btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin);
+		void RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		void Render(Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		Object* GetAIBase(int number);
+		Object* GetAIHead(int number);
+		void SetOrientation(Tank& AI);
+		void UpdateWrapper(unsigned int dt);
+		void Update(unsigned int dt, Tank& AI);
 
 	private:
-		Tank AI;
+		Tank one;
+		Tank two;
+		Tank three;
+		Tank four;
+		Tank five;
 };
 
 #endif

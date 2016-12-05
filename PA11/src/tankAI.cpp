@@ -3,17 +3,29 @@
 #define MAXLIVES 3;
 //#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
-TankAI::TankAI(){
-	srand (time (0));
-	AI.base = new Object("tankbase.obj", 50, btVector3(0, 0, 0), btVector3(0, -2.5, 0), 0, 0, 0, 1);
+TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
+	srand (time (NULL));
+	Initialize (dynamicsWorld, one, btVector3 (0,0,0));
+	Initialize (dynamicsWorld, two, btVector3 (20,0,20));
+	Initialize (dynamicsWorld, three, btVector3 (50,0,50));
+	Initialize (dynamicsWorld, four, btVector3 (70,0,70));
+	Initialize (dynamicsWorld, five, btVector3 (90,0,0));
+ }
+
+TankAI::~TankAI(){
+
+}
+
+
+void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin){
+	AI.base = new Object("tankbase.obj", 50, btVector3(0, 0, 0), btVector3(startOrigin.getX(), -2.5, startOrigin.getY()), 0, 0, 0, 1);
 	//adjust so that it lied on top of the base
-	AI.head = new Object("turret.obj", 50, btVector3(0, 0, 0), btVector3(0, 4.0995, 0), 0, 0, 0, 1);
-	SetOrientation();
+	AI.head = new Object("turret.obj", 50, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getY()), 0, 0, 0, 1);
+	SetOrientation(AI);
 
 	AI.lives = MAXLIVES;
 	AI.initialTime = 0;
 	AI.compassPosition = 4; 
-	// left, right, forwards, backward, stop
 
 	//set restrictions for body movement
 	AI.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
@@ -22,18 +34,22 @@ TankAI::TankAI(){
 	//set restrictions for head movement
 	AI.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
 	AI.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
-	
+
 	// in seconds
 	AI.timeLeft = 0;
-
+	dynamicsWorld->addRigidBody (AI.base->GetRigidBody());
+  	dynamicsWorld->addRigidBody (AI.head->GetRigidBody());
 }
 
-TankAI::~TankAI(){
+void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
+	Render (one, modelMatrix, scalar, spec, spot, height);
+	Render (two, modelMatrix, scalar, spec, spot, height);
+	Render (three, modelMatrix, scalar, spec, spot, height);
+	Render (four, modelMatrix, scalar, spec, spot, height);
+	Render (five, modelMatrix, scalar, spec, spot, height);
+ }
 
-}
-
-void TankAI::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
-
+void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.base->GetModel()));
   AI.base->Render(scalar, spec, spot, height);
 
@@ -41,7 +57,15 @@ void TankAI::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spo
   AI.head->Render(scalar, spec, spot, height);
 }
 
-void TankAI::Update(unsigned int dt){
+void TankAI::UpdateWrapper(unsigned int dt){
+	Update (dt, one);
+	Update (dt, two);
+	Update (dt, three);
+	Update (dt, four);
+	Update (dt,five);
+}
+
+void TankAI::Update(unsigned int dt, Tank& AI){
 	btTransform lower;
 	btTransform upper;
 	btVector3 upperPos;
@@ -78,7 +102,6 @@ void TankAI::Update(unsigned int dt){
 		AI.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
 		AI.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	}
-
 	//action given
 	switch (AI.direction){
 		// Right
@@ -135,26 +158,59 @@ void TankAI::Update(unsigned int dt){
 		case 5:
 		break;
 	}
-
 	AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
+
 	upper = lower;
 	upperPos = upper.getOrigin();
 	upperPos.setY(upperPos.getY()+6.6); 
 	upper.setOrigin(upperPos);
 	AI.head->GetRigidBody()->proceedToTransform(upper);
 
-	SetOrientation(); 
+	SetOrientation(AI); 
 }
 
-Object* TankAI::GetAIBase(){
-	return AI.base;
+Object* TankAI::GetAIBase(int number){
+	switch (number){
+		case 1:
+			return one.base;
+		break;
+		case 2:
+			return two.base;
+		break;
+		case 3:
+			return three.base;
+		break;
+		case 4:
+			return four.base;
+		break;
+		case 5:
+			return five.base;
+		break;
+	}
 }
 
-Object* TankAI::GetAIHead(){
-	return AI.head;
-}
+Object* TankAI::GetAIHead(int number){
+	switch (number){
+		case 1:
+      std::cout << "hello" << std::endl;
+			return one.head;
+		break;
+		case 2:
+			return two.head;
+		break;
+		case 3:
+			return three.head;
+		break;
+		case 4:
+			return four.head;
+		break;
+		case 5:
+			return five.head;
+		break;
+	}
+ }
 
-void TankAI::SetOrientation(){
+void TankAI::SetOrientation(Tank& AI){
 	AI.base->setOrientation();
 	AI.head->setOrientation();
 }
