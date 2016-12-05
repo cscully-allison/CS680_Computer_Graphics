@@ -7,6 +7,7 @@
 struct Tank{
 		Object *base;
 		Object *head;
+		Object *placeholder;
 
 		int lives;
 		int direction;

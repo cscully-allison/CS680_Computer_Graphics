@@ -71,7 +71,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_land = new Object ("ground.obj", 0, 0, 0, 0);
+  m_land = new Object ("ground.obj", 100, 0, 0, 0);
   m_sky =  new Object ("skybox.obj", 0, 0, 0, 0);
 
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
@@ -90,6 +90,7 @@ bool Graphics::Initialize(int width, int height)
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_user->GetPlaceholder()->GetRigidBody());
 
 
   
@@ -224,7 +225,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 { 
 
   //default camera position and point to look
-  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -100.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
@@ -235,7 +236,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   collisionDetection(dt);
 
   m_AI->Update(dt);
-  m_user->Update();
+  m_user->Update(keyPress);
   //m_user->Update();
 
 }

@@ -47,9 +47,6 @@ void TankAI::Update(unsigned int dt){
 	btVector3 upperPos;
 	btQuaternion rotato;
 
-
-
-
 	//no action given yet
 	if (dt-AI.initialTime >= AI.timeLeft){
 		AI.direction = (1+ rand() % 4);
