@@ -7,9 +7,9 @@
 struct Tank{
 		Object *base;
 		Object *head;
+		Object *placeholder;
 
 		int lives;
-		int ammo;
 		int direction;
 		int timeLeft;
 		int initialTime;

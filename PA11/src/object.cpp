@@ -65,7 +65,6 @@ Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3
                                  mesh->mVertices[vertex].z));
       
     }
-   std::cout << filename << " " << texturename.C_Str()<< " " << meshNums << std::endl;
 
     // push back faces  
     for(unsigned int index = 0; index < mesh->mNumFaces; index++){

@@ -22,8 +22,9 @@ class UserTank{
 		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
 		Object* GetBase();
 		Object* GetHead();
+		Object* GetPlaceholder();
 		void SetOrientation();
-		void Update();
+		void Update(std::vector <unsigned int> keyPress);
 
 	private:
 		Tank user;
