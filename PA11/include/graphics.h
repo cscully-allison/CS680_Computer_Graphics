@@ -49,7 +49,8 @@ class Graphics
     Uniform spotlight;
     Uniform specularity;
     Uniform spotlightHeight;
-
+    Uniform eyePos;
+    
     uint score;
 
     bool gamestate;

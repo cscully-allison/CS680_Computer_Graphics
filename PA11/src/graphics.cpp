@@ -266,12 +266,15 @@ void Graphics::Render(vector <unsigned int>  keyPress)
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-for (int i =0; i < keyPress.size(); i++){
+  //get the eye position per rendered frame
+  eyePos.value = m_camera->GetPosition();
+
+  for (int i =0; i < keyPress.size(); i++){
       //g or default  
       if(keyPress[i] == 103 ){
-        // Start the correct program
-        gouraund_shader->Enable();
-          // Locate the projection matrix in the shader
+      // Start the correct program
+      gouraund_shader->Enable();
+      // Locate the projection matrix in the shader
       m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
       // Locate the view matrix in the shader
       m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
@@ -282,8 +285,9 @@ for (int i =0; i < keyPress.size(); i++){
       spotlightHeight.location = gouraund_shader->GetUniformLocation("height");
       spotlight.location = gouraund_shader->GetUniformLocation("spot");
       specularity.location = gouraund_shader->GetUniformLocation("spec");
-
+      eyePos.location = gouraund_shader->GetUniformLocation("eyePos");
       }
+
       //keyboard input p
       else if(keyPress[i] == 112){
       phong_shader->Enable();
@@ -297,6 +301,7 @@ for (int i =0; i < keyPress.size(); i++){
       spotlightHeight.location = phong_shader->GetUniformLocation("height");
       spotlight.location = phong_shader->GetUniformLocation("spot");
       specularity.location = phong_shader->GetUniformLocation("spec");
+      eyePos.location = phong_shader->GetUniformLocation("eyePos");
       }
 
       //numpad + ambient lighting
@@ -335,14 +340,14 @@ for (int i =0; i < keyPress.size(); i++){
 
   // render land
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
-  m_land->Render(scalar, specularity, spotlight, spotlightHeight);
+  m_land->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
 
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
-  m_sky->Render(scalar, specularity, spotlight, spotlightHeight);
+  m_sky->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
 
-  m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
-  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
 
 
   //bldg->Render(scalar, specularity, spotlight, spotlightHeight);

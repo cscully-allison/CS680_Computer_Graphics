@@ -14,7 +14,8 @@
           uniform vec3 scalar;
           uniform vec3 spec;
           uniform vec3 spot;
-          uniform vec3 height;  
+          uniform vec3 height;
+          uniform vec3 eyePos;  
 
           out VS_OUT{
             vec3 N;  //normal
@@ -56,7 +57,8 @@
             vs_out.L2 = light_pos2 - p.xyz;
 
             //calculate view vector
-            vs_out.V = -p.xyz;
+            //vs_out.V = -p.xyz;
+            vs_out.V = normalize(eyePos);
 
             //vs_out.spotlightL = spotlight_pos - p.xyz;
             //vs_out.spotlightV = -ballPosition.xyz;

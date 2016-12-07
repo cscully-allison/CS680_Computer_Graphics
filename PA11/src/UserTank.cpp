@@ -28,16 +28,16 @@ UserTank::~UserTank(){
 
 }
 
-void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
+void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.base->GetModel()));
-  user.base->Render(scalar, spec, spot, height);
+  user.base->Render(scalar, spec, spot, height, eyePos);
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.head->GetModel()));
-  user.head->Render(scalar, spec, spot, height);
+  user.head->Render(scalar, spec, spot, height, eyePos);
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder ->GetModel()));
-  user.placeholder ->Render(scalar, spec, spot, height);
+  user.placeholder ->Render(scalar, spec, spot, height, eyePos);
 }
 
 void UserTank::Update(std::vector <unsigned int> keyPress){

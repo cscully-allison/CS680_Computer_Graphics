@@ -13,6 +13,7 @@
           uniform vec3 spec;
           uniform vec3 spot;
           uniform vec3 height;
+          uniform vec3 eyePos;
 
           uniform sampler2D gSampler;
 
@@ -43,7 +44,7 @@
             vec3 L = normalize(light_pos - p.xyz);
 
             //calculate view vector
-            vec3 V = normalize(-p.xyz);
+            vec3 V = normalize(eyePos);
 
             //calculate R locally
             vec3 R = normalize( reflect(-L, N) );    
