@@ -259,7 +259,7 @@ void Graphics::collisionDetection (unsigned int dt){
         // and collided
         if (pt.getDistance() < 0.01f ){
           if (collisionObject->getUserIndex() == 6){
-            m_health->Collision();
+            m_health->Collision(dynamicsWorld);
             if (collisionObject2->getUserIndex() < 5){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }
