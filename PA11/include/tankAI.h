@@ -20,7 +20,7 @@ class TankAI{
 	public:
 		TankAI(btDiscreteDynamicsWorld* dynamicsWorld);
 		~TankAI();
-		void Initialize (btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin);
+		void Initialize (btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index);
 		void RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void Render(Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		Object* GetAIBase(int number);

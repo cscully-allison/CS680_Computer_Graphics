@@ -3,13 +3,14 @@
 #define MAXAMMO 5;
 
 UserTank::UserTank(){
-	user.base = new Object("tankbase.obj", 500, btVector3(0, 0, 0), btVector3(20, -2.5, 5), 10, 0, 0, 1);
+	user.base = new Object("tankbase.obj", 1000, btVector3(0, 0, 0), btVector3(20, -2.5, 5), .9, 0, 0, 5);
 	//adjust so that it lied on top of the base
-	user.head = new Object("turret.obj", 500, btVector3(0, 0, 0), btVector3(20, 4.0995, 5), 0, 0, 0, 1);
-	user.placeholder = new Object("placeholder.obj", 50, btVector3(0, 0, 0), btVector3(20, 4.0995, 10), 0, 0, 0, 1);
+	user.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(20, 4.0995, 5), 1, 0, 0, 5);
+	//user.placeholder = new Object("placeholder.obj");
 	SetOrientation();
 
-	user.lives = MAXLIVES;
+	//user.lives = MAXLIVES;
+	user.lives = 3;
 	user.compassPosition = 4; 
 
 	//set restrictions for body movement
@@ -36,11 +37,11 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.head->GetModel()));
   user.head->Render(scalar, spec, spot, height, eyePos);
 
-  glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder ->GetModel()));
-  user.placeholder ->Render(scalar, spec, spot, height, eyePos);
+  // glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder ->GetModel()));
+  // user.placeholder ->Render(scalar, spec, spot, height, eyePos);
 }
 
-void UserTank::Update(std::vector <unsigned int> keyPress){
+void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement){
 	btTransform lower;
 	btTransform upper;
 	btTransform placeholder;
@@ -96,16 +97,22 @@ void UserTank::Update(std::vector <unsigned int> keyPress){
 
 			//left
 			case 97:
-				//user.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
+				previousMouse = mouseMovement;
 			break;
 
 			//right 
 			case 100:
-				//user.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
+				previousMouse = mouseMovement;
 			break;
 
 		}
 	}
+	// if (mouseMovement != 0){
+	// 	std::cout << 360.0/800 * mouseMovement - previousMouse << std::endl;
+	// 	user.head->rotate (glm::vec3(0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
+	// }
 
 	user.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
 	upper = lower;
@@ -122,6 +129,12 @@ void UserTank::Update(std::vector <unsigned int> keyPress){
 	user.placeholder->GetRigidBody()->proceedToTransform(placeholder);
 
 	SetOrientation(); 
+}
+
+void UserTank::AddHealth(){
+	if (user.lives != 5){
+		user.lives ++;
+	}
 }
 
 Object* UserTank::GetBase(){

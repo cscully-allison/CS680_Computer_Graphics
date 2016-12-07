@@ -20,14 +20,16 @@ class UserTank{
 		UserTank();
 		~UserTank();
 		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
+		void AddHealth();
 		Object* GetBase();
 		Object* GetHead();
 		Object* GetPlaceholder();
 		void SetOrientation();
-		void Update(std::vector <unsigned int> keyPress);
+		void Update(std::vector <unsigned int> keyPress, int mouseMovement);
 
 	private:
 		Tank user;
+		int previousMouse;
 };
 
 #endif
