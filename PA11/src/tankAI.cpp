@@ -41,20 +41,20 @@ void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVect
   	dynamicsWorld->addRigidBody (AI.head->GetRigidBody());
 }
 
-void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
-	Render (one, modelMatrix, scalar, spec, spot, height);
-	Render (two, modelMatrix, scalar, spec, spot, height);
-	Render (three, modelMatrix, scalar, spec, spot, height);
-	Render (four, modelMatrix, scalar, spec, spot, height);
-	// Render (five, modelMatrix, scalar, spec, spot, height);
+void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
+	Render (one, modelMatrix, scalar, spec, spot, height, eyePos);
+	Render (two, modelMatrix, scalar, spec, spot, height, eyePos);
+	Render (three, modelMatrix, scalar, spec, spot, height, eyePos);
+	Render (four, modelMatrix, scalar, spec, spot, height, eyePos);
+        // Render (five, modelMatrix, scalar, spec, spot, height, eyePos);
  }
 
-void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
+void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.base->GetModel()));
-  AI.base->Render(scalar, spec, spot, height);
+  AI.base->Render(scalar, spec, spot, height, eyePos);
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.head->GetModel()));
-  AI.head->Render(scalar, spec, spot, height);
+  AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
 void TankAI::UpdateWrapper(unsigned int dt){
@@ -217,6 +217,7 @@ Object* TankAI::GetAIBase(int number){
 Object* TankAI::GetAIHead(int number){
 	switch (number){
 		case 1:
+      std::cout << "hello" << std::endl;
 			return one.head;
 		break;
 		case 2:

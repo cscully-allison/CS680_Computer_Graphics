@@ -478,7 +478,7 @@ btRigidBody* Object::GetRigidBody(){
 }
 
 
-void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height)
+void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos)
 {
   // loads the texture to the shaders
   for (int i=0; i<TB.size(); i++)
@@ -492,6 +492,7 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height)
   glUniform3fv(spec.location, 1, glm::value_ptr(spec.value));
   glUniform3fv(spot.location, 1, glm::value_ptr(spot.value));
   glUniform3fv(height.location, 1, glm::value_ptr(height.value));
+  glUniform3fv(eyePos.location, 1, glm::value_ptr(eyePos.value));
 
   // enables attributes
   glEnableVertexAttribArray(0);

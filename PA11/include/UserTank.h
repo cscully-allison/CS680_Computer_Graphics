@@ -19,7 +19,7 @@ class UserTank{
 	public:
 		UserTank();
 		~UserTank();
-		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void AddHealth();
 		Object* GetBase();
 		Object* GetHead();

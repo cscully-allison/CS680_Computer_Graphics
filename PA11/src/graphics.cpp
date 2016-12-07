@@ -86,6 +86,7 @@ bool Graphics::Initialize(int width, int height)
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
+  dynamicsWorld->addRigidBody (m_user->GetPlaceholder()->GetRigidBody());
 
   m_health = new Health ();
   
@@ -285,6 +286,9 @@ void Graphics::Render(vector <unsigned int>  keyPress)
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  //get the eye position per rendered frame
+  eyePos.value = m_camera->GetPosition();
+
 for (int i =0; i < keyPress.size(); i++){
       // //g or default  
       // if(keyPress[i] == 103 ){
@@ -354,14 +358,14 @@ for (int i =0; i < keyPress.size(); i++){
 
   // render land
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
-  m_land->Render(scalar, specularity, spotlight, spotlightHeight);
+  m_land->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
 
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
-  m_sky->Render(scalar, specularity, spotlight, spotlightHeight);
+  m_sky->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
 
-  m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
-  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
 
 
