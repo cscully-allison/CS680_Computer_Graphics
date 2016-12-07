@@ -59,7 +59,7 @@ bool Engine::Initialize()
 
 void Engine::Run()
 {
-
+  int temp;
   m_running = true;
 
   while(m_running)
@@ -74,7 +74,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, key, force);
+    m_graphics->Update(m_DT, key, mouseMovement);
     // pass the key to render
     m_graphics->Render(key);
 
@@ -185,6 +185,10 @@ unsigned int Engine::Keyboard()
         key.erase (key.begin()+ i);
       } 
     }
+  }
+
+  else if (m_event.type == SDL_MOUSEMOTION){
+    mouseMovement = m_event.motion.x;
   }
 }
 

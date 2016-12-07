@@ -538,7 +538,7 @@ glm::vec4 Object::getPosition()
 
 void Object::rotate(const glm::vec3 direction)
 {
-  body->applyTorqueImpulse(btVector3(direction.y*1.06f, direction.y*1.06f, direction.y*1.06f));
+  body->applyTorqueImpulse(btVector3(direction.x*1.06f, direction.y*1.06f, direction.z*1.06f));
 }
 
 void Object::translate(const glm::vec3 direction)

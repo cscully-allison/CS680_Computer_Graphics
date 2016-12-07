@@ -1,14 +1,22 @@
 #ifndef HEALTH_H
 #define HEALTH_H
+
+#include "object.h"
+#include "graphics_headers.h"
  
-class health
+class Health
 {
 	public:
-		health();
-		~health();
+		Health();
+		~Health();
+		int ResetTimer();
+		void Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt);
+		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		void Collision();
 
-	private
-		Object* healthPack;
+	private:
+		Object* healthPack; 
+		int countdownTimer;
 };
 
 #endif 

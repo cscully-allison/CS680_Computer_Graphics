@@ -5,11 +5,11 @@
 
 TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
 	srand (time (NULL));
-	Initialize (dynamicsWorld, one, btVector3 (0,0,0));
-	Initialize (dynamicsWorld, two, btVector3 (20,0,20));
-	Initialize (dynamicsWorld, three, btVector3 (50,0,50));
-	Initialize (dynamicsWorld, four, btVector3 (70,0,70));
-	Initialize (dynamicsWorld, five, btVector3 (90,0,0));
+	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
+	Initialize (dynamicsWorld, two, btVector3 (-150,0,0), 2);
+	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
+	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
+	// Initialize (dynamicsWorld, five, btVector3 (90,0,0));
  }
 
 TankAI::~TankAI(){
@@ -17,10 +17,10 @@ TankAI::~TankAI(){
 }
 
 
-void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin){
-	AI.base = new Object("tankbase.obj", 50, btVector3(0, 0, 0), btVector3(startOrigin.getX(), -2.5, startOrigin.getY()), 0, 0, 0, 1);
+void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
+	AI.base = new Object("tankbase.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), -2.5, startOrigin.getZ()), .9, 0, 0, index);
 	//adjust so that it lied on top of the base
-	AI.head = new Object("turret.obj", 50, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getY()), 0, 0, 0, 1);
+	AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
 	SetOrientation(AI);
 
 	AI.lives = MAXLIVES;
@@ -46,7 +46,7 @@ void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Unif
 	Render (two, modelMatrix, scalar, spec, spot, height);
 	Render (three, modelMatrix, scalar, spec, spot, height);
 	Render (four, modelMatrix, scalar, spec, spot, height);
-	Render (five, modelMatrix, scalar, spec, spot, height);
+	// Render (five, modelMatrix, scalar, spec, spot, height);
  }
 
 void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
@@ -62,7 +62,7 @@ void TankAI::UpdateWrapper(unsigned int dt){
 	Update (dt, two);
 	Update (dt, three);
 	Update (dt, four);
-	Update (dt,five);
+	// Update (dt,five);
 }
 
 void TankAI::Update(unsigned int dt, Tank& AI){
@@ -168,6 +168,31 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 
 	SetOrientation(AI); 
 }
+void TankAI::AddHealth(Tank AI){
+	if (AI.lives != 5){
+		AI.lives ++;
+	}
+}
+
+Tank TankAI::GetTank (int number){
+		switch (number){
+		case 1:
+			return one;
+		break;
+		case 2:
+			return two;
+		break;
+		case 3:
+			return three;
+		break;
+		case 4:
+			return four;
+		break;
+		case 5:
+			return five;
+		break;
+	}
+}
 
 Object* TankAI::GetAIBase(int number){
 	switch (number){
@@ -192,7 +217,6 @@ Object* TankAI::GetAIBase(int number){
 Object* TankAI::GetAIHead(int number){
 	switch (number){
 		case 1:
-      std::cout << "hello" << std::endl;
 			return one.head;
 		break;
 		case 2:

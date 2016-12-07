@@ -42,6 +42,7 @@ class Engine
     bool m_running;
 
     std::vector <unsigned int> key;
+    int mouseMovement;
     int force;
     int menu;
 

@@ -11,6 +11,7 @@ using namespace std;
 #include "object.h"
 #include "tankAI.h"
 #include "UserTank.h"
+#include "health.h"
 
 class Graphics
 {
@@ -18,7 +19,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, vector <unsigned int>  keyPress, int force);
+    void Update(unsigned int dt, vector <unsigned int>  keyPress, int mouseMovement);
     void Render(vector <unsigned int>  keyPress);
     void collisionDetection(unsigned int dt);
     bool getGameState();
@@ -34,6 +35,7 @@ class Graphics
     Shader *phong_shader;
     TankAI *m_AI;
     UserTank *m_user;
+    Health *m_health;
 
 
     GLint m_projectionMatrix;
