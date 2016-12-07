@@ -19,8 +19,8 @@ void Health::Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt){
 	}
 
 	else {
-		healthLight = glm::vec3(rand() % 100, 2.5, rand() % 100);
-		healthPack = new Object ("placeholder.obj", 1, btVector3(0, 0, 0), btVector3(0, 2.5, 0), 0, 0, 0, 6);
+		healthLight = glm::vec3(rand() % 100, 10, rand() % 100);
+		healthPack = new Object ("placeholder.obj", 1, btVector3(0, 0, 0), btVector3(healthLight.x, 2.5, healthLight.z), 0, 0, 0, 6);
 		healthPack->setOrientation();
 		dynamicsWorld->addRigidBody (healthPack->GetRigidBody());
 		healthPack->rotate (glm::vec3(0,1,0));

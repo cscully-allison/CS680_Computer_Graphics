@@ -8,6 +8,7 @@ struct Tank{
 		Object *base;
 		Object *head;
 		Object *placeholder;
+		Object *projectile;
 
 		int lives;
 		int direction;

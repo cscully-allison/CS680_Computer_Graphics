@@ -19,7 +19,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt, vector <unsigned int>  keyPress, int mouseMovement);
+    void Update(unsigned int dt, vector <unsigned int>  keyPress, int mouseMovement, int launch);
     void Render(vector <unsigned int>  keyPress);
     void collisionDetection(unsigned int dt);
     bool getGameState();

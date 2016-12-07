@@ -82,7 +82,6 @@ bool Graphics::Initialize(int width, int height)
 
 
   m_AI = new TankAI(dynamicsWorld);
-  std::cout << "hello" << std::endl;
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
@@ -149,7 +148,6 @@ bool Graphics::Initialize(int width, int height)
   }
 
 
-
   // Enable Phong Shader as inital shader
   phong_shader->Enable();
 
@@ -210,6 +208,13 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
+  eyePos.location = phong_shader->GetUniformLocation("eyePos");
+  if (eyePos.location == INVALID_UNIFORM_LOCATION)
+  {
+    printf("eyePos not found\n");
+    return false;
+  }
+
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -217,7 +222,7 @@ bool Graphics::Initialize(int width, int height)
 }
 
 
-void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int mouseMovement)
+void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int mouseMovement, int launch)
 { 
 
   //default camera position and point to look
@@ -232,15 +237,16 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   collisionDetection(dt);
 
   m_AI->UpdateWrapper(dt);
-  m_user->Update(keyPress, mouseMovement);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld);
   m_health->Update (dynamicsWorld, dt);
 }
 
 void Graphics::collisionDetection (unsigned int dt){
-  // 0 = unessesary
+  // 0 = land/skybox
   // 1-4 = associated AI
   // 5 = user
   // 6 = health pack
+  // 11-15 the projectiles of the associated tank - 10
 
   // cycle through manifolds in the dynamics world
   for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); i++) {
@@ -252,10 +258,11 @@ void Graphics::collisionDetection (unsigned int dt){
     // cycle through contact points of the objects    
     for (int j = 0; j < contactManifold->getNumContacts(); j++) { 
       // if the objects involved with the collision are not the table 
-      if (collisionObject->getUserIndex() != 0 && collisionObject2->getUserIndex() != 0 && 
+      if (
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
           collisionObject->getUserIndex() != collisionObject2->getUserIndex())
       {
+        //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
@@ -268,6 +275,16 @@ void Graphics::collisionDetection (unsigned int dt){
               m_user->AddHealth ();
             }
                
+          }
+          else if (collisionObject2->getUserIndex() > 10 || collisionObject2->getUserIndex() > 10){
+            int tankProjectile = max (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
+            int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
+            if (tankProjectile < 15){
+              //AIstuff
+            }
+            else {
+              score = m_user->ProjectileHit (dynamicsWorld, tankOrGround);
+            }
           }
         }
 

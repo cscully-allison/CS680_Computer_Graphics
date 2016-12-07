@@ -457,9 +457,9 @@ void Object::Update()
   model = glm::make_mat4(m);
 }
 
-void Object::applyForce(int force){
+void Object::applyForce(){
       // applies force to the object
-      body->applyForce(btVector3(force*200.0f, 0.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(-100000.0f, 150.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 
@@ -545,4 +545,8 @@ void Object::rotate(const glm::vec3 direction)
 void Object::translate(const glm::vec3 direction)
 {
   body->applyForce(btVector3(direction.x*10.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
+}
+
+void Object::translateModel(glm::vec4 direction){
+   model = glm::translate(glm::mat4(1.0f), glm::vec3(direction.x-11.5, direction.y, direction.z-2));
 }

@@ -32,9 +32,10 @@ class Object
     void Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
-    void applyForce (int force);
+    void applyForce ();
     void rotate(const glm::vec3);
     void translate(const glm::vec3);
+    void translateModel(glm::vec4 direction);
 
     glm::mat4 GetModel();
     btRigidBody* GetRigidBody();

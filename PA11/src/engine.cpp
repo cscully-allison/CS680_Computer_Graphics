@@ -74,9 +74,11 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, key, mouseMovement);
+    m_graphics->Update(m_DT, key, mouseMovement, launch);
     // pass the key to render
     m_graphics->Render(key);
+
+    launch = 0; 
 
     // Swap to the Window
     m_window->Swap();
@@ -189,6 +191,12 @@ unsigned int Engine::Keyboard()
 
   else if (m_event.type == SDL_MOUSEMOTION){
     mouseMovement = m_event.motion.x;
+  }
+
+  else if (m_event.type == SDL_MOUSEBUTTONUP){
+    if (m_event.button.button == SDL_BUTTON_LEFT){
+      launch = 1;
+    }
   }
 }
 
