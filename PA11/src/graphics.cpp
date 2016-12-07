@@ -82,13 +82,13 @@ bool Graphics::Initialize(int width, int height)
 
 
   m_AI = new TankAI(dynamicsWorld);
-
+  std::cout << "hello" << std::endl;
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
-  dynamicsWorld->addRigidBody (m_user->GetPlaceholder()->GetRigidBody());
 
   m_health = new Health ();
+
   
   // // Initalize the Gouraund Shader
   // gouraund_shader = new Shader();
@@ -366,7 +366,7 @@ for (int i =0; i < keyPress.size(); i++){
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
-  m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
 
 
   //bldg->Render(scalar, specularity, spotlight, spotlightHeight);
