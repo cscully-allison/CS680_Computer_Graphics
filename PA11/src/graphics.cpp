@@ -366,7 +366,7 @@ for (int i =0; i < keyPress.size(); i++){
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
-  m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight);
+  m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
 
 
   //bldg->Render(scalar, specularity, spotlight, spotlightHeight);

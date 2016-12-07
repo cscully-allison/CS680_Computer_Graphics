@@ -27,10 +27,10 @@ void Health::Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt){
 
 }
 
-void Health::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height){
+void Health::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
 	if (healthPack != NULL){
   		glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(healthPack->GetModel()));
-  		healthPack->Render(scalar, spec, spot, height);
+  		healthPack->Render(scalar, spec, spot, height, eyePos);
   }
 }
 

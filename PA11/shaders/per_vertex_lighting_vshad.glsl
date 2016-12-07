@@ -44,7 +44,7 @@
             vec3 L = normalize(light_pos - p.xyz);
 
             //calculate view vector
-            vec3 V = normalize(eyePos);
+            vec3 V = eyePos;
 
             //calculate R locally
             vec3 R = normalize( reflect(-L, N) );    
