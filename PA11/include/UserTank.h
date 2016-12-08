@@ -12,9 +12,10 @@ class UserTank{
 		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void AddHealth();
 		Object* GetBase();
-		Object* GetHead();
+		//Object* GetHead();
 		Object* GetPlaceholder();
 		void SetOrientation();
+		glm::vec4 getPosition();
 
 		void LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld);
 		int ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround);

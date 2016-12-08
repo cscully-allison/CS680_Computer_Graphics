@@ -463,7 +463,7 @@ void Object::Update()
 
 void Object::applyForce(){
       // applies force to the object
-      body->applyForce(btVector3(-100000.0f, 150.0f, 0.0f), btVector3(0, 0, 0));
+      body->applyForce(btVector3(-500000.0f, 150.0f, 0.0f), btVector3(0, 0, 0));
 }
 
 
@@ -538,6 +538,9 @@ void Object::setSpec (glm::vec3 s){
 
 glm::vec4 Object::getPosition()
 {
+  glm::vec4 poop;
+  poop = model * glm::vec4 (0.0,1.0,0.0,0.0);
+  std::cout << poop.x << "  " << poop.y << "   " << poop.z << std::endl;
   return model * glm::vec4 (1.0,1.0,1.0,1.0);
 }
 
@@ -552,5 +555,5 @@ void Object::translate(const glm::vec3 direction)
 }
 
 void Object::translateModel(glm::vec4 direction){
-   model = glm::translate(glm::mat4(1.0f), glm::vec3(direction.x-11.5, direction.y, direction.z-2));
+   model = glm::translate(glm::mat4(1.0f), glm::vec3(direction.x, direction.y, direction.z));
 }
