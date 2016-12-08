@@ -4,7 +4,7 @@
 
 UserTank::UserTank(){
 
-	user.base = new Object("tradeFederationTank.obj", 1000, btVector3(0, 0, 0), btVector3(20, 5, 5), .9, 0, .9, 5);
+	user.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(20, 5, 5), .9, 0, .9, 5);
 
 	//adjust so that it lied on top of the base
 	//user.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(20, 4.0995, 5), 1, 0, 0, 5);

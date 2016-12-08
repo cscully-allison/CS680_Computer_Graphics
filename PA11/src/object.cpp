@@ -538,9 +538,6 @@ void Object::setSpec (glm::vec3 s){
 
 glm::vec4 Object::getPosition()
 {
-  glm::vec4 poop;
-  poop = model * glm::vec4 (0.0,1.0,0.0,0.0);
-  std::cout << poop.x << "  " << poop.y << "   " << poop.z << std::endl;
   return model * glm::vec4 (1.0,1.0,1.0,1.0);
 }
 

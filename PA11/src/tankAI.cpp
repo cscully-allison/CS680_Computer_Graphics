@@ -18,7 +18,7 @@ TankAI::~TankAI(){
 
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
-	AI.base = new Object("tradeFederationTank.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
+	AI.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
 	//adjust so that it lied on top of the base
 	//AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
 	SetOrientation(AI);
