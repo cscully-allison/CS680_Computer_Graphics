@@ -86,7 +86,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
-  m_health = new Health ();
+  m_health = new Health();
 
   
   // // Initalize the Gouraund Shader
@@ -226,7 +226,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 { 
 
   //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 5.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));

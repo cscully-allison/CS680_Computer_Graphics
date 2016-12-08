@@ -440,6 +440,10 @@ void Object::setOrientation(){
   model = glm::make_mat4(m);
 }
 
+void Object::Embiggen(){
+  model *= glm::scale(model, glm::vec3(5.0,5.0,5.0));
+}
+
 void Object::setGrav(btVector3 grav)
 {
   // sets gravity
