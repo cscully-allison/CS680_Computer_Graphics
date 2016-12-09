@@ -261,7 +261,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   //get data from model position of tank
   transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(0.0f, 0.0f, 0.0f));
   glm::vec4 userPos = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-  glm::vec4 poop = userPos;
+  //glm::vec4 poop = userPos;
   //std::cout << rotation.w << "   " << rotation.x << "   " << rotation.y << "   " << rotation.z << std::endl;
 
   glm::decompose(transformation, scale, rotation, translation, skew,perspective);
@@ -269,7 +269,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
     
     
-    std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+    //std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
     
 
     //extract y rotation from quaternion
@@ -302,13 +302,70 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
     //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
     
+    float xDisplace;
+    float zDisplace;
+
+    std::cout << "before: " << h << std::endl;
+
+    if (h<0)
+    {
+      h+=360;
+    }
+
+    std::cout<< "after: " << h << std::endl;
+
+
+    if (h > 0 && h < 90)
+    {
+      xDisplace = cos(h)*8;
+      zDisplace = sin(h)*8;
+    }
+    else if (h > 90 && h < 180)
+    {
+      h -= 90;
+      xDisplace = cos(h)*8 * (-1);
+      zDisplace = sin(h)*8;
+    }
+    else if (h > 180 && h < 270)
+    {
+      h -= 180;
+      xDisplace = cos(h)*8 * (-1);
+      zDisplace = sin(h)*8 * (-1);
+    }
+    else if (h > 270 && h < 360)
+    {
+      h -= 270;
+      xDisplace = cos(h)*8;
+      zDisplace = sin(h)*8 * (-1);
+    }
+    else if (h == 0 || 360)
+    {
+      xDisplace = -8;
+      zDisplace = 0;
+    }
+    else if (h == 90)
+    {
+      xDisplace = 0;
+      zDisplace = 8;
+    }
+    else if (h == 180)
+    {
+      xDisplace = 8;
+      zDisplace = 0;
+    }
+    else if (h == 270)
+    {
+      xDisplace = 0;
+      zDisplace = -8;
+    }
+    std::cout << xDisplace << "      " << zDisplace << std::endl;
   
-    poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-    std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
+    //std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
 
-    std::cout << camRotation << std::endl;
+    //std::cout << camRotation << std::endl;
 
-    poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
+    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
 
 
 
@@ -316,7 +373,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   //default camera position and point to look
   glm::vec4 tankPos = m_user->getPosition();
-  m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
+  m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x-xDisplace, userPos.y+5, userPos.z-zDisplace));
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 }
