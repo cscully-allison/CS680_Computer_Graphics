@@ -33,7 +33,7 @@ class Object
     void Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
-    void applyForce ();
+    void applyForce (glm::vec4 pos, float x, float z);
     void rotate(const glm::vec3);
     void translate(const glm::vec3);
     void translateModel(glm::vec4 direction);

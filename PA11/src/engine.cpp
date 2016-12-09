@@ -62,7 +62,7 @@ void Engine::Run()
   int temp;
   m_running = true;
 
-  while(m_running)
+  while(m_running && m_graphics->getGameState())
   {
     // Update the DT
     m_DT += getDT();
@@ -86,6 +86,7 @@ void Engine::Run()
 
   //gets score from graphics
   int score = m_graphics->getScore();
+  std::cout << "GAME OVER!" << std::endl << "Score: " << score << std::endl << std::endl;
 
   //creates input stream variable
   ifstream fin;

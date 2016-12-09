@@ -1,12 +1,13 @@
 #include "tankAI.h"
 #include <time.h>
+#include <math.h>
 #define MAXLIVES 3;
 //#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
 TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
 	srand (time (NULL));
 	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
-	Initialize (dynamicsWorld, two, btVector3 (-150,0,0), 2);
+	Initialize (dynamicsWorld, two, btVector3 (-10,0,5), 2);
 	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
 	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
 	// Initialize (dynamicsWorld, five, btVector3 (90,0,0));
@@ -18,14 +19,13 @@ TankAI::~TankAI(){
 
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
-	AI.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 3.5, startOrigin.getZ()), .9, 0, .9, index);
-	//adjust so that it lied on top of the base
-	//AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
+	AI.base = new Object("tradeFederationTank2.obj", 500, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
 	SetOrientation(AI);
 
 	AI.lives = MAXLIVES;
 	AI.initialTime = 0;
 	AI.compassPosition = 4; 
+	AI.attack = false;
 
 	//set restrictions for body movement
 	AI.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
@@ -42,11 +42,18 @@ void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVect
 }
 
 void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
-	Render (one, modelMatrix, scalar, spec, spot, height, eyePos);
-	Render (two, modelMatrix, scalar, spec, spot, height, eyePos);
-	Render (three, modelMatrix, scalar, spec, spot, height, eyePos);
-	Render (four, modelMatrix, scalar, spec, spot, height, eyePos);
-        // Render (five, modelMatrix, scalar, spec, spot, height, eyePos);
+	if (one.base != NULL){
+		Render (one, modelMatrix, scalar, spec, spot, height, eyePos);
+	}
+	if (two.base != NULL){
+		Render (two, modelMatrix, scalar, spec, spot, height, eyePos);
+	}
+	if (three.base != NULL){
+		Render (three, modelMatrix, scalar, spec, spot, height, eyePos);
+	}
+	if (four.base != NULL){
+		Render (four, modelMatrix, scalar, spec, spot, height, eyePos);
+	}
  }
 
 void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
@@ -57,101 +64,221 @@ void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, U
   //AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
-void TankAI::UpdateWrapper(unsigned int dt){
-	Update (dt, one);
-	Update (dt, two);
-	Update (dt, three);
-	Update (dt, four);
-	// Update (dt,five);
+void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user, btDiscreteDynamicsWorld* dynamicsWorld){	
+	if (one.base != NULL){
+		Update (dt, one, user, 1, dynamicsWorld);
+	}
+	if (two.base != NULL){;
+		Update (dt, two, user, 2, dynamicsWorld);
+	}
+	if (three.base != NULL){
+		Update (dt, three, user, 3, dynamicsWorld);
+	}
+	if (four.base != NULL){
+		Update (dt, four, user, 4, dynamicsWorld);
+	}
 }
 
-void TankAI::Update(unsigned int dt, Tank& AI){
-	btTransform lower;
-	btTransform upper;
-	btVector3 upperPos;
-	btQuaternion rotato;
-
-	//no action given yet
-	if (dt-AI.initialTime >= AI.timeLeft){
-		AI.direction = (1+ rand() % 4);
-
-		//2-4 seconds for movement
-		if (AI.direction == 3 || AI.direction == 4)
-		{
-			AI.timeLeft = (rand() % 2000)+2000;
-		}
-		//4 seconds for turns
-		else
-		{
-			AI.timeLeft = 4000;
-		}
-
-		switch (AI.direction){
-			case 1:
-				AI.compassPosition --;
-				if (AI.compassPosition < 1)
-					AI.compassPosition = 4;
-			break;
-			case 2:
-				AI.compassPosition ++;
-				if (AI.compassPosition > 4)
-					AI.compassPosition = 1;
-			break;
-		}
-		AI.initialTime = dt;
-		AI.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		AI.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btDiscreteDynamicsWorld* dynamicsWorld){
+	AI.attack = LookForOpponent(AI, user, position);
+	if (AI.attack  > 0){
+		Attack (AI, dynamicsWorld);
 	}
-	//action given
-	switch (AI.direction){
-		// Right
-		case 1:
-			AI.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
-		break;
-		//Left
-		case 2:
-			AI.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
-		break;
-		//Forward
-		case 3:
-			switch (AI.compassPosition){
-				//North
+
+	else{
+			//no action given yet
+			if (dt-AI.initialTime >= AI.timeLeft){
+				AI.direction = (1 + rand() % 3);
+
+				//2-4 seconds for movement
+				if (AI.direction == 3 || AI.direction == 4)
+				{
+					AI.timeLeft = (rand() % 2000)+2000;
+				}
+				//4 seconds for turns
+				else
+				{
+					AI.timeLeft = 4000;
+				}
+
+				switch (AI.direction){
+					case 1:
+						AI.compassPosition --;
+						if (AI.compassPosition < 1)
+							AI.compassPosition = 4;
+					break;
+					case 2:
+						AI.compassPosition ++;
+						if (AI.compassPosition > 4)
+							AI.compassPosition = 1;
+					break;
+				}
+				AI.initialTime = dt;
+				AI.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+				AI.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+			}
+			//action given
+			switch (AI.direction){
+				// Right
 				case 1:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+					AI.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
 				break;
-				//West
+				//Left
 				case 2:
-					AI.base->translate(glm::vec3 (+1.0f, 0.0, .0f));
+					AI.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
 				break;
-				//South
+				//Forward
 				case 3:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+					switch (AI.compassPosition){
+						//North
+						case 1:
+							AI.base->translate(glm::vec3 (0.0f, 0.0, 5.0f));
+						break;
+						//West
+						case 2:
+							AI.base->translate(glm::vec3 (+5.0f, 0.0, .0f));
+						break;
+						//South
+						case 3:
+							AI.base->translate(glm::vec3 (0.0f, 0.0, -5.0f));
+						break;
+						//East
+						case 4:
+							AI.base->translate(glm::vec3 (-5.0f, 0.0, 0.0f));
+						break;
+					}
 				break;
-				//East
+				//Backwards
 				case 4:
-					AI.base->translate(glm::vec3 (-1.0f, 0.0, 0.0f));
+					switch (AI.compassPosition){
+						//North
+						case 1:
+							AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+						break;
+						//West
+						case 2:
+							AI.base->translate(glm::vec3 (-1.0f, 0.0, .0f));
+						break;
+						//South
+						case 3:
+							AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+						break;
+						//East
+						case 4:
+							AI.base->translate(glm::vec3 (1.0f, 0.0, 0.0f));
+						break;
+					}
+				break; 
+				//Nothing
+				case 5:
 				break;
 			}
+
+
+		}
+
+	SetOrientation(AI); 
+}
+
+int TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
+	int min = position;
+	std::vector<float> EuclidenDist;
+	glm::vec4 TankPos = AI.base->getPosition();
+	glm::vec4 otherPos;
+	if (one.base != NULL){
+		otherPos = one.base->getPosition();
+		EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+	}
+
+	if (two.base != NULL){
+		otherPos = two.base->getPosition();
+		EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+	}
+
+	if (three.base != NULL){
+		otherPos = three.base->getPosition();
+		EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+	}
+
+	if (four.base != NULL){
+		otherPos = four.base->getPosition();
+		EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+	}
+
+	EuclidenDist.push_back (EuclidenDistance (TankPos, user));
+
+	for (int i = 0; i < EuclidenDist.size(); i++){
+		if (EuclidenDist[i] != 0 || EuclidenDist[min] > EuclidenDist[i]  || EuclidenDist[i] != false ){
+			min = i;
+		}
+	}
+
+	if (EuclidenDist[min] < 50.0){
+		return min + 1;
+	}	
+	else{
+		return 0;
+	}
+}
+
+float TankAI::EuclidenDistance(glm::vec4 one, glm:: vec4 two){
+	float p = one.x - two.x;
+	float q = one.z - two.z;
+	return sqrt (p*p-q*q);
+}
+
+void TankAI::Attack(Tank AI , btDiscreteDynamicsWorld* dynamicsWorld){
+	//std::cout << "ready for attack" << std::endl;
+	LaunchProjectile (AI, dynamicsWorld);
+
+}
+void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
+	//std::cout << "Tank " << AI.attack << " under attack!" << std::endl; 
+	// if(AI.projectile == NULL){
+	// 	glm::vec4 temp = AI.base->getPosition();
+	// 	AI.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x-16, temp.y+2, temp.z-3), 1, 0, 0, 15);
+		
+	// 	SetOrientation(AI);
+	// 	dynamicsWorld->addRigidBody (AI.projectile->GetRigidBody());
+	// 	AI.projectile->applyForce(temp, 0, 0);
+	// }
+}
+
+
+
+void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
+
+	switch (tankNumber){
+		case 1:
+			one.lives --;
+			if (one.lives <= 0){
+				dynamicsWorld->removeRigidBody (one.base->GetRigidBody());
+				delete one.base;
+				one.base = NULL;
+			}
 		break;
-		//Backwards
+		case 2:
+			two.lives --;
+			if (two.lives <= 0){
+				dynamicsWorld->removeRigidBody (two.base->GetRigidBody());
+				delete two.base;
+				two.base = NULL;
+			}
+		break;
+		case 3:
+			three.lives --;
+			if (three.lives <= 0){
+				dynamicsWorld->removeRigidBody (three.base->GetRigidBody());
+				delete three.base;
+				three.base = NULL;
+			}
+		break;
 		case 4:
-			switch (AI.compassPosition){
-				//North
-				case 1:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
-				break;
-				//West
-				case 2:
-					AI.base->translate(glm::vec3 (-1.0f, 0.0, .0f));
-				break;
-				//South
-				case 3:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
-				break;
-				//East
-				case 4:
-					AI.base->translate(glm::vec3 (1.0f, 0.0, 0.0f));
-				break;
+			four.lives --;
+			if (four.lives <= 0){
+				dynamicsWorld->removeRigidBody (four.base->GetRigidBody());
+				delete four.base;
+				four.base = NULL;
 			}
 		break; 
 		//Nothing
