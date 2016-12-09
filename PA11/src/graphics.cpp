@@ -94,7 +94,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   //dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
-  m_health = new Health ();
+  m_health = new Health();
 
   
   // // Initalize the Gouraund Shader
@@ -243,7 +243,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec4 perspective;
 
   //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 40.0f, -50.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
@@ -304,7 +304,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     
   
     poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-    std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+    std::cout << "post rotate/translate: " << h <<  std::endl;
 
     std::cout << camRotation << std::endl;
 
@@ -316,7 +316,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   //default camera position and point to look
   glm::vec4 tankPos = m_user->getPosition();
-  m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
+  //m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 }
@@ -455,11 +455,11 @@ for (int i =0; i < keyPress.size(); i++){
 
   // render land
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
-  m_land->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_land->Render(scalar, specularity, eyePos);
 
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
-  m_sky->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_sky->Render(scalar, specularity, eyePos);
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);

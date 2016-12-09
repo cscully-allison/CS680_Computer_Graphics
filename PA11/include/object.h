@@ -29,6 +29,7 @@ class Object
     void Update();
     void ScoreUpdate();
     void Embiggen();
+    void Render(Uniform scalar, Uniform spec, Uniform eyePos);
     void Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
     void setBodyTransform(btVector3);
     void setGrav(btVector3 grav);
