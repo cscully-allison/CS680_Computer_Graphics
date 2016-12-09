@@ -58,7 +58,7 @@
 
             //calculate view vector
             //vs_out.V = -p.xyz;
-            vs_out.V = normalize(eyePos);
+            vs_out.V = eyePos;
 
             //vs_out.spotlightL = spotlight_pos - p.xyz;
             //vs_out.spotlightV = -ballPosition.xyz;

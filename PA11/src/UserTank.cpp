@@ -106,13 +106,13 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 
 			//left
 			case 97:
-				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (1600), 0.0f));
 				previousMouse = mouseMovement;
 			break;
 
 			//right 
 			case 100:
-				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (1600), 0.0f));
 				previousMouse = mouseMovement;
 			break;
 
