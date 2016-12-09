@@ -168,6 +168,15 @@ int UserTank::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrG
 	return 0;
 }
 
+void UserTank::Hit(){
+	user.lives --;
+	
+}
+
+int UserTank::GetLives(){
+	return user.lives;
+}
+
 void UserTank::AddHealth(){
 	if (user.lives != 5){
 		user.lives ++;

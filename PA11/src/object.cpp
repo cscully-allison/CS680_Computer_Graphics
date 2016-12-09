@@ -467,8 +467,6 @@ void Object::applyForce(glm::vec4 pos, float x, float z){
 }
 
 
-
-
 glm::mat4 Object::GetModel()
 {
   // get model

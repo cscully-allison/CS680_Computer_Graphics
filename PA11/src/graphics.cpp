@@ -379,6 +379,9 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   m_AI->UpdateWrapper(dt, m_user->getPosition());
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
+  if (m_user->GetLives() <= 0){
+    gamestate = false;
+  }
 
 }
 
@@ -425,6 +428,9 @@ void Graphics::collisionDetection (unsigned int dt){
             int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             if (tankProjectile < 15){
               //AIstuff
+              if (tankOrGround == 5){
+               m_user->Hit();
+              }
             }
             else {         
               score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
