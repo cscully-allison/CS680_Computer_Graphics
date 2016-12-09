@@ -253,9 +253,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  m_AI->UpdateWrapper(dt, m_user->getPosition());
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld);
-  m_health->Update (dynamicsWorld, dt);
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
   //get data from model position of tank
@@ -293,7 +290,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
         //x
         float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
 
-        camRotation = h * 180 / PI;
+        h = h * 180 / PI;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -309,7 +306,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
     if (h<0)
     {
-      h+=360;
+      h +=360;
     }
 
     std::cout<< "after: " << h << std::endl;
@@ -317,26 +314,26 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
     if (h > 0 && h < 90)
     {
-      xDisplace = cos(h)*8;
-      zDisplace = sin(h)*8;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h > 90 && h < 180)
     {
-      h -= 90;
-      xDisplace = cos(h)*8 * (-1);
-      zDisplace = sin(h)*8;
+      //h -= 90;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h > 180 && h < 270)
     {
-      h -= 180;
-      xDisplace = cos(h)*8 * (-1);
-      zDisplace = sin(h)*8 * (-1);
+      //h -= 180;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8 ;
     }
     else if (h > 270 && h < 360)
     {
-      h -= 270;
-      xDisplace = cos(h)*8;
-      zDisplace = sin(h)*8 * (-1);
+      //h -= 270;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h == 0 || 360)
     {
@@ -358,12 +355,14 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
       xDisplace = 0;
       zDisplace = -8;
     }
-    std::cout << xDisplace << "      " << zDisplace << std::endl;
+
+
+   // std::cout << xDisplace << "      " << zDisplace << std::endl;
   
     //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
     //std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
 
-    //std::cout << camRotation << std::endl;
+    
 
     //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
 
@@ -372,10 +371,15 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
 
   //default camera position and point to look
-  glm::vec4 tankPos = m_user->getPosition();
-  m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x-xDisplace, userPos.y+5, userPos.z-zDisplace));
+ glm::vec4 tankPos = m_user->getPosition();
+ m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x, userPos.y+5, userPos.z));
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
+
+  m_AI->UpdateWrapper(dt, m_user->getPosition());
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
+  m_health->Update (dynamicsWorld, dt);
+
 }
 
 void Graphics::collisionDetection (unsigned int dt){
@@ -424,6 +428,7 @@ void Graphics::collisionDetection (unsigned int dt){
             }
             else {         
               score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
+              m_AI->Hit (dynamicsWorld, tankOrGround);
             }
           }
         }

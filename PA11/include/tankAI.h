@@ -26,11 +26,12 @@ class TankAI{
 		void RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void Render(Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void AddHealth(Tank AI);
-		void LookForOpponent(Tank AI, glm::vec4, int position);
+		bool LookForOpponent(Tank AI, glm::vec4, int position);
 		float EuclidenDistance(glm::vec4, glm::vec4);
 		void Attack(Tank AI);
 		Tank GetTank(int number);
 		Object* GetAIBase(int number);
+		void Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber);
 		//Object* GetAIHead(int number);
 		void SetOrientation(Tank& AI);
 		void UpdateWrapper(unsigned int dt, glm::vec4);

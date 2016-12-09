@@ -47,15 +47,25 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
   }
 }
 
-void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, btDiscreteDynamicsWorld* dynamicsWorld){
+void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, float x, float z, glm::vec4 forwardsVec){
 	btTransform lower;
 	btTransform upper;
 	btTransform placeholder;
 	btVector3 upperPos;
 	btVector3 placeholderPos;
 	btQuaternion rotato;
+
+	user.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+	user.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+
 	if (launch){
-		LaunchProjectile(dynamicsWorld);
+		LaunchProjectile(dynamicsWorld, x, z, forwardsVec);
+		lastShot = dt;
+	}
+
+	if (user.projectile != NULL && dt - lastShot > 3000){
+		dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
+		user.projectile = NULL;
 	}
 
 	for (int i = 0; i < keyPress.size(); i ++){
@@ -65,19 +75,19 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 				switch (user.compassPosition){
 					//North
 					case 1:
-						user.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+						user.base->translate(glm::vec3 (0.0f, 0.0, 50.0f));
 					break;
 					//West
 					case 2:
-						user.base->translate(glm::vec3 (+1.0f, 0.0, .0f));
+						user.base->translate(glm::vec3 (+50.0f, 0.0, .0f));
 					break;
 					//South
 					case 3:
-						user.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+						user.base->translate(glm::vec3 (0.0f, 0.0, -50.0f));
 					break;
 					//East
 					case 4:
-						user.base->translate(glm::vec3 (-1.0f, 0.0, 0.0f));
+						user.base->translate(glm::vec3 (-50.0f, 0.0, 0.0f));
 					break;
 				}
 			break;
@@ -87,19 +97,19 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 				switch (user.compassPosition){
 					//North
 					case 1:
-						user.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+						user.base->translate(glm::vec3 (0.0f, 0.0, -50.0f));
 					break;
 					//West
 					case 2:
-						user.base->translate(glm::vec3 (-1.0f, 0.0, .0f));
+						user.base->translate(glm::vec3 (-50.0f, 0.0, .0f));
 					break;
 					//South
 					case 3:
-						user.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+						user.base->translate(glm::vec3 (0.0f, 0.0, 50.0f));
 					break;
 					//East
 					case 4:
-						user.base->translate(glm::vec3 (1.0f, 0.0, 0.0f));
+						user.base->translate(glm::vec3 (50.0f, 0.0, 0.0f));
 					break;
 				}
 			break;
@@ -112,7 +122,7 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 
 			//right 
 			case 100:
-				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (1600), 0.0f));
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (-1600), 0.0f));
 				previousMouse = mouseMovement;
 			break;
 
@@ -136,20 +146,20 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 	SetOrientation(); 
 }
 
-void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld){
+void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, float x, float z, glm::vec4 forwardsVec){
 	if(user.projectile == NULL){
-		glm::vec4 temp = user.placeholder->getPosition();
-		user.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x, temp.y, temp.z), 1, 0, 0, 15);
+		user.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(forwardsVec.x-16, forwardsVec.y+2, forwardsVec.z-3), 1, 0, 0, 15);
 		
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
-		user.projectile->applyForce();
+		user.projectile->applyForce(forwardsVec, x, z);
 
 	}
 }
 
 int UserTank::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround){
 	dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
+	delete user.projectile;
 	user.projectile = NULL;
 	if (tankOrGround > 0){
 		std::cout << "Tank " << tankOrGround << " hit!" << std::endl;
