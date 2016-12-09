@@ -6,8 +6,9 @@
 
 struct Tank{
 		Object *base;
-		Object *head;
+		//Object *head;
 		Object *placeholder;
+		Object *projectile;
 
 		int lives;
 		int direction;
@@ -26,7 +27,7 @@ class TankAI{
 		void AddHealth(Tank AI);
 		Tank GetTank(int number);
 		Object* GetAIBase(int number);
-		Object* GetAIHead(int number);
+		//Object* GetAIHead(int number);
 		void SetOrientation(Tank& AI);
 		void UpdateWrapper(unsigned int dt);
 		void Update(unsigned int dt, Tank& AI);

@@ -45,6 +45,7 @@ class Engine
     int mouseMovement;
     int force;
     int menu;
+    int launch;
 
     Scores people[10];
 };

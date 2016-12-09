@@ -5,16 +5,6 @@
 #include "graphics_headers.h"
 #include "tankAI.h"
 
-// struct PlayerTank{
-// 		Object *base;
-// 		Object *head;
-
-// 		int lives;
-// 		int ammo;
-// 		int direction;
-// 		int compassPosition;
-// };
-
 class UserTank{
 	public:
 		UserTank();
@@ -22,10 +12,14 @@ class UserTank{
 		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void AddHealth();
 		Object* GetBase();
-		Object* GetHead();
+		//Object* GetHead();
 		Object* GetPlaceholder();
 		void SetOrientation();
-		void Update(std::vector <unsigned int> keyPress, int mouseMovement);
+		glm::vec4 getPosition();
+
+		void LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld);
+		int ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround);
+		void Update(std::vector <unsigned int> keyPress, int mouseMovement, int launch,btDiscreteDynamicsWorld* dynamicsWorld);
 
 	private:
 		Tank user;

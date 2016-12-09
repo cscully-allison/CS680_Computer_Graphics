@@ -18,9 +18,9 @@ TankAI::~TankAI(){
 
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
-	AI.base = new Object("tankbase.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), -2.5, startOrigin.getZ()), .9, 0, 0, index);
+	AI.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
 	//adjust so that it lied on top of the base
-	AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
+	//AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
 	SetOrientation(AI);
 
 	AI.lives = MAXLIVES;
@@ -32,13 +32,13 @@ void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVect
 	AI.base->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
 
 	//set restrictions for head movement
-	AI.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
-	AI.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
+	//AI.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
+	//AI.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
 
 	// in seconds
 	AI.timeLeft = 0;
 	dynamicsWorld->addRigidBody (AI.base->GetRigidBody());
-  	dynamicsWorld->addRigidBody (AI.head->GetRigidBody());
+  	//dynamicsWorld->addRigidBody (AI.head->GetRigidBody());
 }
 
 void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
@@ -53,8 +53,8 @@ void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, U
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.base->GetModel()));
   AI.base->Render(scalar, spec, spot, height, eyePos);
 
-  glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.head->GetModel()));
-  AI.head->Render(scalar, spec, spot, height, eyePos);
+  //glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.head->GetModel()));
+  //AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
 void TankAI::UpdateWrapper(unsigned int dt){
@@ -160,11 +160,11 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 	}
 	AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
 
-	upper = lower;
+	/*upper = lower;
 	upperPos = upper.getOrigin();
 	upperPos.setY(upperPos.getY()+6.6); 
 	upper.setOrigin(upperPos);
-	AI.head->GetRigidBody()->proceedToTransform(upper);
+	//AI.head->GetRigidBody()->proceedToTransform(upper);*/
 
 	SetOrientation(AI); 
 }
@@ -215,7 +215,7 @@ Object* TankAI::GetAIBase(int number){
 	}
 }
 
-Object* TankAI::GetAIHead(int number){
+/*Object* TankAI::GetAIHead(int number){
 	switch (number){
 		case 1:
       std::cout << "hello" << std::endl;
@@ -234,9 +234,9 @@ Object* TankAI::GetAIHead(int number){
 			return five.head;
 		break;
 	}
- }
+ }*/
 
 void TankAI::SetOrientation(Tank& AI){
 	AI.base->setOrientation();
-	AI.head->setOrientation();
+	//AI.head->setOrientation();
 }

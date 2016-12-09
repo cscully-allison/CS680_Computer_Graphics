@@ -147,12 +147,12 @@ void Object::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt)
      }
 
      if(!paused && !r_pause){
-        angle_r += dt * M_PI/600;
+        angle_r += dt * M_PI/60000;
      }
     
     //translate model first
     //then rotate
-    model = glm::translate(ptOfOrbt, glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
+    //model = glm::translate(ptOfOrbt, glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
     model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
 
 
@@ -231,9 +231,9 @@ void Moon::Update(unsigned int dt, int key_press_val, glm::mat4 ptOfOrbt){
 
     //translate model first
     //then rotate
-    model = glm::translate(ptOfOrbt, glm::vec3(glm::cos(angle)*scalar, 0, glm::sin(angle)*scalar));
-    model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
-    model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+    model = glm::translate(ptOfOrbt, glm::vec3(8.0f, 0.0f, 8.0f));
+    //model = glm::rotate(model, angle_r*coef_r, glm::vec3(0.0, 1.0, 0.0));
+    //model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 
 }
