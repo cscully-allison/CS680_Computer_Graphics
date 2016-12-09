@@ -285,7 +285,7 @@ void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
 		case 5:
 		break;
 	}
-	AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
+	//AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
 
 	/*upper = lower;
 	upperPos = upper.getOrigin();
@@ -293,7 +293,7 @@ void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
 	upper.setOrigin(upperPos);
 	//AI.head->GetRigidBody()->proceedToTransform(upper);*/
 
-	SetOrientation(AI); 
+	//SetOrientation(AI); 
 }
 
 void TankAI::AddHealth(Tank AI){

@@ -253,10 +253,10 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  m_AI->UpdateWrapper(dt);
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld);
+  /*m_AI->UpdateWrapper(dt, dynamicsWorld);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
-
+*/
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
   //get data from model position of tank
   transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -374,8 +374,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
 
   //default camera position and point to look
- glm::vec4 tankPos = m_user->getPosition();
- m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x, userPos.y+5, userPos.z));
+  glm::vec4 tankPos = m_user->getPosition();
+  m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x, userPos.y+5, userPos.z));
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 
@@ -529,11 +529,11 @@ for (int i =0; i < keyPress.size(); i++){
 
   // render land
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
-  m_land->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_land->Render(scalar, specularity, eyePos);
 
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
-  m_sky->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_sky->Render(scalar, specularity, eyePos);
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
