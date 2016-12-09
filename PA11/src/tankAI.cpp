@@ -1,12 +1,13 @@
 #include "tankAI.h"
 #include <time.h>
+#include <math.h>
 #define MAXLIVES 3;
 //#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
 TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
 	srand (time (NULL));
 	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
-	Initialize (dynamicsWorld, two, btVector3 (-150,0,0), 2);
+	Initialize (dynamicsWorld, two, btVector3 (-10,0,5), 2);
 	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
 	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
 	// Initialize (dynamicsWorld, five, btVector3 (90,0,0));
@@ -18,7 +19,7 @@ TankAI::~TankAI(){
 
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
-	AI.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
+	AI.base = new Object("tradeFederationTank2.obj", 500, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
 	//adjust so that it lied on top of the base
 	//AI.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 4.0995, startOrigin.getZ()), 1, 0, 0, index);
 	SetOrientation(AI);
@@ -26,6 +27,7 @@ void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVect
 	AI.lives = MAXLIVES;
 	AI.initialTime = 0;
 	AI.compassPosition = 4; 
+	AI.attack = false;
 
 	//set restrictions for body movement
 	AI.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
@@ -57,15 +59,15 @@ void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, U
   //AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
-void TankAI::UpdateWrapper(unsigned int dt){
-	Update (dt, one);
-	Update (dt, two);
-	Update (dt, three);
-	Update (dt, four);
+void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user){
+	Update (dt, one, user, 1);
+	Update (dt, two, user, 2);
+	Update (dt, three, user, 3);
+	Update (dt, four, user, 4);
 	// Update (dt,five);
 }
 
-void TankAI::Update(unsigned int dt, Tank& AI){
+void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position){
 	btTransform lower;
 	btTransform upper;
 	btVector3 upperPos;
@@ -73,7 +75,7 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 
 	//no action given yet
 	if (dt-AI.initialTime >= AI.timeLeft){
-		AI.direction = (1+ rand() % 4);
+		AI.direction = (1 + rand() % 3);
 
 		//2-4 seconds for movement
 		if (AI.direction == 3 || AI.direction == 4)
@@ -117,19 +119,19 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 			switch (AI.compassPosition){
 				//North
 				case 1:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+					AI.base->translate(glm::vec3 (0.0f, 0.0, 5.0f));
 				break;
 				//West
 				case 2:
-					AI.base->translate(glm::vec3 (+1.0f, 0.0, .0f));
+					AI.base->translate(glm::vec3 (+5.0f, 0.0, .0f));
 				break;
 				//South
 				case 3:
-					AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+					AI.base->translate(glm::vec3 (0.0f, 0.0, -5.0f));
 				break;
 				//East
 				case 4:
-					AI.base->translate(glm::vec3 (-1.0f, 0.0, 0.0f));
+					AI.base->translate(glm::vec3 (-5.0f, 0.0, 0.0f));
 				break;
 			}
 		break;
@@ -158,15 +160,55 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 		case 5:
 		break;
 	}
-	AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
 
-	/*upper = lower;
-	upperPos = upper.getOrigin();
-	upperPos.setY(upperPos.getY()+6.6); 
-	upper.setOrigin(upperPos);
-	//AI.head->GetRigidBody()->proceedToTransform(upper);*/
+	LookForOpponent(AI, user, position);
+
+	if (AI.attack){
+		Attack(AI);
+	}
 
 	SetOrientation(AI); 
+}
+
+void TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
+	int min = position;
+	std::vector<float> EuclidenDist;
+	glm::vec4 TankPos = AI.base->getPosition();
+	glm::vec4 otherPos = one.base->getPosition();
+	EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+
+	otherPos = two.base->getPosition();
+	EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+
+	otherPos = three.base->getPosition();
+	EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+
+	otherPos = four.base->getPosition();
+	EuclidenDist.push_back (EuclidenDistance (TankPos, otherPos));
+
+	EuclidenDist.push_back (EuclidenDistance (TankPos, user));
+
+	for (int i = 0; i < EuclidenDist.size(); i++){
+		if (EuclidenDist[i] != 0 || EuclidenDist[min] > EuclidenDist[i]  || EuclidenDist[i] != false ){
+			min = i;
+		}
+	}
+
+	if (EuclidenDist[min] < 50){
+		AI.attack = true;
+	}	
+	else
+		AI.attack = false;
+}
+
+float TankAI::EuclidenDistance(glm::vec4 one, glm:: vec4 two){
+	float p = one.x - two.x;
+	float q = one.z - two.z;
+	return sqrt (p*p-q*q);
+}
+
+void TankAI::Attack(Tank AI){
+
 }
 
 void TankAI::AddHealth(Tank AI){

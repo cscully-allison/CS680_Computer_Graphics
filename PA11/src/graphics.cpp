@@ -252,7 +252,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  m_AI->UpdateWrapper(dt);
+  m_AI->UpdateWrapper(dt, m_user->getPosition());
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld);
   m_health->Update (dynamicsWorld, dt);
 
@@ -263,59 +263,59 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec4 poop = userPos;
   //std::cout << rotation.w << "   " << rotation.x << "   " << rotation.y << "   " << rotation.z << std::endl;
 
-  glm::decompose(transformation, scale, rotation, translation, skew,perspective);
-  rotation = glm::conjugate(rotation);
+  // glm::decompose(transformation, scale, rotation, translation, skew,perspective);
+  // rotation = glm::conjugate(rotation);
 
     
     
-    std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+  //   std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
     
 
-    //extract y rotation from quaternion
-    ///////////////////////////////////////////////////test code////////////////////////////////////////////////
-        float qw = rotation.w;
-        float qx = rotation.x;
-        float qy = rotation.y;
-        float qz = rotation.z;
-        float qw2 = qw*qw;
-        float qx2 = qx*qx;
-        float qy2 = qy*qy;
-        float qz2 = qz*qz;
-        float test= qx*qy + qz*qw;
+  //   //extract y rotation from quaternion
+  //   ///////////////////////////////////////////////////test code////////////////////////////////////////////////
+  //       float qw = rotation.w;
+  //       float qx = rotation.x;
+  //       float qy = rotation.y;
+  //       float qz = rotation.z;
+  //       float qw2 = qw*qw;
+  //       float qx2 = qx*qx;
+  //       float qy2 = qy*qy;
+  //       float qz2 = qz*qz;
+  //       float test= qx*qy + qz*qw;
 
-        //y
-        float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
+  //       //y
+  //       float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
 
-        //z
-        float a = asin(2*qx*qy+2*qz*qw);
+  //       //z
+  //       float a = asin(2*qx*qy+2*qz*qw);
 
-        //x
-        float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
+  //       //x
+  //       float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
 
-        camRotation = h * 180 / PI;
+  //       camRotation = h * 180 / PI;
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     
 
-    //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
+  //   //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
     
   
-    poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-    std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+  //   poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
+  //   std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
 
-    std::cout << camRotation << std::endl;
+  //   std::cout << camRotation << std::endl;
 
-    poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-
-
+  //   poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
 
 
 
-  //default camera position and point to look
-  glm::vec4 tankPos = m_user->getPosition();
-  m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
+
+
+  // //default camera position and point to look
+  // glm::vec4 tankPos = m_user->getPosition();
+  // m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 }
@@ -336,18 +336,19 @@ void Graphics::collisionDetection (unsigned int dt){
     
     // cycle through contact points of the objects    
     for (int j = 0; j < contactManifold->getNumContacts(); j++) { 
+      std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
       // if the objects involved with the collision are not the table 
       if (
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
           collisionObject->getUserIndex() != collisionObject2->getUserIndex())
       {
-        //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
+       
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
           if (collisionObject->getUserIndex() == 6){
             m_health->Collision(dynamicsWorld);
-            if (collisionObject2->getUserIndex() < 5){
+            if (collisionObject2->getUserIndex() < 5 ){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }
             else{
@@ -355,14 +356,16 @@ void Graphics::collisionDetection (unsigned int dt){
             }
                
           }
-          else if (collisionObject2->getUserIndex() > 10 || collisionObject2->getUserIndex() > 10){
+
+          else if (collisionObject2->getUserIndex() < 5 && collisionObject2->getUserIndex() > 0 || collisionObject2->getUserIndex() > 10){
+
             int tankProjectile = max (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             if (tankProjectile < 15){
               //AIstuff
             }
-            else {
-              score = m_user->ProjectileHit (dynamicsWorld, tankOrGround);
+            else {         
+              score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
             }
           }
         }

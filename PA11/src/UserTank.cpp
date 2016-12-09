@@ -137,8 +137,6 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 }
 
 void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld){
-	std::cout << "FIRE!" << std::endl;
-
 	if(user.projectile == NULL){
 		glm::vec4 temp = user.placeholder->getPosition();
 		user.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x, temp.y, temp.z), 1, 0, 0, 15);
@@ -153,9 +151,8 @@ void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld){
 int UserTank::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround){
 	dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
 	user.projectile = NULL;
-	std::cout << tankOrGround << std::endl;
 	if (tankOrGround > 0){
-		std::cout << "tank hit!" << std::endl;
+		std::cout << "Tank " << tankOrGround << " hit!" << std::endl;
 		return 100;
 	}
 	return 0;

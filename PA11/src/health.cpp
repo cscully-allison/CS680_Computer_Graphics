@@ -20,7 +20,7 @@ void Health::Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt){
 
 	else {
 		healthLight = glm::vec3(rand() % 100, 10, rand() % 100);
-		healthPack = new Object ("healthpack.obj", 1, btVector3(0, 2.5, 0), btVector3(0.0, 2.5, 0.0), 0, 0, 0, 6);
+		healthPack = new Object ("healthpack.obj", 1, btVector3(0, 2.5, 0), btVector3(healthLight.x, 2.5, healthLight.z), 0, 0, 0, 6);
 		healthPack->Embiggen();
 		healthPack->setOrientation();
 		dynamicsWorld->addRigidBody(healthPack->GetRigidBody());
@@ -52,6 +52,6 @@ glm::vec3 Health:: GetLighting(){
 }
 
 void Health::ResetTimer(){
-	//countdownTimer = rand() % 10000;
-	countdownTimer = 0;
+	countdownTimer = rand() % 10000;
+	//countdownTimer = 0;
 }
