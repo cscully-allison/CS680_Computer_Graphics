@@ -302,14 +302,14 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     float xDisplace;
     float zDisplace;
 
-    std::cout << "before: " << h << std::endl;
+    //std::cout << "before: " << h << std::endl;
 
     if (h<0)
     {
       h +=360;
     }
 
-    std::cout<< "after: " << h << std::endl;
+    //std::cout<< "after: " << h << std::endl;
 
 
     if (h > 0 && h < 90)
@@ -376,7 +376,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 
-  m_AI->UpdateWrapper(dt, m_user->getPosition());
+  m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
   if (m_user->GetLives() <= 0){

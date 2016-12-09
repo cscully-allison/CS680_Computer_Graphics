@@ -59,26 +59,25 @@ void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, U
   //AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
-void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user){
-	
+void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user, btDiscreteDynamicsWorld* dynamicsWorld){	
 	if (one.base != NULL){
-		Update (dt, one, user, 1);
+		Update (dt, one, user, 1, dynamicsWorld);
 	}
 	if (two.base != NULL){;
-		Update (dt, two, user, 2);
+		Update (dt, two, user, 2, dynamicsWorld);
 	}
 	if (three.base != NULL){
-		Update (dt, three, user, 3);
+		Update (dt, three, user, 3, dynamicsWorld);
 	}
 	if (four.base != NULL){
-		Update (dt, four, user, 4);
+		Update (dt, four, user, 4, dynamicsWorld);
 	}
 }
 
-void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position){
+void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btDiscreteDynamicsWorld* dynamicsWorld){
 	AI.attack = LookForOpponent(AI, user, position);
-	if (AI.attack){
-		Attack (AI);
+	if (AI.attack  > 0){
+		Attack (AI, dynamicsWorld);
 	}
 
 	else{
@@ -176,7 +175,7 @@ void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position){
 	SetOrientation(AI); 
 }
 
-bool TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
+int TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
 	int min = position;
 	std::vector<float> EuclidenDist;
 	glm::vec4 TankPos = AI.base->getPosition();
@@ -210,10 +209,10 @@ bool TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
 	}
 
 	if (EuclidenDist[min] < 50.0){
-		return true;
+		return min + 1;
 	}	
 	else{
-		return false;
+		return 0;
 	}
 }
 
@@ -223,13 +222,26 @@ float TankAI::EuclidenDistance(glm::vec4 one, glm:: vec4 two){
 	return sqrt (p*p-q*q);
 }
 
-void TankAI::Attack(Tank AI){
+void TankAI::Attack(Tank AI , btDiscreteDynamicsWorld* dynamicsWorld){
 	//std::cout << "ready for attack" << std::endl;
+	LaunchProjectile (AI, dynamicsWorld);
 
 }
+void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
+	//std::cout << "Tank " << AI.attack << " under attack!" << std::endl; 
+	// if(AI.projectile == NULL){
+	// 	glm::vec4 temp = AI.base->getPosition();
+	// 	AI.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x-16, temp.y+2, temp.z-3), 1, 0, 0, 15);
+		
+	// 	SetOrientation(AI);
+	// 	dynamicsWorld->addRigidBody (AI.projectile->GetRigidBody());
+	// 	AI.projectile->applyForce(temp, 0, 0);
+	// }
+}
+
+
 
 void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
-	std::cout << tankNumber << " " <<  two.lives << std::endl;
 
 	switch (tankNumber){
 		case 1:
