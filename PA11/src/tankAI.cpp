@@ -168,6 +168,7 @@ void TankAI::Update(unsigned int dt, Tank& AI){
 
 	SetOrientation(AI); 
 }
+
 void TankAI::AddHealth(Tank AI){
 	if (AI.lives != 5){
 		AI.lives ++;

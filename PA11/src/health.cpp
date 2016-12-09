@@ -19,6 +19,7 @@ void Health::Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt){
 	}
 
 	else {
+		healthLight = glm::vec3(rand() % 100, 2.5, rand() % 100);
 		healthPack = new Object ("placeholder.obj", 1, btVector3(0, 0, 0), btVector3(0, 2.5, 0), 0, 0, 0, 6);
 		healthPack->setOrientation();
 		dynamicsWorld->addRigidBody (healthPack->GetRigidBody());
@@ -34,14 +35,22 @@ void Health::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spo
   }
 }
 
-void Health::Collision(){
+void Health::Collision(btDiscreteDynamicsWorld* dynamicsWorld){
 	if (healthPack != NULL){
+		dynamicsWorld->removeRigidBody (healthPack->GetRigidBody());
+		delete healthPack;
 		healthPack = NULL;
-		countdownTimer = ResetTimer();
+		ResetTimer();
 	}
 }
 
-int Health::ResetTimer(){
+glm::vec3 Health:: GetLighting(){
+	if (healthPack != NULL){
+		return healthLight;
+	}
+}
+
+void Health::ResetTimer(){
 	countdownTimer = rand() % 10000;
 	//countdownTimer = 0;
 }

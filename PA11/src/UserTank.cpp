@@ -20,9 +20,6 @@ UserTank::UserTank(){
 	//set restrictions for head movement
 	user.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
 	user.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
-
-	user.placeholder->GetRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-	user.placeholder->GetRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
 }
 
 UserTank::~UserTank(){
@@ -36,9 +33,6 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.head->GetModel()));
   user.head->Render(scalar, spec, spot, height, eyePos);
-
-  // glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder ->GetModel()));
-  // user.placeholder ->Render(scalar, spec, spot, height, eyePos);
 }
 
 void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement){
@@ -120,13 +114,6 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement){
 	upperPos.setY(upperPos.getY()+6.6); 
 	upper.setOrigin(upperPos);
 	user.head->GetRigidBody()->proceedToTransform(upper);
-	
-	user.head->GetRigidBody()->getMotionState()->getWorldTransform(lower);
-	placeholder = lower;
-	placeholderPos = placeholder.getOrigin();
-	placeholderPos.setX (placeholderPos.getX()-11);
-	placeholder.setOrigin(placeholderPos);
-	user.placeholder->GetRigidBody()->proceedToTransform(placeholder);
 
 	SetOrientation(); 
 }
@@ -152,5 +139,4 @@ Object* UserTank::GetPlaceholder(){
 void UserTank::SetOrientation(){
 	user.base->setOrientation();
 	user.head->setOrientation();
-	user.placeholder->setOrientation();
 }

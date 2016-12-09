@@ -24,7 +24,7 @@ class TankAI{
 		void RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void Render(Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
 		void AddHealth(Tank AI);
-		Tank GetTank (int number);
+		Tank GetTank(int number);
 		Object* GetAIBase(int number);
 		Object* GetAIHead(int number);
 		void SetOrientation(Tank& AI);

@@ -82,13 +82,13 @@ bool Graphics::Initialize(int width, int height)
 
 
   m_AI = new TankAI(dynamicsWorld);
-
+  std::cout << "hello" << std::endl;
   m_user = new UserTank();
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
-  dynamicsWorld->addRigidBody (m_user->GetPlaceholder()->GetRigidBody());
 
   m_health = new Health ();
+
   
   // // Initalize the Gouraund Shader
   // gouraund_shader = new Shader();
@@ -221,7 +221,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 { 
 
   //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 20.0f, -20.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
@@ -260,7 +260,7 @@ void Graphics::collisionDetection (unsigned int dt){
         // and collided
         if (pt.getDistance() < 0.01f ){
           if (collisionObject->getUserIndex() == 6){
-            m_health->Collision();
+            m_health->Collision(dynamicsWorld);
             if (collisionObject2->getUserIndex() < 5){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }

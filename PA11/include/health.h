@@ -9,14 +9,16 @@ class Health
 	public:
 		Health();
 		~Health();
-		int ResetTimer();
+		void ResetTimer();
 		void Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt);
 		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
-		void Collision();
+		void Collision(btDiscreteDynamicsWorld* dynamicsWorld);
+		glm::vec3 GetLighting();
 
 	private:
 		Object* healthPack; 
 		int countdownTimer;
+		glm::vec3 healthLight;
 };
 
 #endif 
