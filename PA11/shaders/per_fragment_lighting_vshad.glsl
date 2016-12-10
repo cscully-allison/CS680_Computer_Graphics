@@ -21,7 +21,7 @@
             vec3 N;  //normal
             vec3 L;  //light source
             vec3 V;  //view
-            //vec3 L2;  //2nd light source
+            vec3 L2;  //2nd light source
 
             // material properties
             vec3 Ka;
@@ -35,19 +35,21 @@
             vec3 light_color;            
 
             // spotlight
-           // vec3 spotlightL;
-           // vec3 spotlightV;
+            vec3 spotlightL;
+
           } vs_out;
 
           
           void main(void) 
           { 
-            //light position
+            //light positions
             
-            //vec3 light_pos = vec3(0.0, 10.0, 7.0);
-            vec3 light_pos = spot - vec3(10.0, 0.0, 10.0);
-            //vec3 light_pos2 = vec3(0, 20.0, 0.0);
-            //vec3 light_pos2 = vec3(0.0, -10.0, 0.0);
+            vec3 light_pos = vec3(0.0, 10.0, 7.0);
+            vec3 light_pos2 = vec3(0.0, 20.0, 0.0);
+            vs_out.spotlightL = spot;
+
+            //vec3 light_pos = spot - vec3(10.0, 0.0, 10.0);
+            //vec3 light_pos2 = spot;
 
 
             if(light_pos.y > 0){
@@ -66,13 +68,12 @@
             vs_out.L = light_pos - p.xyz;
 
             //Caluclate 2nd light vector
-            //vs_out.L2 = light_pos2 - p.xyz;
+            vs_out.L2 = light_pos2 - p.xyz;
 
             //calculate view vector
             vs_out.V = eyePos;
 
-            //vs_out.spotlightL = spotlight_pos;
-            //vs_out.spotlightV = -ballPosition.xyz;
+
 
             gl_Position = projectionMatrix * viewMatrix * p;
 
