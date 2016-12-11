@@ -94,7 +94,7 @@ bool Graphics::Initialize(int width, int height)
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
   //dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
-  m_health = new Health ();
+  m_health = new Health();
 
   
   // // Initalize the Gouraund Shader
@@ -243,7 +243,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec4 perspective;
 
   //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
+  m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 40.0f, -50.0f));
 
   //once tank is loaded and available with movement
   //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
@@ -253,9 +253,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  m_AI->UpdateWrapper(dt, m_user->getPosition());
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld);
-  m_health->Update (dynamicsWorld, dt);
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
   //get data from model position of tank
@@ -264,83 +261,79 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   //glm::vec4 poop = userPos;
   //std::cout << rotation.w << "   " << rotation.x << "   " << rotation.y << "   " << rotation.z << std::endl;
 
-  // glm::decompose(transformation, scale, rotation, translation, skew,perspective);
-  // rotation = glm::conjugate(rotation);
+  glm::decompose(transformation, scale, rotation, translation, skew,perspective);
+  rotation = glm::conjugate(rotation);
 
     
     
-<<<<<<< HEAD
-  //   std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-=======
     //std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
->>>>>>> 53c340d767d6cdc6e25f99fcbd6a27063857fcde
     
 
-  //   //extract y rotation from quaternion
-  //   ///////////////////////////////////////////////////test code////////////////////////////////////////////////
-  //       float qw = rotation.w;
-  //       float qx = rotation.x;
-  //       float qy = rotation.y;
-  //       float qz = rotation.z;
-  //       float qw2 = qw*qw;
-  //       float qx2 = qx*qx;
-  //       float qy2 = qy*qy;
-  //       float qz2 = qz*qz;
-  //       float test= qx*qy + qz*qw;
+    //extract y rotation from quaternion
+    ///////////////////////////////////////////////////test code////////////////////////////////////////////////
+        float qw = rotation.w;
+        float qx = rotation.x;
+        float qy = rotation.y;
+        float qz = rotation.z;
+        float qw2 = qw*qw;
+        float qx2 = qx*qx;
+        float qy2 = qy*qy;
+        float qz2 = qz*qz;
+        float test= qx*qy + qz*qw;
 
-  //       //y
-  //       float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
+        //y
+        float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
 
-  //       //z
-  //       float a = asin(2*qx*qy+2*qz*qw);
+        //z
+        float a = asin(2*qx*qy+2*qz*qw);
 
-  //       //x
-  //       float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
+        //x
+        float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
 
-  //       camRotation = h * 180 / PI;
+        h = h * 180 / PI;
 
 
-  //   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     
 
-  //   //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
+    //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
     
     float xDisplace;
     float zDisplace;
 
-    std::cout << "before: " << h << std::endl;
+    //std::cout << "before: " << h << std::endl;
 
     if (h<0)
     {
-      h+=360;
+      h +=360;
     }
 
-    std::cout<< "after: " << h << std::endl;
+    //std::cout<< "after: " << h << std::endl;
 
 
     if (h > 0 && h < 90)
     {
-      xDisplace = cos(h)*8;
-      zDisplace = sin(h)*8;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h > 90 && h < 180)
     {
-      h -= 90;
-      xDisplace = cos(h)*8 * (-1);
-      zDisplace = sin(h)*8;
+      //h -= 90;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h > 180 && h < 270)
     {
-      h -= 180;
-      xDisplace = cos(h)*8 * (-1);
-      zDisplace = sin(h)*8 * (-1);
+      //h -= 180;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8 ;
     }
     else if (h > 270 && h < 360)
     {
-      h -= 270;
-      xDisplace = cos(h)*8;
-      zDisplace = sin(h)*8 * (-1);
+      //h -= 270;
+      xDisplace = cos((h/180)*PI)*8 * (-1);
+      zDisplace = sin((h/180)*PI)*8;
     }
     else if (h == 0 || 360)
     {
@@ -362,39 +355,44 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
       xDisplace = 0;
       zDisplace = -8;
     }
-    std::cout << xDisplace << "      " << zDisplace << std::endl;
+
+
+   // std::cout << xDisplace << "      " << zDisplace << std::endl;
   
 <<<<<<< HEAD
-  //   poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-  //   std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-
-  //   std::cout << camRotation << std::endl;
-
-  //   poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
+    poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
+    std::cout << "post rotate/translate: " << h <<  std::endl;
 =======
     //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
     //std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
+>>>>>>> 14d651a8394e1f6a070751438fdcb7fc03640477
 
-    //std::cout << camRotation << std::endl;
+    
 
     //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
->>>>>>> 53c340d767d6cdc6e25f99fcbd6a27063857fcde
 
 
 
 
 
-<<<<<<< HEAD
-  // //default camera position and point to look
-  // glm::vec4 tankPos = m_user->getPosition();
-  // m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
-=======
   //default camera position and point to look
+<<<<<<< HEAD
   glm::vec4 tankPos = m_user->getPosition();
-  m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x-xDisplace, userPos.y+5, userPos.z-zDisplace));
->>>>>>> 53c340d767d6cdc6e25f99fcbd6a27063857fcde
+  //m_camera->lookAt(glm::vec3(userPos.x, userPos.y, userPos.z), glm::vec3(poop.x , poop.y + 5, poop.z ));
+=======
+ glm::vec4 tankPos = m_user->getPosition();
+ m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x, userPos.y+5, userPos.z));
+>>>>>>> 14d651a8394e1f6a070751438fdcb7fc03640477
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
+
+  m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
+  m_health->Update (dynamicsWorld, dt);
+  if (m_user->GetLives() <= 0){
+    gamestate = false;
+  }
+
 }
 
 void Graphics::collisionDetection (unsigned int dt){
@@ -419,13 +417,13 @@ void Graphics::collisionDetection (unsigned int dt){
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
           collisionObject->getUserIndex() != collisionObject2->getUserIndex())
       {
-       
+        //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
           if (collisionObject->getUserIndex() == 6){
             m_health->Collision(dynamicsWorld);
-            if (collisionObject2->getUserIndex() < 5 ){
+            if (collisionObject2->getUserIndex() < 5){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }
             else{
@@ -440,9 +438,13 @@ void Graphics::collisionDetection (unsigned int dt){
             int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             if (tankProjectile < 15){
               //AIstuff
+              if (tankOrGround == 5){
+               m_user->Hit();
+              }
             }
             else {         
               score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
+              m_AI->Hit (dynamicsWorld, tankOrGround);
             }
           }
         }
@@ -534,11 +536,11 @@ for (int i =0; i < keyPress.size(); i++){
 
   // render land
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_land->GetModel()));
-  m_land->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_land->Render(scalar, specularity, eyePos);
 
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
-  m_sky->Render(scalar, specularity, spotlight, spotlightHeight, eyePos);
+  m_sky->Render(scalar, specularity, eyePos);
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);

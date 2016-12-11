@@ -21,7 +21,7 @@
           //light position
           uniform vec3 light_pos = vec3(0.0, 10.0, 5.0);
 
-          uniform vec3 light_pos2 = vec3(0.0, 0.0, 0.0);
+          uniform vec3 light_pos2 = vec3(0.0, 10.0, -10.0);
 
           //material properties
           uniform float specular_power = 128.0;

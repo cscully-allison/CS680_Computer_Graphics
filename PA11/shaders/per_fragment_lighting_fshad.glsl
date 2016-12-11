@@ -19,10 +19,11 @@
             vec3 scalar;
             vec3 spec;  //scalar
             vec3 spot;
+            vec3 light_color;
 
-            // spotlight
-          //  vec3 spotlightL;
-          //  vec3 spotlightV;
+            //spotlight data
+            vec3 spotlightL;
+
           } fs_in;
 
 
@@ -42,35 +43,39 @@
 
             vec4 texel = texture2D(gSampler, fs_in.texture.xy); 
 
-            vec3 diffuse = texel.rgb * max(dot(N,L), 0.0);
+            vec3 diffuse = texel.rgb * fs_in.light_color * max(dot(N,L), 0.0);
 
           	//compute the diffuse and specular components for each fragment;
           	vec3 specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
             color = vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
 
+            //Second Light//////////////////////////
+
             vec3 L2 = normalize(fs_in.L2);
 
             //calculate the halfway
             R = normalize( reflect(-L2, N) );    
-            diffuse = texel.rgb * max(dot(N,L2), 0.0);
+            diffuse = texel.rgb * fs_in.light_color.rgb * max(dot(N,L2), 0.0);
 
             //compute the diffuse and specular components for each fragment;
             specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
             color += vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
 
 
+            /*
 
-/*              float NdotL = max (dot(N,L),0.0);
+              float NdotL = max (dot(N,L),0.0);
                 if ( NdotL > 0.0){
                    L = normalize(fs_in.spotlightL);
                    R = normalize( reflect(-L, N) );
                    float spotLight = dot (L,V);
-                   if (spotLight < 0.01){
-                      V = normalize(fs_in.spotlightV);
+                   if (spotLight < .01){
+                      V = normalize(fs_in.V);
                       diffuse = max(dot(N,L), 0.0) *  fs_in.diffuse;
                       specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
                       color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
                    }
-              }*/
+              }
+             */ 
 
           }

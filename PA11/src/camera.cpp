@@ -47,6 +47,6 @@ void Camera::lookAt(glm::vec3 spotToLook, glm::vec3 cameraPos)
   view = glm::lookAt(cameraPos,
                      spotToLook,
                      glm::vec3(0.0, 1.0, 0.0));
-  //cameraPosition = cameraPos;
+  cameraPosition = cameraPos;
 }
 

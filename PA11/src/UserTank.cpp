@@ -4,7 +4,7 @@
 
 UserTank::UserTank(){
 
-	user.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(20, 5, 5), .9, 0, .9, 5);
+	user.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(20, 3.5, 5), .9, 0, .9, 5);
 
 	//adjust so that it lied on top of the base
 	//user.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(20, 4.0995, 5), 1, 0, 0, 5);
@@ -33,17 +33,17 @@ UserTank::~UserTank(){
 void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.base->GetModel()));
-  user.base->Render(scalar, spec, spot, height, eyePos);
+  user.base->Render(scalar, spec, eyePos);
 
   /*glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.head->GetModel()));
   user.head->Render(scalar, spec, spot, height, eyePos);*/
 
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder->GetModel()));
-  user.placeholder->Render(scalar, spec, spot, height, eyePos);
+  user.placeholder->Render(scalar, spec, eyePos);
 
   if (user.projectile != NULL){
   	glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.projectile->GetModel()));
-  	user.projectile->Render(scalar, spec, spot, height, eyePos);
+  	user.projectile->Render(scalar, spec, eyePos);
   }
 }
 
@@ -67,6 +67,8 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 		dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
 		user.projectile = NULL;
 	}
+
+
 
 	for (int i = 0; i < keyPress.size(); i ++){
 		switch (keyPress[i]){

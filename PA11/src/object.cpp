@@ -1,6 +1,10 @@
 #include "object.h"
 
 
+/*****************************
+Constructor for HealthPack & Others
+******************************/
+
 Object::Object(std::string filename, btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping, int index)
 {
 
@@ -479,8 +483,11 @@ btRigidBody* Object::GetRigidBody(){
   return body;
 }
 
+/***************
+Render Standerd Objects
+***************/
 
-void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos)
+void Object::Render(Uniform scalar, Uniform spec, Uniform eyePos)
 {
   // loads the texture to the shaders
   for (int i=0; i<TB.size(); i++)
@@ -491,8 +498,63 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, 
 
   // loads the lighting values to the shader
   glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));
-  glUniform3fv(spec.location, 1, glm::value_ptr(spec.value));
-  glUniform3fv(spot.location, 1, glm::value_ptr(spot.value));
+  glUniform3fv(spec.location, 1, glm::value_ptr(spec.value)); 
+  glUniform3fv(eyePos.location, 1, glm::value_ptr(eyePos.value));
+
+  // enables attributes
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glEnableVertexAttribArray(4);    
+
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normals));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.texture));
+  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ka));
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, properties.Ks));
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+
+  glDrawArrays(GL_TRIANGLES, 0, Indices.size());
+  
+  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+  // disables attributes
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
+  glDisableVertexAttribArray(4);  
+}
+
+/******************
+Render Health Pack
+********************/
+
+void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos)
+{
+  // loads the texture to the shaders
+  for (int i=0; i<TB.size(); i++)
+  {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, TB[i]);
+  }
+
+  std::cout << "Spot x :" << spot.value.x << std::endl;
+  std::cout << "Spot z :" << spot.value.z << std::endl;
+
+  std::cout << "ScalarLocation:" << scalar.location << std::endl;
+std::cout << "SpecLocation:" << spec.location << std::endl;
+std::cout << "SpotLocation:" << spot.location << std::endl;
+std::cout << "HeightLocation:" << height.location << std::endl;
+std::cout << "EyePosLocation:" << eyePos.location << std::endl;
+
+  // loads the lighting values to the shader
+  glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));
+  glUniform3fv(spec.location, 1, glm::value_ptr(spec.value)); 
+  glUniform3fv(spot.location, 1, glm::value_ptr(spot.value)); 
   glUniform3fv(height.location, 1, glm::value_ptr(height.value));
   glUniform3fv(eyePos.location, 1, glm::value_ptr(eyePos.value));
 
@@ -523,6 +585,7 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, 
   glDisableVertexAttribArray(3);
   glDisableVertexAttribArray(4);  
 }
+
 
 glm::vec3 Object::getSpec(){
         // return specularity
