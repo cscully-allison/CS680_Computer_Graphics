@@ -5,12 +5,13 @@
 //#define COMPASS [NORTH, WEST, SOUTH, EAST];
 
 TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
+	// start rand seed
 	srand (time (NULL));
+	// initalize tanks
 	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
 	Initialize (dynamicsWorld, two, btVector3 (-10,0,5), 2);
 	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
 	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
-	// Initialize (dynamicsWorld, five, btVector3 (90,0,0));
  }
 
 TankAI::~TankAI(){
@@ -19,29 +20,27 @@ TankAI::~TankAI(){
 
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
+	// create ovject
 	AI.base = new Object("tradeFederationTank2.obj", 500, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
-	SetOrientation(AI);
 
-	AI.lives = MAXLIVES;
-	AI.initialTime = 0;
-	AI.compassPosition = 4; 
-	AI.attack = false;
+	SetOrientation(AI);
 
 	//set restrictions for body movement
 	AI.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
 	AI.base->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
 
-	//set restrictions for head movement
-	//AI.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
-	//AI.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
-
-	// in seconds
+	// set variables
+	AI.projectile = NULL;
+	AI.lives = MAXLIVES;
+	AI.initialTime = 0;
+	AI.compassPosition = 4; 
+	AI.attack = false;
 	AI.timeLeft = 0;
-	dynamicsWorld->addRigidBody (AI.base->GetRigidBody());
-  	//dynamicsWorld->addRigidBody (AI.head->GetRigidBody());
+		dynamicsWorld->addRigidBody (AI.base->GetRigidBody());
 }
 
 void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
+	// render tanks in existance
 	if (one.base != NULL){
 		Render (one, modelMatrix, scalar, spec, spot, height, eyePos);
 	}
@@ -59,12 +58,10 @@ void TankAI::RenderWrapper(GLint modelMatrix, Uniform scalar, Uniform spec, Unif
 void TankAI::Render (Tank AI, GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.base->GetModel()));
   AI.base->Render(scalar, spec, eyePos);
-
-  //glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(AI.head->GetModel()));
-  //AI.head->Render(scalar, spec, spot, height, eyePos);
 }
 
-void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user, btDiscreteDynamicsWorld* dynamicsWorld){	
+void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user, btDiscreteDynamicsWorld* dynamicsWorld){
+	// update tanks in exsistance	
 	if (one.base != NULL){
 		Update (dt, one, user, 1, dynamicsWorld);
 	}
@@ -273,7 +270,8 @@ void TankAI::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGr
 
 
 void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
-
+	// find tank, decrease lives
+	// if lives == 0, delete tank
 	switch (tankNumber){
 		case 1:
 			one.lives --;
@@ -311,15 +309,6 @@ void TankAI::Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber){
 		case 5:
 		break;
 	}
-	//AI.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
-
-	/*upper = lower;
-	upperPos = upper.getOrigin();
-	upperPos.setY(upperPos.getY()+6.6); 
-	upper.setOrigin(upperPos);
-	//AI.head->GetRigidBody()->proceedToTransform(upper);*/
-
-	//SetOrientation(AI); 
 }
 
 void TankAI::AddHealth(Tank AI){
@@ -379,29 +368,7 @@ void TankAI::setSpec (glm::vec3 s){
 		four.base->setSpec (s);
 }
 
-
-/*Object* TankAI::GetAIHead(int number){
-	switch (number){
-		case 1:
-      std::cout << "hello" << std::endl;
-			return one.head;
-		break;
-		case 2:
-			return two.head;
-		break;
-		case 3:
-			return three.head;
-		break;
-		case 4:
-			return four.head;
-		break;
-		case 5:
-			return five.head;
-		break;
-	}
- }*/
-
 void TankAI::SetOrientation(Tank& AI){
 	AI.base->setOrientation();
-	//AI.head->setOrientation();
+
 }

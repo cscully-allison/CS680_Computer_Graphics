@@ -3,27 +3,19 @@
 #define MAXAMMO 5;
 
 UserTank::UserTank(){
-
+	// creat objects and move rigid body to position
 	user.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(20, 3.5, 5), .9, 0, .9, 5);
-
-	//adjust so that it lied on top of the base
-	//user.head = new Object("turret.obj", 1000, btVector3(0, 0, 0), btVector3(20, 4.0995, 5), 1, 0, 0, 5);
 	user.placeholder = new Object("placeholder.obj");
 	user.projectile = NULL;
 	SetOrientation();
-	//user.lives = MAXLIVES;
-	user.lives = 3;
-	user.compassPosition = 4; 
 
 	//set restrictions for body movement
 	user.base->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
 	user.base->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
-
-	//set restrictions for head movement
-	//user.head->GetRigidBody()->setLinearFactor(btVector3(1.0f, 0.0f, 1.0f));
-	//user.head->GetRigidBody()->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
 	
-
+	// set variables
+	user.lives = 3;
+	user.compassPosition = 4; 
 }
 
 UserTank::~UserTank(){
@@ -31,16 +23,14 @@ UserTank::~UserTank(){
 }
 
 void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos){
-
+	// render body
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.base->GetModel()));
   user.base->Render(scalar, spec, eyePos);
 
-  /*glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.head->GetModel()));
-  user.head->Render(scalar, spec, spot, height, eyePos);*/
+  // glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder->GetModel()));
+  // user.placeholder->Render(scalar, spec, eyePos);
 
-  glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder->GetModel()));
-  user.placeholder->Render(scalar, spec, eyePos);
-
+  // render projectile
   if (user.projectile != NULL){
   	glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.projectile->GetModel()));
   	user.projectile->Render(scalar, spec, eyePos);
@@ -48,28 +38,24 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
 }
 
 void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, float x, float z, glm::vec4 forwardsVec){
-	btTransform lower;
-	btTransform upper;
-	btTransform placeholder;
-	btVector3 upperPos;
-	btVector3 placeholderPos;
-	btQuaternion rotato;
-
+	// reset velocity
 	user.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	user.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
 
+	// if user has launched, start projectile
 	if (launch){
 		LaunchProjectile(dynamicsWorld, x, z, forwardsVec);
 		lastShot = dt;
 	}
 
+	// see if the projectile needs to be deleted
 	if (user.projectile != NULL && dt - lastShot > 3000){
 		dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
 		user.projectile = NULL;
 	}
 
 
-
+	// find key pressed
 	for (int i = 0; i < keyPress.size(); i ++){
 		switch (keyPress[i]){
 			//forward
@@ -131,40 +117,34 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 	
 		}
 	}
-	// if (mouseMovement != 0){
-	// 	std::cout << 360.0/800 * mouseMovement - previousMouse << std::endl;
-	// 	user.head->rotate (glm::vec3(0.0f, 360.0/800 * (mouseMovement - previousMouse), 0.0f));
-	// }
 
-	/*user.base->GetRigidBody()->getMotionState()->getWorldTransform(lower);
-	upper = lower;
-	upperPos = upper.getOrigin();
-	upperPos.setY(upperPos.getY()+6.6); 
-	upper.setOrigin(upperPos);
-	//user.head->GetRigidBody()->proceedToTransform(upper);*/
+	// move object
 	glm::vec4 basePosition = user.base->getPosition();
 	user.placeholder->translateModel(basePosition);
-
 	SetOrientation(); 
 }
 
 void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, float x, float z, glm::vec4 forwardsVec){
+	// if null
 	if(user.projectile == NULL){
-		user.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(forwardsVec.x-16, forwardsVec.y+2, forwardsVec.z-3), 1, 0, 0, 15);
-		
+		// create object
+		user.projectile = new Object("placeholder.obj", 10, btVector3(0, 0, 0), btVector3(forwardsVec.x-16, forwardsVec.y+2, forwardsVec.z-3), 0, .9, .9, 15);
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
+		//apply force
 		user.projectile->applyForce(forwardsVec, x, z);
-
 	}
 }
 
 int UserTank::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround){
+	// remove projectile and delete
 	dynamicsWorld->removeRigidBody (user.projectile->GetRigidBody());
 	delete user.projectile;
 	user.projectile = NULL;
+	// if a tank is hit
 	if (tankOrGround > 0){
 		std::cout << "Tank " << tankOrGround << " hit!" << std::endl;
+		// add to score
 		return 100;
 	}
 	return 0;
@@ -176,7 +156,6 @@ void UserTank::setSpec (glm::vec3 s){
 
 void UserTank::Hit(){
 	user.lives --;
-	
 }
 
 int UserTank::GetLives(){
@@ -192,10 +171,6 @@ void UserTank::AddHealth(){
 Object* UserTank::GetBase(){
 	return user.base;
 }
-
-/*Object* UserTank::GetHead(){
-	return user.head;
-}*/
 
 Object* UserTank::GetPlaceholder(){
 	return user.placeholder;

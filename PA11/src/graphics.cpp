@@ -410,7 +410,7 @@ void Graphics::collisionDetection (unsigned int dt){
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
           collisionObject->getUserIndex() != collisionObject2->getUserIndex())
       {
-        //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
+        std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
