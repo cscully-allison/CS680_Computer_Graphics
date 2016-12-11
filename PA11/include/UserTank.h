@@ -16,6 +16,7 @@ class UserTank{
 		Object* GetPlaceholder();
 		void SetOrientation();
 		glm::vec4 getPosition();
+		void setSpec (glm::vec3 s);
 
 		void LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, float x, float z,glm::vec4 forwardsVec);
 		void Hit();

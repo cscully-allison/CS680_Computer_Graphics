@@ -542,14 +542,14 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, 
     glBindTexture(GL_TEXTURE_2D, TB[i]);
   }
 
-  std::cout << "Spot x :" << spot.value.x << std::endl;
-  std::cout << "Spot z :" << spot.value.z << std::endl;
+//   std::cout << "Spot x :" << spot.value.x << std::endl;
+//   std::cout << "Spot z :" << spot.value.z << std::endl;
 
-  std::cout << "ScalarLocation:" << scalar.location << std::endl;
-std::cout << "SpecLocation:" << spec.location << std::endl;
-std::cout << "SpotLocation:" << spot.location << std::endl;
-std::cout << "HeightLocation:" << height.location << std::endl;
-std::cout << "EyePosLocation:" << eyePos.location << std::endl;
+//   std::cout << "ScalarLocation:" << scalar.location << std::endl;
+// std::cout << "SpecLocation:" << spec.location << std::endl;
+// std::cout << "SpotLocation:" << spot.location << std::endl;
+// std::cout << "HeightLocation:" << height.location << std::endl;
+// std::cout << "EyePosLocation:" << eyePos.location << std::endl;
 
   // loads the lighting values to the shader
   glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));

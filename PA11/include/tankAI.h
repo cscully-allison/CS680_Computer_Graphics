@@ -33,6 +33,8 @@ class TankAI{
 		Tank GetTank(int number);
 		Object* GetAIBase(int number);
 		void Hit(btDiscreteDynamicsWorld* dynamicsWorld, int tankNumber);
+		void setSpec (glm::vec3 s);
+		void ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround, int projectile);
 		//Object* GetAIHead(int number);
 		void SetOrientation(Tank& AI);
 		void UpdateWrapper(unsigned int dt, glm::vec4, btDiscreteDynamicsWorld* dynamicsWorld);

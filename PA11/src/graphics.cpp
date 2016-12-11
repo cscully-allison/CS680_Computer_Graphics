@@ -85,15 +85,14 @@ bool Graphics::Initialize(int width, int height)
   //bldg = new Object("bldg.obj", 0, 0, 0, 0);
   //dynamicsWorld->addRigidBody(bldg->GetRigidBody());
 
-
+  // start AI
   m_AI = new TankAI(dynamicsWorld);
 
+  // start user
   m_user = new UserTank();
-
-
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
-  //dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
+  // start health
   m_health = new Health();
 
   
@@ -154,7 +153,6 @@ bool Graphics::Initialize(int width, int height)
     printf("Program to Finalize\n");
     return false;
   }
-
 
 
   // Enable Phong Shader as inital shader
@@ -379,9 +377,11 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 
+  // start updates
   m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
+  // check if user is out of lives
   if (m_user->GetLives() <= 0){
     gamestate = false;
   }
@@ -404,7 +404,7 @@ void Graphics::collisionDetection (unsigned int dt){
     
     // cycle through contact points of the objects    
     for (int j = 0; j < contactManifold->getNumContacts(); j++) { 
-      std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
+      //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
       // if the objects involved with the collision are not the table 
       if (
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
@@ -414,27 +414,39 @@ void Graphics::collisionDetection (unsigned int dt){
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
+          // if health pack
           if (collisionObject->getUserIndex() == 6){
+            // do things to the health pack
             m_health->Collision(dynamicsWorld);
+            // add health if AI
             if (collisionObject2->getUserIndex() < 5){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }
+            // add health if user
             else{
               m_user->AddHealth ();
             }
                
           }
 
+          // if projectile collision
           else if (collisionObject2->getUserIndex() < 5 && collisionObject2->getUserIndex() > 0 || collisionObject2->getUserIndex() > 10){
-
+            // figure out which object was which
             int tankProjectile = max (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
+            // if AI shot projectile
             if (tankProjectile < 15){
               //AIstuff
+              m_AI->ProjectileHit(dynamicsWorld, tankOrGround, tankProjectile);
+              // user hit
               if (tankOrGround == 5){
                m_user->Hit();
               }
+              else{
+                m_AI->Hit (dynamicsWorld, tankOrGround);
+              }
             }
+            // if user shot projectile
             else {         
               score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
               m_AI->Hit (dynamicsWorld, tankOrGround);
@@ -521,6 +533,43 @@ for (int i =0; i < keyPress.size(); i++){
       else if (keyPress[i]== 1073741921 && spotlightHeight.value.x < 20){
           spotlightHeight.value += glm::vec3(0.01);
       }
+       //numpad 0 + for land
+        if (keyPress[i] == 1073741922){
+          m_land->setSpec (glm::vec3(0.1));
+        }
+        
+        //numpad . - for land 
+        else if (keyPress[i]== 1073741923){
+          m_land->setSpec (glm::vec3(-0.1));
+        }
+       //numpad 1 + for bumper
+       else if (keyPress[i] == 1073741913){
+          m_sky->setSpec (glm::vec3(0.1));
+        }
+        //numpad 2 - for bumper
+       else if (keyPress[i] == 1073741914){
+          m_sky->setSpec (glm::vec3(-0.1));
+        }
+       
+       //numpad 4 + for user tank
+       else if (keyPress[i] == 1073741916){
+          m_user->setSpec (glm::vec3(0.1));
+        } 
+        
+        //numpad 5 - for user tank
+        else if (keyPress[i] == 1073741917){
+          m_user->setSpec (glm::vec3(-0.1));
+        }   
+       
+       //numpad 7 + for enemy tank
+        else if (keyPress[i] == 1073741919){
+          m_AI->setSpec (glm::vec3(0.1));
+        } 
+        
+         //numpad 8 - for enemy tank
+        else if (keyPress[i] == 1073741920){
+          m_AI->setSpec (glm::vec3(-0.1));
+        } 
   }
 
   // Send in the projection and view to the shader

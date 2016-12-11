@@ -233,15 +233,41 @@ void TankAI::Attack(Tank AI , btDiscreteDynamicsWorld* dynamicsWorld){
 
 }
 void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
-	std::cout << "Tank " << AI.attack << " under attack!" << std::endl; 
-	// if(AI.projectile == NULL){
-	// 	glm::vec4 temp = AI.base->getPosition();
-	// 	AI.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x-16, temp.y+2, temp.z-3), 1, 0, 0, 15);
+	std::cout << "Tank " << AI.attack << " attacking!" << std::endl; 
+	if(AI.projectile == NULL){
+		glm::vec4 temp = AI.base->getPosition();
+		AI.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x-16, temp.y+2, temp.z-3), 1, 0, 0, 15);
 		
-	// 	SetOrientation(AI);
-	// 	dynamicsWorld->addRigidBody (AI.projectile->GetRigidBody());
-	// 	AI.projectile->applyForce(temp, 0, 0);
-	// }
+		SetOrientation(AI);
+		dynamicsWorld->addRigidBody (AI.projectile->GetRigidBody());
+		AI.projectile->applyForce(temp, 0, 0);
+	}
+}
+
+void TankAI::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround, int projectile){
+	if (projectile == 11){
+		dynamicsWorld->removeRigidBody (one.projectile->GetRigidBody());
+		delete one.projectile;
+		one.projectile = NULL;
+	}
+	else if (projectile == 12){
+		dynamicsWorld->removeRigidBody (two.projectile->GetRigidBody());
+		delete two.projectile;
+		two.projectile = NULL;
+	}
+	else if (projectile == 13){
+		dynamicsWorld->removeRigidBody (three.projectile->GetRigidBody());
+		delete three.projectile;
+		three.projectile = NULL;
+	}
+	else if (projectile == 14){
+		dynamicsWorld->removeRigidBody (four.projectile->GetRigidBody());
+		delete four.projectile;
+		four.projectile = NULL;
+	}
+	if (tankOrGround > 0){
+		std::cout << "Tank " << tankOrGround << " hit!" << std::endl;
+	}
 }
 
 
@@ -341,6 +367,18 @@ Object* TankAI::GetAIBase(int number){
 		break;
 	}
 }
+
+void TankAI::setSpec (glm::vec3 s){
+	if (one.base != NULL)
+		one.base->setSpec (s);
+	if (two.base != NULL)
+		two.base->setSpec (s);
+	if (three.base != NULL)
+		three.base->setSpec (s);
+	if (four.base != NULL)
+		four.base->setSpec (s);
+}
+
 
 /*Object* TankAI::GetAIHead(int number){
 	switch (number){

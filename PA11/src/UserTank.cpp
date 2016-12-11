@@ -170,6 +170,10 @@ int UserTank::ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrG
 	return 0;
 }
 
+void UserTank::setSpec (glm::vec3 s){
+	user.base->setSpec (s);
+}
+
 void UserTank::Hit(){
 	user.lives --;
 	
