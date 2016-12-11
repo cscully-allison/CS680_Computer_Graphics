@@ -208,7 +208,7 @@ int TankAI::LookForOpponent(Tank AI, glm::vec4 user, int position){
 		}
 	}
 
-	if (EuclidenDist[min] < 50.0){
+	if (EuclidenDist[min] < 30.0){
 		return min + 1;
 	}	
 	else{
@@ -228,7 +228,7 @@ void TankAI::Attack(Tank AI , btDiscreteDynamicsWorld* dynamicsWorld){
 
 }
 void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
-	//std::cout << "Tank " << AI.attack << " under attack!" << std::endl; 
+	std::cout << "Tank " << AI.attack << " under attack!" << std::endl; 
 	// if(AI.projectile == NULL){
 	// 	glm::vec4 temp = AI.base->getPosition();
 	// 	AI.projectile = new Object("placeholder.obj", 500, btVector3(0, 0, 0), btVector3(temp.x-16, temp.y+2, temp.z-3), 1, 0, 0, 15);
