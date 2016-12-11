@@ -229,7 +229,7 @@ float TankAI::EuclidenDistance(glm::vec4 one, glm:: vec4 two){
 
 void TankAI::Attack(Tank AI , btDiscreteDynamicsWorld* dynamicsWorld){
 	//std::cout << "ready for attack" << std::endl;
-	LaunchProjectile (AI, dynamicsWorld);
+	//LaunchProjectile (AI, dynamicsWorld);
 
 }
 void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
