@@ -542,15 +542,6 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, 
     glBindTexture(GL_TEXTURE_2D, TB[i]);
   }
 
-//   std::cout << "Spot x :" << spot.value.x << std::endl;
-//   std::cout << "Spot z :" << spot.value.z << std::endl;
-
-//   std::cout << "ScalarLocation:" << scalar.location << std::endl;
-// std::cout << "SpecLocation:" << spec.location << std::endl;
-// std::cout << "SpotLocation:" << spot.location << std::endl;
-// std::cout << "HeightLocation:" << height.location << std::endl;
-// std::cout << "EyePosLocation:" << eyePos.location << std::endl;
-
   // loads the lighting values to the shader
   glUniform3fv(scalar.location, 1, glm::value_ptr(scalar.value));
   glUniform3fv(spec.location, 1, glm::value_ptr(spec.value)); 
@@ -586,32 +577,37 @@ void Object::Render(Uniform scalar, Uniform spec, Uniform spot, Uniform height, 
   glDisableVertexAttribArray(4);  
 }
 
-
+//gives specularity of an object
 glm::vec3 Object::getSpec(){
         // return specularity
         return spec;
 }
 
+//sets specularity of an object
 void Object::setSpec (glm::vec3 s){
         // sets specularity
         spec += s;
 }
 
+//gets the x y z coordinates of an object
 glm::vec4 Object::getPosition()
 {
   return model * glm::vec4 (1.0,1.0,1.0,1.0);
 }
 
+//rotates a rigid body with force
 void Object::rotate(const glm::vec3 direction)
 {
   body->applyTorqueImpulse(btVector3(direction.x*1.06f, direction.y*1.06f, direction.z*1.06f));
 }
 
+//translates a rigid body by applying force
 void Object::translate(const glm::vec3 direction)
 {
   body->applyForce(btVector3(direction.x*10.0f, 0.0f, direction.z*10.0f), btVector3(0.0f, 0.0f, 0.0f));
 }
 
+//moves the model to a specific location
 void Object::translateModel(glm::vec4 direction){
    model = glm::translate(glm::mat4(1.0f), glm::vec3(direction.x, direction.y, direction.z));
 }

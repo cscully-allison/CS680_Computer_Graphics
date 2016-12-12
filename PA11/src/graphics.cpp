@@ -83,20 +83,30 @@ bool Graphics::Initialize(int width, int height)
   m_land = new Object ("ground.obj", .8, 0, 0, 0, btVector3(0.0,0.0,0.0));
   m_sky =  new Object ("skybox_bigger.obj", 0, 0, 0, 0, btVector3(0.0,0.0,0.0));
   int negate;
+
   //make terrian objects
   for(int object = 0; object < 20; object++){
+      //finds random x location
       float x =(float) ((rand() % 10)+1)*55;
+
+      //determines if value is negative or not
       negate = rand() % 2;
       if (negate == 0)
       {
         x *=-1;
       }
+
+      //determines random y location
       float z =(float) ((rand() % 10)+1)*55;
+
+      //determines if it is negative
       negate = rand() % 2;
       if (negate == 0)
       {
         z *=-1;
       }
+
+      //determines which object will be rendered
       float y =(float) (rand() % 1);
 
       negate = rand()%2;
@@ -115,12 +125,6 @@ bool Graphics::Initialize(int width, int height)
 
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
   dynamicsWorld->addRigidBody (m_sky->GetRigidBody());
-  
-
-
-
-  //bldg = new Object("bldg.obj", 0, 0, 0, 0);
-  //dynamicsWorld->addRigidBody(bldg->GetRigidBody());
 
   // start AI
   m_AI = new TankAI(dynamicsWorld);
@@ -133,34 +137,34 @@ bool Graphics::Initialize(int width, int height)
   m_health = new Health();
 
   
-  // // Initalize the Gouraund Shader
-  // gouraund_shader = new Shader();
-  // if(!gouraund_shader->Initialize())
-  // {
-  //   printf("Shader Failed to Initialize\n");
-  //   return false;
-  // }
+  // Initalize the Gouraund Shader
+  gouraund_shader = new Shader();
+  if(!gouraund_shader->Initialize())
+  {
+    printf("Shader Failed to Initialize\n");
+    return false;
+  }
 
-  // // Add the vertex shader to the Gouraund Shader
-  // if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
-  // {
-  //   printf("Vertex Shader failed to Initialize\n");
-  //   return false;
-  // }
+  // Add the vertex shader to the Gouraund Shader
+  if(!gouraund_shader->AddShader(GL_VERTEX_SHADER, "per_vertex_lighting_vshad.glsl"))
+  {
+    printf("Vertex Shader failed to Initialize\n");
+    return false;
+  }
 
-  // // Add the fragment shader to the Gouraund Shader
-  // if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
-  // {
-  //   printf("Fragment Shader failed to Initialize\n");
-  //   return false;
-  // }
+  // Add the fragment shader to the Gouraund Shader
+  if(!gouraund_shader->AddShader(GL_FRAGMENT_SHADER, "per_vertex_lighting_fshad.glsl"))
+  {
+    printf("Fragment Shader failed to Initialize\n");
+    return false;
+  }
 
-  // // Connect the Gouraund Shader to the program
-  // if(!gouraund_shader->Finalize())
-  // {
-  //   printf("Program to Finalize\n");
-  //   return false;
-  // }
+  // Connect the Gouraund Shader to the program
+  if(!gouraund_shader->Finalize())
+  {
+    printf("Program to Finalize\n");
+    return false;
+  }
   
   // Initialize the Phong Shader
   phong_shader = new Shader();
@@ -296,11 +300,6 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   // senses any collision; returned variable not used
   collisionDetection(dt);
 
-  /*m_AI->UpdateWrapper(dt, dynamicsWorld);
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
-  m_health->Update (dynamicsWorld, dt);
-*/
-
 
   //get data from model position of tank
   transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -363,6 +362,8 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, forwardsVec, rotation);
   m_health->Update (dynamicsWorld, dt);
+
+
   // check if user is out of lives
   if (m_user->GetLives() <= 0){
     gamestate = false;
@@ -455,37 +456,37 @@ void Graphics::Render(vector <unsigned int>  keyPress)
   eyePos.value = m_camera->GetPosition();
 
 for (int i =0; i < keyPress.size(); i++){
-      // //g or default  
-      // if(keyPress[i] == 103 ){
-      //   // Start the correct program
-      //   gouraund_shader->Enable();
-      //     // Locate the projection matrix in the shader
-      // m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
-      // // Locate the view matrix in the shader
-      // m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
-      // // Locate the model matrix in the shader
-      // m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
-      // //Locate the scalar in the shader
-      // scalar.location = gouraund_shader->GetUniformLocation("scalar");
-      // spotlightHeight.location = gouraund_shader->GetUniformLocation("height");
-      // spotlight.location = gouraund_shader->GetUniformLocation("spot");
-      // specularity.location = gouraund_shader->GetUniformLocation("spec");
+      //g or default  
+      if(keyPress[i] == 103 ){
+        // Start the correct program
+        gouraund_shader->Enable();
+          // Locate the projection matrix in the shader
+      m_projectionMatrix = gouraund_shader->GetUniformLocation("projectionMatrix");
+      // Locate the view matrix in the shader
+      m_viewMatrix = gouraund_shader->GetUniformLocation("viewMatrix");
+      // Locate the model matrix in the shader
+      m_modelMatrix = gouraund_shader->GetUniformLocation("modelMatrix");
+      //Locate the scalar in the shader
+      scalar.location = gouraund_shader->GetUniformLocation("scalar");
+      spotlightHeight.location = gouraund_shader->GetUniformLocation("height");
+      spotlight.location = gouraund_shader->GetUniformLocation("spot");
+      specularity.location = gouraund_shader->GetUniformLocation("spec");
 
-      // }
-      // //keyboard input p
-      // else if(keyPress[i] == 112){
-      // phong_shader->Enable();
-      //  m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
-      // // Locate the view matrix in the shader
-      // m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
-      // // Locate the model matrix in the shader
-      // m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
-      // //Locate the scalar in the shader
-      // scalar.location = phong_shader->GetUniformLocation("scalar");
-      // spotlightHeight.location = phong_shader->GetUniformLocation("height");
-      // spotlight.location = phong_shader->GetUniformLocation("spot");
-      // specularity.location = phong_shader->GetUniformLocation("spec");
-      // }
+      }
+      //keyboard input p
+      else if(keyPress[i] == 112){
+      phong_shader->Enable();
+       m_projectionMatrix = phong_shader->GetUniformLocation("projectionMatrix");
+      // Locate the view matrix in the shader
+      m_viewMatrix = phong_shader->GetUniformLocation("viewMatrix");
+      // Locate the model matrix in the shader
+      m_modelMatrix = phong_shader->GetUniformLocation("modelMatrix");
+      //Locate the scalar in the shader
+      scalar.location = phong_shader->GetUniformLocation("scalar");
+      spotlightHeight.location = phong_shader->GetUniformLocation("height");
+      spotlight.location = phong_shader->GetUniformLocation("spot");
+      specularity.location = phong_shader->GetUniformLocation("spec");
+      }
 
       //numpad + ambient lighting
       if(keyPress[i] == 1073741911 && scalar.value.x < 10.0){
@@ -579,9 +580,6 @@ for (int i =0; i < keyPress.size(); i++){
   m_health->Render (GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
 
 
-  //bldg->Render(scalar, specularity, spotlight, spotlightHeight);
-
-  // Render the table object
   
   //Get any errors from OpenGL
   auto error = glGetError();

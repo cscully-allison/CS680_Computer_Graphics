@@ -21,7 +21,7 @@ TankAI::~TankAI(){
 
 void TankAI::Initialize(btDiscreteDynamicsWorld* dynamicsWorld, Tank& AI, btVector3 startOrigin, int index){
 	// create ovject
-	AI.base = new Object("tradeFederationTank2.obj", 500, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 5, startOrigin.getZ()), .9, 0, .9, index);
+	AI.base = new Object("tradeFederationTank2.obj", 500, btVector3(0, 0, 0), btVector3(startOrigin.getX(), 2, startOrigin.getZ()), .9, 0, .9, index);
 
 	SetOrientation(AI);
 

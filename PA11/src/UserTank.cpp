@@ -27,11 +27,6 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.base->GetModel()));
   user.base->Render(scalar, spec, eyePos);
 
-
-
-  // glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder->GetModel()));
-  // user.placeholder->Render(scalar, spec, eyePos);
-
   // render projectile
   if (user.projectile != NULL){
   	glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.projectile->GetModel()));

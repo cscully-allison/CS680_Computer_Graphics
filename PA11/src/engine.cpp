@@ -67,11 +67,12 @@ void Engine::Run()
     // Update the DT
     m_DT += getDT();
 
-    //allows game to run for 1 minute
+    //allows game to run for the allotted time in graphics
     if (m_DT > m_graphics->getTime())
     {
       m_running = false;
     }
+    
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {
