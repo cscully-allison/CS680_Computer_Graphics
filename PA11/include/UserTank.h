@@ -16,12 +16,14 @@ class UserTank{
 		Object* GetPlaceholder();
 		void SetOrientation();
 		glm::vec4 getPosition();
+		void setSpec (glm::vec3 s);
 
-		void LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, float x, float z,glm::vec4 forwardsVec);
+		void LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec3 forwardsVec);
 		void Hit();
 		int GetLives();
 		int ProjectileHit (btDiscreteDynamicsWorld* dynamicsWorld, int tankOrGround);
-		void Update(std::vector <unsigned int> keyPress, int mouseMovement, int launch,btDiscreteDynamicsWorld* dynamicsWorld,unsigned int dt, float x, float z, glm::vec4 forwardsVec);
+		void Update(std::vector <unsigned int> keyPress, int mouseMovement, int launch,
+						btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, glm::vec3 forwardsVec);
 
 	private:
 		Tank user;

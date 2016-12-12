@@ -85,15 +85,14 @@ bool Graphics::Initialize(int width, int height)
   //bldg = new Object("bldg.obj", 0, 0, 0, 0);
   //dynamicsWorld->addRigidBody(bldg->GetRigidBody());
 
-
+  // start AI
   m_AI = new TankAI(dynamicsWorld);
 
+  // start user
   m_user = new UserTank();
-
-
   dynamicsWorld->addRigidBody (m_user->GetBase()->GetRigidBody());
-  //dynamicsWorld->addRigidBody (m_user->GetHead()->GetRigidBody());
 
+  // start health
   m_health = new Health();
 
   
@@ -154,7 +153,6 @@ bool Graphics::Initialize(int width, int height)
     printf("Program to Finalize\n");
     return false;
   }
-
 
 
   // Enable Phong Shader as inital shader
@@ -242,11 +240,9 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec3 skew;
   glm::vec4 perspective;
 
-  //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
-
-  //once tank is loaded and available with movement
-  //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
+  //displacement from camera for forwards vector
+  float xDisplace;
+  float zDisplace;
 
   // update the dynamics world step
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
@@ -257,23 +253,21 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
 */
-  ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
+
+
   //get data from model position of tank
   transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(0.0f, 0.0f, 0.0f));
   glm::vec4 userPos = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-  //glm::vec4 poop = userPos;
-  //std::cout << rotation.w << "   " << rotation.x << "   " << rotation.y << "   " << rotation.z << std::endl;
 
+
+  //breaks down the transform into each respected variables values
   glm::decompose(transformation, scale, rotation, translation, skew,perspective);
+
+  //decompose returns a non-conjugated quaternion
   rotation = glm::conjugate(rotation);
 
-    
-    
-    //std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-    
-
-    //extract y rotation from quaternion
-    ///////////////////////////////////////////////////test code////////////////////////////////////////////////
+    //extract x,y and z rotation from quaternion
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
         float qw = rotation.w;
         float qx = rotation.x;
         float qy = rotation.y;
@@ -284,93 +278,35 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
         float qz2 = qz*qz;
         float test= qx*qy + qz*qw;
 
-        //y
+        //y rotation in radians
         float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
 
-        //z
+        //z rotation in radians
         float a = asin(2*qx*qy+2*qz*qw);
 
-        //x
+        //x in radians
         float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
 
+        //convert y roation into degrees
         h = h * 180 / PI;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
-
-    //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
-    
-    float xDisplace;
-    float zDisplace;
-
-    //std::cout << "before: " << h << std::endl;
-
+    //if the value of the y rotation is negative, we move it to the corresponding position with a positive value
     if (h<0)
     {
       h +=360;
     }
 
-    //std::cout<< "after: " << h << std::endl;
 
 
-    if (h > 0 && h < 90)
-    {
       xDisplace = cos((h/180)*PI)*8 * (-1);
       zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h > 90 && h < 180)
-    {
-      //h -= 90;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h > 180 && h < 270)
-    {
-      //h -= 180;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8 ;
-    }
-    else if (h > 270 && h < 360)
-    {
-      //h -= 270;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h == 0 || 360)
-    {
-      xDisplace = -8;
-      zDisplace = 0;
-    }
-    else if (h == 90)
-    {
-      xDisplace = 0;
-      zDisplace = 8;
-    }
-    else if (h == 180)
-    {
-      xDisplace = 8;
-      zDisplace = 0;
-    }
-    else if (h == 270)
-    {
-      xDisplace = 0;
-      zDisplace = -8;
-    }
-
-
-   // std::cout << xDisplace << "      " << zDisplace << std::endl;
-  
-    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-    //std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-
-    
-
-    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
 
 
 
+    glm::vec3 forwardsVec (xDisplace, 0 ,zDisplace);
 
 
   //default camera position and point to look
@@ -379,9 +315,11 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 
+  // start updates
   m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, forwardsVec);
   m_health->Update (dynamicsWorld, dt);
+  // check if user is out of lives
   if (m_user->GetLives() <= 0){
     gamestate = false;
   }
@@ -404,7 +342,7 @@ void Graphics::collisionDetection (unsigned int dt){
     
     // cycle through contact points of the objects    
     for (int j = 0; j < contactManifold->getNumContacts(); j++) { 
-      std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
+      //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
       // if the objects involved with the collision are not the table 
       if (
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
@@ -414,27 +352,39 @@ void Graphics::collisionDetection (unsigned int dt){
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){
+          // if health pack
           if (collisionObject->getUserIndex() == 6){
+            // do things to the health pack
             m_health->Collision(dynamicsWorld);
+            // add health if AI
             if (collisionObject2->getUserIndex() < 5){
               m_AI->AddHealth(m_AI->GetTank (collisionObject2->getUserIndex()));
             }
+            // add health if user
             else{
               m_user->AddHealth ();
             }
                
           }
 
+          // if projectile collision
           else if (collisionObject2->getUserIndex() < 5 && collisionObject2->getUserIndex() > 0 || collisionObject2->getUserIndex() > 10){
-
+            // figure out which object was which
             int tankProjectile = max (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
             int tankOrGround = min (collisionObject->getUserIndex(), collisionObject2->getUserIndex());
+            // if AI shot projectile
             if (tankProjectile < 15){
               //AIstuff
+              m_AI->ProjectileHit(dynamicsWorld, tankOrGround, tankProjectile);
+              // user hit
               if (tankOrGround == 5){
                m_user->Hit();
               }
+              else{
+                m_AI->Hit (dynamicsWorld, tankOrGround);
+              }
             }
+            // if user shot projectile
             else {         
               score += m_user->ProjectileHit (dynamicsWorld, tankOrGround);
               m_AI->Hit (dynamicsWorld, tankOrGround);
@@ -521,6 +471,43 @@ for (int i =0; i < keyPress.size(); i++){
       else if (keyPress[i]== 1073741921 && spotlightHeight.value.x < 20){
           spotlightHeight.value += glm::vec3(0.01);
       }
+       //numpad 0 + for land
+        if (keyPress[i] == 1073741922){
+          m_land->setSpec (glm::vec3(0.1));
+        }
+        
+        //numpad . - for land 
+        else if (keyPress[i]== 1073741923){
+          m_land->setSpec (glm::vec3(-0.1));
+        }
+       //numpad 1 + for bumper
+       else if (keyPress[i] == 1073741913){
+          m_sky->setSpec (glm::vec3(0.1));
+        }
+        //numpad 2 - for bumper
+       else if (keyPress[i] == 1073741914){
+          m_sky->setSpec (glm::vec3(-0.1));
+        }
+       
+       //numpad 4 + for user tank
+       else if (keyPress[i] == 1073741916){
+          m_user->setSpec (glm::vec3(0.1));
+        } 
+        
+        //numpad 5 - for user tank
+        else if (keyPress[i] == 1073741917){
+          m_user->setSpec (glm::vec3(-0.1));
+        }   
+       
+       //numpad 7 + for enemy tank
+        else if (keyPress[i] == 1073741919){
+          m_AI->setSpec (glm::vec3(0.1));
+        } 
+        
+         //numpad 8 - for enemy tank
+        else if (keyPress[i] == 1073741920){
+          m_AI->setSpec (glm::vec3(-0.1));
+        } 
   }
 
   // Send in the projection and view to the shader
