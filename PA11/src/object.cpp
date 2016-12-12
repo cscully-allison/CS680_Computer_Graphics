@@ -467,7 +467,7 @@ void Object::Update()
 
 void Object::applyForce(glm::vec3 direction){
       // applies force to the object
-      body->applyForce(btVector3(direction.x*1000, 150.0f, direction.z*1000), btVector3(0, 0, 0));
+      body->applyForce(btVector3(direction.x*250, 150.0f, direction.z*250), btVector3(0, 0, 0));
 }
 
 

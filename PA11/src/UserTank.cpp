@@ -27,6 +27,8 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
   glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.base->GetModel()));
   user.base->Render(scalar, spec, eyePos);
 
+
+
   // glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, glm::value_ptr(user.placeholder->GetModel()));
   // user.placeholder->Render(scalar, spec, eyePos);
 
@@ -38,14 +40,14 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
 }
 
 void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, 
-							btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, glm::vec3 forwardsVec){
+							btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, glm::vec3 forwardsVec, glm::quat angle){
 	// reset velocity
 	user.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	user.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-	float x=0, z =0;
+
 	// if user has launched, start projectile
 	if (launch){
-		LaunchProjectile(dynamicsWorld, forwardsVec);
+		LaunchProjectile(dynamicsWorld, forwardsVec, angle);
 		lastShot = dt;
 	}
 
@@ -89,15 +91,19 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 	SetOrientation(); 
 }
 
-void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec3 forwardsVec){
+void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec3 forwardsVec, glm::quat angle){
 	glm::vec4 userPos = user.base->getPosition();
 	// if null
 	if(user.projectile == NULL){
 		// create object
-		user.projectile = new Object("placeholder.obj", 10, btVector3(0, 0, 0), 
+		user.projectile = new Object("bullet.obj", 10, btVector3(0, 0, 0), 
 										btVector3(userPos.x+forwardsVec.x, 6, userPos.z+forwardsVec.z), 0, .9, .9, 15);
+		user.projectile->GetRigidBody()->proceedToTransform(btTransform(btQuaternion(angle.x, angle.y, angle.z, angle.w),
+																 btVector3(userPos.x+forwardsVec.x, 6, userPos.z+forwardsVec.z)));
+
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
+		user.projectile->GetRigidBody()->setGravity(btVector3(0.0f, -0.3f, 0.0f));
 		//apply force
 		user.projectile->applyForce(forwardsVec);
 	}
@@ -145,7 +151,6 @@ Object* UserTank::GetPlaceholder(){
 
 void UserTank::SetOrientation(){
 	user.base->setOrientation();
-	//user.head->setOrientation();
 	if (user.projectile != NULL){
 		user.projectile->setOrientation();
 	}
