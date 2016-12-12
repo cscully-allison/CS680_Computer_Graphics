@@ -19,6 +19,7 @@ Graphics::Graphics()
   score = 0;
   gamestate = true;
   gameTime = 60000;
+  printOnce = true;
 
 }
 
@@ -96,7 +97,7 @@ bool Graphics::Initialize(int width, int height)
       {
         z *=-1;
       }
-      float y =(float) (rand() % 5);
+      float y =(float) (rand() % 1);
 
       negate = rand()%2;
 
@@ -267,6 +268,16 @@ bool Graphics::Initialize(int width, int height)
 
 void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int mouseMovement, int launch)
 { 
+
+  if ((dt/1000)%10  == 0 && printOnce)
+  {
+    std::cout << "Time elapsed: " << dt/1000 << " out of " << gameTime/1000 << std::endl;
+    printOnce = false;
+  }
+  else if ((dt/1000)%10  != 0)
+  {
+    printOnce = true;
+  }
   //things used for camera positioning
   float camRotation;
   glm::mat4 transformation;
@@ -395,7 +406,7 @@ void Graphics::collisionDetection (unsigned int dt){
             }
             // add health if user
             else{
-              increaseTime();
+              increaseTime(dt);
             }
                
           }
@@ -627,8 +638,10 @@ unsigned int Graphics::getTime()
   return gameTime;
 }
 
-void Graphics::increaseTime()
+void Graphics::increaseTime(unsigned int dt)
 {
   gameTime += 10000;
+  std::cout << "Found Health! 10 Additional Seconds!" << std::endl;
+  std::cout << "Current game time is now = " << dt/1000 << " out of " << gameTime / 1000 << " seconds" << std::endl;
 }
 

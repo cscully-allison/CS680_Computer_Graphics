@@ -56,8 +56,6 @@
 
             if(true){
                 vs_out.light_color = vec3(1.0,1.0,1.0);
-            } else {
-                vs_out.light_color = vec3(0.0,1.0,1.0);
             }
 
             //view space coordinate

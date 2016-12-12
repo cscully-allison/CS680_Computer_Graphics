@@ -27,7 +27,7 @@ class Graphics
     void highScore(int score);
     GLint GetModelMatrix ();
     unsigned int getTime();
-    void increaseTime();
+    void increaseTime(unsigned int dt);
 
   private:
     std::string ErrorString(GLenum error);
@@ -59,6 +59,7 @@ class Graphics
     uint score;
 
     bool gamestate;
+    bool printOnce;
 
     /* Bullet Variables */
     btBroadphaseInterface* broadphase;

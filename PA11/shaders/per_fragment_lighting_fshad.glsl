@@ -66,11 +66,6 @@
 
 
 
-            //Soptlight Calculation/////////////////////////////
-
-            //color = calculateSpotLight(fs_in.spotlightPos, N, V);
-
-
           	//calculate the halfway
           	vec3 R = normalize( reflect(-L, N) );    
 
@@ -114,10 +109,10 @@
                    R = normalize( reflect(-L, N) );
                    V = normalize(vec3(0.0, 1.0, 0.0));
                    float spotLight = dot (L,V);
-                   if (spotLight > .80){
-                      diffuse = max(dot(N,L), 0.0) * fs_in.light_color * fs_in.diffuse;
+                   if (spotLight > .70){
+                      diffuse = fs_in.light_color * fs_in.diffuse;
                       specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
-                      color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
+                      color += vec4(fs_in.spot + diffuse, 1.0);
                    }
               }
               
