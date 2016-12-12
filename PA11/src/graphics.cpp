@@ -77,7 +77,7 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_land = new Object ("ground.obj", .8, 0, 0, 0);
-  m_sky =  new Object ("skybox.obj", 0, 0, 0, 0);
+  m_sky =  new Object ("skybox_bigger.obj", 0, 0, 0, 0);
 
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
   dynamicsWorld->addRigidBody (m_sky->GetRigidBody());

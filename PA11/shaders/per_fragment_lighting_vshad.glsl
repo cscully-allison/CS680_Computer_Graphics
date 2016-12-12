@@ -45,8 +45,8 @@
           { 
             //light positions
             
-            vec3 light_pos = vec3(0.0, 10.0, 7.0);
-            vec3 light_pos2 = vec3(0.0, 20.0, 0.0);
+            vec3 light_pos = vec3(500.0, 100.0, 100.0);
+            vec3 light_pos2 = vec3(-500.0, 100.0, -150.0);
             vs_out.spotlightPos = spot;
             vs_out.spotLightDir = vec3(0.0,-1.0,0.0);
 
@@ -54,7 +54,7 @@
             //vec3 light_pos2 = spot;
 
 
-            if(vs_out.spotlightPos.y > 10){
+            if(true){
                 vs_out.light_color = vec3(1.0,1.0,1.0);
             } else {
                 vs_out.light_color = vec3(0.0,1.0,1.0);
@@ -73,11 +73,12 @@
             //Caluclate 2nd light vector
             vs_out.L2 = light_pos2 - p.xyz;
 
+            vs_out.spotlightPos = spot - p.xyz;
+
             //calculate view vector
             vs_out.V = eyePos;
 
-
-
+            //get gl_Position
             gl_Position = projectionMatrix * viewMatrix * p;
 
             // pass other values to the fragment shader
