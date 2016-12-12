@@ -240,11 +240,9 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   glm::vec3 skew;
   glm::vec4 perspective;
 
-  //default camera position and point to look
- // m_camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 2.0f, -20.0f));
-
-  //once tank is loaded and available with movement
-  //m_camera->lookAt(glm::vec3(pos.x, pos.y, pos.z), glm::vec3(tankpos.x, tankpos.y, tankpos.z));
+  //displacement from camera for forwards vector
+  float xDisplace;
+  float zDisplace;
 
   // update the dynamics world step
   dynamicsWorld->stepSimulation(btScalar(dt), btScalar(5));
@@ -255,23 +253,21 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
   m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
   m_health->Update (dynamicsWorld, dt);
 */
-  ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
+
+
   //get data from model position of tank
   transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(0.0f, 0.0f, 0.0f));
   glm::vec4 userPos = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-  //glm::vec4 poop = userPos;
-  //std::cout << rotation.w << "   " << rotation.x << "   " << rotation.y << "   " << rotation.z << std::endl;
 
+
+  //breaks down the transform into each respected variables values
   glm::decompose(transformation, scale, rotation, translation, skew,perspective);
+
+  //decompose returns a non-conjugated quaternion
   rotation = glm::conjugate(rotation);
 
-    
-    
-    //std::cout << "pre rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-    
-
-    //extract y rotation from quaternion
-    ///////////////////////////////////////////////////test code////////////////////////////////////////////////
+    //extract x,y and z rotation from quaternion
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
         float qw = rotation.w;
         float qx = rotation.x;
         float qy = rotation.y;
@@ -282,93 +278,35 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
         float qz2 = qz*qz;
         float test= qx*qy + qz*qw;
 
-        //y
+        //y rotation in radians
         float h = atan2(2*qy*qw-2*qx*qz,1-2*qy2-2*qz2);
 
-        //z
+        //z rotation in radians
         float a = asin(2*qx*qy+2*qz*qw);
 
-        //x
+        //x in radians
         float b = atan2(2*qx*qw-2*qy*qz,1-2*qx2-2*qz2);
 
+        //convert y roation into degrees
         h = h * 180 / PI;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
-
-    //transformation = glm::translate(m_user->GetBase()->GetModel(), glm::vec3(glm::cos(camRotation)*8, 0.0f, glm::sin(camRotation)*8));
-    
-    float xDisplace;
-    float zDisplace;
-
-    //std::cout << "before: " << h << std::endl;
-
+    //if the value of the y rotation is negative, we move it to the corresponding position with a positive value
     if (h<0)
     {
       h +=360;
     }
 
-    //std::cout<< "after: " << h << std::endl;
 
 
-    if (h > 0 && h < 90)
-    {
       xDisplace = cos((h/180)*PI)*8 * (-1);
       zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h > 90 && h < 180)
-    {
-      //h -= 90;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h > 180 && h < 270)
-    {
-      //h -= 180;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8 ;
-    }
-    else if (h > 270 && h < 360)
-    {
-      //h -= 270;
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8;
-    }
-    else if (h == 0 || 360)
-    {
-      xDisplace = -8;
-      zDisplace = 0;
-    }
-    else if (h == 90)
-    {
-      xDisplace = 0;
-      zDisplace = 8;
-    }
-    else if (h == 180)
-    {
-      xDisplace = 8;
-      zDisplace = 0;
-    }
-    else if (h == 270)
-    {
-      xDisplace = 0;
-      zDisplace = -8;
-    }
-
-
-   // std::cout << xDisplace << "      " << zDisplace << std::endl;
-  
-    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
-    //std::cout << "post rotate/translate: " << poop.x << "   " << poop.y << "   " << poop.z <<  std::endl;
-
-    
-
-    //poop = transformation * glm::vec4 (1.0,1.0,1.0,1.0);
 
 
 
+    glm::vec3 forwardsVec (xDisplace, 0 ,zDisplace);
 
 
   //default camera position and point to look
@@ -379,7 +317,7 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
 
   // start updates
   m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, xDisplace, zDisplace, userPos);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, forwardsVec);
   m_health->Update (dynamicsWorld, dt);
   // check if user is out of lives
   if (m_user->GetLives() <= 0){
@@ -410,7 +348,7 @@ void Graphics::collisionDetection (unsigned int dt){
           collisionObject->getUserIndex() != -1 && collisionObject2->getUserIndex() != -1 && 
           collisionObject->getUserIndex() != collisionObject2->getUserIndex())
       {
-        std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
+        //std::cout << collisionObject->getUserIndex() << " " << collisionObject2->getUserIndex() << std::endl;
         btManifoldPoint& pt = contactManifold->getContactPoint(j);
         // and collided
         if (pt.getDistance() < 0.01f ){

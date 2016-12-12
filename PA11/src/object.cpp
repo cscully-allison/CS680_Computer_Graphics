@@ -465,9 +465,9 @@ void Object::Update()
   model = glm::make_mat4(m);
 }
 
-void Object::applyForce(glm::vec4 pos, float x, float z){
+void Object::applyForce(glm::vec3 direction){
       // applies force to the object
-      body->applyForce(btVector3(-5000.0f, 150.0f, 0.0f), btVector3(pos.x+x, 0, pos.z+z));
+      body->applyForce(btVector3(direction.x*1000, 150.0f, direction.z*1000), btVector3(0, 0, 0));
 }
 
 

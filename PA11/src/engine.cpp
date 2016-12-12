@@ -86,7 +86,7 @@ void Engine::Run()
 
   //gets score from graphics
   int score = m_graphics->getScore();
-  std::cout << "GAME OVER!" << std::endl << "Score: " << score << std::endl << std::endl;
+  std::cout << std::endl << "GAME OVER!" << std::endl << "Score: " << score << std::endl << std::endl;
 
   //creates input stream variable
   ifstream fin;
@@ -194,7 +194,7 @@ unsigned int Engine::Keyboard()
     mouseMovement = m_event.motion.x;
   }
 
-  else if (m_event.type == SDL_MOUSEBUTTONUP){
+  else if (m_event.type == SDL_MOUSEBUTTONDOWN){
     if (m_event.button.button == SDL_BUTTON_LEFT){
       launch = 1;
     }

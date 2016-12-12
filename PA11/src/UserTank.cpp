@@ -4,7 +4,7 @@
 
 UserTank::UserTank(){
 	// creat objects and move rigid body to position
-	user.base = new Object("tradeFederationTank2.obj", 1000, btVector3(0, 0, 0), btVector3(20, 3.5, 5), .9, 0, .9, 5);
+	user.base = new Object("tradeFederationTank3.obj", 1000, btVector3(0, 0, 0), btVector3(20, 3.5, 5), .9, 0, .9, 5);
 	user.placeholder = new Object("placeholder.obj");
 	user.projectile = NULL;
 	SetOrientation();
@@ -37,14 +37,15 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
   }
 }
 
-void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, float x, float z, glm::vec4 forwardsVec){
+void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, 
+							btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, glm::vec3 forwardsVec){
 	// reset velocity
 	user.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	user.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-
+	float x=0, z =0;
 	// if user has launched, start projectile
 	if (launch){
-		LaunchProjectile(dynamicsWorld, x, z, forwardsVec);
+		LaunchProjectile(dynamicsWorld, forwardsVec);
 		lastShot = dt;
 	}
 
@@ -60,58 +61,22 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 		switch (keyPress[i]){
 			//forward
 			case 119:
-				switch (user.compassPosition){
-					//North
-					case 1:
-						user.base->translate(glm::vec3 (0.0f, 0.0, 50.0f));
-					break;
-					//West
-					case 2:
-						user.base->translate(glm::vec3 (+50.0f, 0.0, .0f));
-					break;
-					//South
-					case 3:
-						user.base->translate(glm::vec3 (0.0f, 0.0, -50.0f));
-					break;
-					//East
-					case 4:
-						user.base->translate(glm::vec3 (-50.0f, 0.0, 0.0f));
-					break;
-				}
+				user.base->translate(glm::vec3(50.0f*forwardsVec.x, 0.0f, 50.0f*forwardsVec.z));
 			break;
 
 			//backwards
 			case 115:
-				switch (user.compassPosition){
-					//North
-					case 1:
-						user.base->translate(glm::vec3 (0.0f, 0.0, -50.0f));
-					break;
-					//West
-					case 2:
-						user.base->translate(glm::vec3 (-50.0f, 0.0, .0f));
-					break;
-					//South
-					case 3:
-						user.base->translate(glm::vec3 (0.0f, 0.0, 50.0f));
-					break;
-					//East
-					case 4:
-						user.base->translate(glm::vec3 (50.0f, 0.0, 0.0f));
-					break;
-				}
+				user.base->translate(glm::vec3(-50.0f*forwardsVec.x, 0.0f, -50.0f*forwardsVec.z));
 			break;
 
 			//left
 			case 97:
-				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (1600), 0.0f));
-				previousMouse = mouseMovement;
+				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (1600), 0.0f));	
 			break;
 
 			//right 
 			case 100:
 				user.base->rotate(glm::vec3 (0.0f, 360.0/800 * (-1600), 0.0f));
-				previousMouse = mouseMovement;
 			break;
 
 	
@@ -124,15 +89,17 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 	SetOrientation(); 
 }
 
-void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, float x, float z, glm::vec4 forwardsVec){
+void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec3 forwardsVec){
+	glm::vec4 userPos = user.base->getPosition();
 	// if null
 	if(user.projectile == NULL){
 		// create object
-		user.projectile = new Object("placeholder.obj", 10, btVector3(0, 0, 0), btVector3(forwardsVec.x-16, forwardsVec.y+2, forwardsVec.z-3), 0, .9, .9, 15);
+		user.projectile = new Object("placeholder.obj", 10, btVector3(0, 0, 0), 
+										btVector3(userPos.x+forwardsVec.x, 6, userPos.z+forwardsVec.z), 0, .9, .9, 15);
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
 		//apply force
-		user.projectile->applyForce(forwardsVec, x, z);
+		user.projectile->applyForce(forwardsVec);
 	}
 }
 

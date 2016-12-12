@@ -237,7 +237,7 @@ void TankAI::LaunchProjectile(Tank AI, btDiscreteDynamicsWorld* dynamicsWorld){
 		
 		SetOrientation(AI);
 		dynamicsWorld->addRigidBody (AI.projectile->GetRigidBody());
-		AI.projectile->applyForce(temp, 0, 0);
+		//AI.projectile->applyForce(temp, 0, 0);
 	}
 }
 
