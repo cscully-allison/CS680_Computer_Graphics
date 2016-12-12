@@ -67,6 +67,11 @@ void Engine::Run()
     // Update the DT
     m_DT += getDT();
 
+    //allows game to run for 1 minute
+    if (m_DT > 60000)
+    {
+      m_running = false;
+    }
     // Check the keyboard input
     while(SDL_PollEvent(&m_event) != 0)
     {

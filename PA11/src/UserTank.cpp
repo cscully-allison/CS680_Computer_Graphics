@@ -151,7 +151,6 @@ Object* UserTank::GetPlaceholder(){
 
 void UserTank::SetOrientation(){
 	user.base->setOrientation();
-	//user.head->setOrientation();
 	if (user.projectile != NULL){
 		user.projectile->setOrientation();
 	}
