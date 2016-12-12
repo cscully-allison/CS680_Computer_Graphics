@@ -294,30 +294,27 @@ void Graphics::Update(unsigned int dt, std::vector <unsigned int> keyPress, int 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //if the value of the y rotation is negative, we move it to the corresponding position with a positive value
-    if (h<0)
-    {
-      h +=360;
-    }
+  if (h<0)
+  {
+    h +=360;
+  }
+
+  //calculates forwards vector with an x and z displacement
+  xDisplace = cos((h/180)*PI)*8 * (-1);
+  zDisplace = sin((h/180)*PI)*8;
 
 
-
-      xDisplace = cos((h/180)*PI)*8 * (-1);
-      zDisplace = sin((h/180)*PI)*8;
-
-
-
-    glm::vec3 forwardsVec (xDisplace, 0 ,zDisplace);
+  glm::vec3 forwardsVec (xDisplace, userPos.y+5 ,zDisplace);
 
 
   //default camera position and point to look
   glm::vec4 tankPos = m_user->getPosition();
   m_camera->lookAt(glm::vec3(userPos.x+xDisplace, userPos.y+5, userPos.z+zDisplace), glm::vec3( userPos.x, userPos.y+5, userPos.z));
 
-  ///////////////////////////////////////////////shit kurt is working on for camera////////////////////////////////////
 
   // start updates
   m_AI->UpdateWrapper(dt, m_user->getPosition(), dynamicsWorld);
-  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, forwardsVec);
+  m_user->Update(keyPress, mouseMovement, launch, dynamicsWorld, dt, forwardsVec, rotation);
   m_health->Update (dynamicsWorld, dt);
   // check if user is out of lives
   if (m_user->GetLives() <= 0){

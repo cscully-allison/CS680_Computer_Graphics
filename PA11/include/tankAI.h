@@ -6,7 +6,6 @@
 
 struct Tank{
 		Object *base;
-		//Object *head;
 		Object *placeholder;
 		Object *projectile;
 

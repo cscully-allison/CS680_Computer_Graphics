@@ -178,7 +178,6 @@ unsigned int Engine::Keyboard()
     }
     else
     {
-      std::cout << m_event.key.keysym.sym << std::endl;
       // otherwise, return the key
       return m_event.key.keysym.sym;
     }  
