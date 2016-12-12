@@ -166,6 +166,11 @@ unsigned int Engine::Keyboard()
   // when a key is pressed down
   else if (m_event.type == SDL_KEYDOWN)
   {
+    //checks for spacebar being pressed
+    if (m_event.key.keysym.sym == 32)
+    {
+      launch = 1;
+    }
     // handle key down events here
     if (m_event.key.keysym.sym == SDLK_ESCAPE)
     {
@@ -173,6 +178,7 @@ unsigned int Engine::Keyboard()
     }
     else
     {
+      std::cout << m_event.key.keysym.sym << std::endl;
       // otherwise, return the key
       return m_event.key.keysym.sym;
     }  
@@ -194,11 +200,6 @@ unsigned int Engine::Keyboard()
     mouseMovement = m_event.motion.x;
   }
 
-  else if (m_event.type == SDL_MOUSEBUTTONDOWN){
-    if (m_event.button.button == SDL_BUTTON_LEFT){
-      launch = 1;
-    }
-  }
 }
 
 unsigned int Engine::getDT()
