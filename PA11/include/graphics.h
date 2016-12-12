@@ -45,7 +45,7 @@ class Graphics
 
     Object *m_land;
     Object *m_sky;
-    Object *bldg;
+    Object *terrian_objects[20];
 
     Uniform scalar;
     Uniform spotlight;

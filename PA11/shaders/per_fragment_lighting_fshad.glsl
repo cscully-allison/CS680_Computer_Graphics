@@ -98,7 +98,7 @@
             //Soptlight Calculation/////////////////////////////
 
             vec3 L3 = normalize(fs_in.spotlightPos);
-
+/*
             //calculate the halfway
             R = normalize( reflect(-L3, N) );    
             diffuse = texel.rgb * fs_in.light_color * max(dot(N,L3), 0.0);
@@ -106,24 +106,20 @@
             //compute the diffuse and specular components for each fragment;
             specular = pow(max(dot(R,V), 0.0),  specular_power) * fs_in.spec;
             color += vec4(fs_in.scalar*10 + diffuse, 1.0) + vec4 (specular,1);
+*/
 
-
-/*
-              vec3 sd = normalize(fs_in.spotLightDir);
-              float NdotL = max (dot(sd,L),0.0);
+              L = normalize(fs_in.spotlightPos);
+              float NdotL = max (dot(N,L),0.0);
                 if ( NdotL > 0.0){
-                   L = normalize(fs_in.spotlightPos);
-                   R = normalize( reflect(sd,N) );
-                   float spotLight = dot(L,V);
-                   if (spotLight < .01){
-                      V = normalize(fs_in.V);
-                      diffuse = max(dot(N,L), 0.0) *  fs_in.diffuse;
+                   R = normalize( reflect(-L, N) );
+                   V = normalize(vec3(0.0, 1.0, 0.0));
+                   float spotLight = dot (L,V);
+                   if (spotLight > .80){
+                      diffuse = max(dot(N,L), 0.0) * fs_in.light_color * fs_in.diffuse;
                       specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
                       color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
-                  }
-
+                   }
               }
-*/
               
 
           }

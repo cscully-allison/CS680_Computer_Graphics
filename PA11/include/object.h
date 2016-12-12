@@ -22,7 +22,7 @@ class Object
     // ball
     Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar friction, btScalar restitution, btScalar damping);
     //static object
-    Object (std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber);
+    Object (std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber, btVector3 startPos);
     Object (std::string filename);
     ~Object();
     void setOrientation();

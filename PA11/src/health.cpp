@@ -23,7 +23,11 @@ void Health::Update(btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt){
 
 	else {
 		// set position
-		healthLight = glm::vec3(rand() % 500, 10, rand() % 500);
+		int neg = rand() % 2;
+		if(neg == 0){
+			neg = -1;
+		}
+		healthLight = glm::vec3((rand() % 500)*neg, 10, (rand() % 500) * neg);
 		healthPack = new Object ("healthpack.obj", 1, btVector3(0, 2.5, 0), btVector3(healthLight.x, 5.5, healthLight.z), 0, 0, 0, 6);
 		healthPack->setOrientation();
 		healthPack->GetRigidBody()->setAngularFactor(btVector3(0.0,1.0,0.0));

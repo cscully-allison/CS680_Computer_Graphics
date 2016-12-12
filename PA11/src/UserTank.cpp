@@ -4,7 +4,7 @@
 
 UserTank::UserTank(){
 	// creat objects and move rigid body to position
-	user.base = new Object("tradeFederationTank3.obj", 1000, btVector3(0, 0, 0), btVector3(20, 3.5, 5), .9, 0, .9, 5);
+	user.base = new Object("tradeFederationTank3.obj", 1000, btVector3(0, 0, 0), btVector3(0, 3.5, 0), .9, 0, .9, 5);
 	user.placeholder = new Object("placeholder.obj");
 	user.projectile = NULL;
 	SetOrientation();

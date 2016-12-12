@@ -221,7 +221,7 @@ Object::Object(btScalar mass, btVector3 inertia, btVector3 startOrigin, btScalar
 STATIC OBJ CONTRUCTOR
 ***************************/
 
-Object::Object(std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber)
+Object::Object(std::string filename, btScalar friction, btScalar restitution, btScalar damping, int indexNumber, btVector3 startPos)
 {  
 
  aiString texturename;
@@ -328,7 +328,7 @@ Object::Object(std::string filename, btScalar friction, btScalar restitution, bt
     shape->calculateLocalInertia(0, interia);
     btTransform bodyTransform;
     bodyTransform.setIdentity();
-    bodyTransform.setOrigin (btVector3(0,0,0));
+    bodyTransform.setOrigin (startPos);
     btDefaultMotionState* motion = new btDefaultMotionState(bodyTransform);
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motion, shape, interia);
     rigidBodyCI.m_friction = friction;

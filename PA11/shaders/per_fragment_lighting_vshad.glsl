@@ -74,6 +74,7 @@
             vs_out.L2 = light_pos2 - p.xyz;
 
             vs_out.spotlightPos = spot - p.xyz;
+            vs_out.spotLightDir = normalize(-spot.xyz);
 
             //calculate view vector
             vs_out.V = eyePos;

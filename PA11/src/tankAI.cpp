@@ -9,9 +9,9 @@ TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
 	srand (time (NULL));
 	// initalize tanks
 	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
-	Initialize (dynamicsWorld, two, btVector3 (-10,0,5), 2);
-	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
-	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
+	Initialize (dynamicsWorld, two, btVector3 (-100,0,5), 2);
+	Initialize (dynamicsWorld, three, btVector3 (300,0,100), 3);
+	Initialize (dynamicsWorld, four, btVector3 (75,0,-100), 4);
  }
 
 TankAI::~TankAI(){

@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include <glm/gtx/matrix_decompose.hpp>
 #include <math.h>
-
+#include <time.h>
 
 #define PI 3.14159265
 
@@ -59,6 +59,8 @@ bool Graphics::Initialize(int width, int height)
     }
   #endif
 
+  srand(time(NULL));
+
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -76,11 +78,44 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_land = new Object ("ground.obj", .8, 0, 0, 0);
-  m_sky =  new Object ("skybox_bigger.obj", 0, 0, 0, 0);
+  m_land = new Object ("ground.obj", .8, 0, 0, 0, btVector3(0.0,0.0,0.0));
+  m_sky =  new Object ("skybox_bigger.obj", 0, 0, 0, 0, btVector3(0.0,0.0,0.0));
+  int negate;
+  //make terrian objects
+  for(int object = 0; object < 20; object++){
+      float x =(float) ((rand() % 10)+1)*55;
+      negate = rand() % 2;
+      if (negate == 0)
+      {
+        x *=-1;
+      }
+      float z =(float) ((rand() % 10)+1)*55;
+      negate = rand() % 2;
+      if (negate == 0)
+      {
+        z *=-1;
+      }
+      float y =(float) (rand() % 5);
+
+      negate = rand()%2;
+
+      if (negate == 0)
+      {
+      terrian_objects[object] =  new Object("rockthing.obj", 0, 0, 0, 0, btVector3(x,y,z));
+      }
+      else
+      {
+       terrian_objects[object] =  new Object("pyramid.obj", 0, 0, 0, 0, btVector3(x,5,z)); 
+      }
+      dynamicsWorld->addRigidBody(terrian_objects[object]->GetRigidBody());
+      terrian_objects[object]->setOrientation();
+  }
 
   dynamicsWorld->addRigidBody (m_land->GetRigidBody());
   dynamicsWorld->addRigidBody (m_sky->GetRigidBody());
+  
+
+
 
   //bldg = new Object("bldg.obj", 0, 0, 0, 0);
   //dynamicsWorld->addRigidBody(bldg->GetRigidBody());
@@ -518,6 +553,14 @@ for (int i =0; i < keyPress.size(); i++){
   //render sky
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_sky->GetModel()));
   m_sky->Render(scalar, specularity, eyePos);
+
+  //render thang
+  for(int object = 0; object < 20; object++){
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(terrian_objects[object]->GetModel()));
+    terrian_objects[object]->Render(scalar, specularity, eyePos);
+  }
+
+
 
   m_AI->RenderWrapper(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
   m_user->Render(GetModelMatrix(),scalar, specularity, spotlight, spotlightHeight, eyePos);
