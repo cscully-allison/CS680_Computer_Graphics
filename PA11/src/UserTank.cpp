@@ -104,7 +104,7 @@ void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec
 
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
-		user.projectile->GetRigidBody()->setGravity(btVector3(0.0f, -0.2f, 0.0f));
+		user.projectile->GetRigidBody()->setGravity(btVector3(0.0f, -0.5f, 0.0f));
 		//apply force
 		user.projectile->applyForce(forwardsVec);
 	}

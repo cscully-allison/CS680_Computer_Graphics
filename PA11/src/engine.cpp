@@ -113,7 +113,7 @@ void Engine::Run()
   //checks if new score belongs on board
   if (score > people[9].score)
   {
-    while (people[index].score <= score && index != 0)
+    while (people[index].score < score && index != 0)
     {
       index--;
     }
@@ -132,8 +132,8 @@ void Engine::Run()
     std::cin >> temp;
 
     //assigns score in proper spot
-    people[index].initials = temp;
-    people[index].score = score;
+    people[index+1].initials = temp;
+    people[index+1].score = score;
 
     //prints new scoreboard to file
     ofstream fout;
