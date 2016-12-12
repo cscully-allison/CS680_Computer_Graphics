@@ -84,7 +84,7 @@ void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btD
 	}
 	if(two.base == NULL)
 	{
-		Initialize (dynamicsWorld, two, btVector3 (-100,0,50), 2);
+		Initialize (dynamicsWorld, two, btVector3 (-300,0,200), 2);
 	}
 	if(three.base == NULL)
 	{
