@@ -42,7 +42,8 @@ void UserTank::Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform s
 void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int launch, 
 							btDiscreteDynamicsWorld* dynamicsWorld, unsigned int dt, glm::vec3 forwardsVec, glm::quat angle){
 	// reset velocity
-	user.base->GetRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+	btVector3 currentVel = user.base->GetRigidBody()->getLinearVelocity();
+	user.base->GetRigidBody()->setLinearVelocity(btVector3(currentVel.getX()/2, currentVel.getY()/2, currentVel.getZ()/2));
 	user.base->GetRigidBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
 
 	// if user has launched, start projectile
@@ -63,12 +64,12 @@ void UserTank::Update(std::vector <unsigned int> keyPress, int mouseMovement,int
 		switch (keyPress[i]){
 			//forward
 			case 119:
-				user.base->translate(glm::vec3(50.0f*forwardsVec.x, 0.0f, 50.0f*forwardsVec.z));
+				user.base->translate(glm::vec3(100.0f*forwardsVec.x, 0.0f, 100.0f*forwardsVec.z));
 			break;
 
 			//backwards
 			case 115:
-				user.base->translate(glm::vec3(-50.0f*forwardsVec.x, 0.0f, -50.0f*forwardsVec.z));
+				user.base->translate(glm::vec3(-100.0f*forwardsVec.x, 0.0f, -100.0f*forwardsVec.z));
 			break;
 
 			//left
@@ -103,7 +104,7 @@ void UserTank::LaunchProjectile(btDiscreteDynamicsWorld* dynamicsWorld, glm::vec
 
 		SetOrientation();
 		dynamicsWorld->addRigidBody (user.projectile->GetRigidBody());
-		user.projectile->GetRigidBody()->setGravity(btVector3(0.0f, -0.3f, 0.0f));
+		user.projectile->GetRigidBody()->setGravity(btVector3(0.0f, -0.2f, 0.0f));
 		//apply force
 		user.projectile->applyForce(forwardsVec);
 	}

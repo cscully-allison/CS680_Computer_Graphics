@@ -18,6 +18,7 @@ Graphics::Graphics()
   // set inital game variables
   score = 0;
   gamestate = true;
+  gameTime = 60000;
 
 }
 
@@ -394,7 +395,7 @@ void Graphics::collisionDetection (unsigned int dt){
             }
             // add health if user
             else{
-              m_user->AddHealth ();
+              increaseTime();
             }
                
           }
@@ -619,5 +620,15 @@ std::string Graphics::ErrorString(GLenum error)
   {
     return "None";
   }
+}
+
+unsigned int Graphics::getTime()
+{
+  return gameTime;
+}
+
+void Graphics::increaseTime()
+{
+  gameTime += 10000;
 }
 
