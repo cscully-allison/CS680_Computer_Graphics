@@ -30,12 +30,13 @@
 
             vec3 diffuse;
             vec3 scalar;
-            vec3 spec;  //scalar
             vec3 spot;
+            vec3 spec;  //scalar
             vec3 light_color;            
 
             // spotlight
-            vec3 spotlightL;
+            vec3 spotlightPos;
+            vec3 spotLightDir;
 
           } vs_out;
 
@@ -46,13 +47,14 @@
             
             vec3 light_pos = vec3(0.0, 10.0, 7.0);
             vec3 light_pos2 = vec3(0.0, 20.0, 0.0);
-            vs_out.spotlightL = spot;
+            vs_out.spotlightPos = spot;
+            vs_out.spotLightDir = vec3(0.0,-1.0,0.0);
 
             //vec3 light_pos = spot - vec3(10.0, 0.0, 10.0);
             //vec3 light_pos2 = spot;
 
 
-            if(light_pos.y > 0){
+            if(vs_out.spotlightPos.y > 10){
                 vs_out.light_color = vec3(1.0,1.0,1.0);
             } else {
                 vs_out.light_color = vec3(0.0,1.0,1.0);
@@ -60,6 +62,7 @@
 
             //view space coordinate
             vec4 p = modelMatrix * position;
+
 
             // Calculate normal in view space
             vs_out.N = mat3(modelMatrix) * normal;

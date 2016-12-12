@@ -1,4 +1,27 @@
 #version 330
+
+          vec4 calculateSpotLight(in vec3 lightVec, in vec3 normalVec, in vec3 eyeVec){
+            
+            // define (would come from c++ code)
+            vec3 spotDirection = vec3(0.0,-1.0,0.0);
+            float cutOffAngle = cos(radians(5.0));
+            // end define
+            
+            vec4 color = vec4(1.0,0.0,0.0,1.0);
+            float SpotFac = dot(-lightVec,spotDirection);
+              
+            if( SpotFac > cutOffAngle ){
+             float att = clamp(dot(normalVec,-lightVec),0.0,1.0);
+             color = att* color * (1.0 - (1.0 - SpotFac) * 1.0/(1.0 - cutOffAngle));
+            }else{
+              color = vec4(0.0,0.0,0.0,1.0); 
+            }
+            
+            
+            return color;
+            
+          }
+
           
           //Output
           out vec4 color;
@@ -17,12 +40,13 @@
 
             vec3 diffuse;
             vec3 scalar;
-            vec3 spec;  //scalar
             vec3 spot;
+            vec3 spec;
             vec3 light_color;
 
-            //spotlight data
-            vec3 spotlightL;
+            // spotlight
+            vec3 spotlightPos;
+            vec3 spotLightDir;
 
           } fs_in;
 
@@ -62,20 +86,26 @@
             color += vec4(fs_in.scalar + diffuse, 1.0) + vec4 (specular,1);
 
 
-            /*
+            //Soptlight Calculation/////////////////////////////
 
-              float NdotL = max (dot(N,L),0.0);
+            color += calculateSpotLight(fs_in.spotlightPos, N, V);
+
+/*
+              vec3 sd = normalize(fs_in.spotLightDir);
+              float NdotL = max (dot(sd,L),0.0);
                 if ( NdotL > 0.0){
-                   L = normalize(fs_in.spotlightL);
-                   R = normalize( reflect(-L, N) );
-                   float spotLight = dot (L,V);
+                   L = normalize(fs_in.spotlightPos);
+                   R = normalize( reflect(sd,N) );
+                   float spotLight = dot(L,V);
                    if (spotLight < .01){
                       V = normalize(fs_in.V);
                       diffuse = max(dot(N,L), 0.0) *  fs_in.diffuse;
                       specular = pow(max(dot(R, V), 0.0), 100.0) *  vec3 (1.0);
                       color += vec4(fs_in.spot + diffuse, 1.0) + vec4 (specular,1);
-                   }
+                  }
+
               }
-             */ 
+*/
+              
 
           }
