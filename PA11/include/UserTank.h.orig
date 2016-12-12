@@ -1,0 +1,39 @@
+#ifndef USERTANK_H
+#define USERTANK_H
+
+#include <object.h>
+#include "graphics_headers.h"
+#include "tankAI.h"
+
+// struct PlayerTank{
+// 		Object *base;
+// 		Object *head;
+
+// 		int lives;
+// 		int ammo;
+// 		int direction;
+// 		int compassPosition;
+// };
+
+class UserTank{
+	public:
+		UserTank();
+		~UserTank();
+<<<<<<< HEAD
+		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height, Uniform eyePos);
+=======
+		void Render(GLint modelMatrix, Uniform scalar, Uniform spec, Uniform spot, Uniform height);
+		void AddHealth();
+>>>>>>> 3ae92b0a7ae5cc1f07fe9832c67fde334067501a
+		Object* GetBase();
+		Object* GetHead();
+		Object* GetPlaceholder();
+		void SetOrientation();
+		void Update(std::vector <unsigned int> keyPress, int mouseMovement);
+
+	private:
+		Tank user;
+		int previousMouse;
+};
+
+#endif
