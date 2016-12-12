@@ -8,10 +8,10 @@ TankAI::TankAI(btDiscreteDynamicsWorld* dynamicsWorld){
 	// start rand seed
 	srand (time (NULL));
 	// initalize tanks
-	Initialize (dynamicsWorld, one, btVector3 (150,0,0), 1);
-	Initialize (dynamicsWorld, two, btVector3 (-10,0,5), 2);
-	Initialize (dynamicsWorld, three, btVector3 (0,0,100), 3);
-	Initialize (dynamicsWorld, four, btVector3 (0,0,-100), 4);
+	Initialize (dynamicsWorld, one, btVector3 (150,0,200), 1);
+	Initialize (dynamicsWorld, two, btVector3 (-100,0,50), 2);
+	Initialize (dynamicsWorld, three, btVector3 (300,0,400), 3);
+	Initialize (dynamicsWorld, four, btVector3 (200,0,-500), 4);
  }
 
 TankAI::~TankAI(){
@@ -78,6 +78,22 @@ void TankAI::UpdateWrapper(unsigned int dt, glm::vec4 user, btDiscreteDynamicsWo
 
 void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btDiscreteDynamicsWorld* dynamicsWorld){
 	AI.attack = LookForOpponent(AI, user, position);
+	if (one.base == NULL)
+	{
+		Initialize (dynamicsWorld, one, btVector3 (150,0,200), 1);
+	}
+	if(two.base == NULL)
+	{
+		Initialize (dynamicsWorld, two, btVector3 (-100,0,50), 2);
+	}
+	if(three.base == NULL)
+	{
+		Initialize (dynamicsWorld, three, btVector3 (300,0,400), 3);
+	}
+	if(four.base == NULL)
+	{
+		Initialize (dynamicsWorld, four, btVector3 (200,0,-500), 4);
+	}
 	if (AI.attack  > 0){
 		Attack (AI, dynamicsWorld);
 	}
@@ -118,30 +134,48 @@ void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btD
 			switch (AI.direction){
 				// Right
 				case 1:
-					AI.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+					one.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+					two.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+					three.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
+					four.base->rotate(glm::vec3 (0.0f, -1.0, 0.0f));
 				break;
 				//Left
 				case 2:
-					AI.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+					one.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+					two.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+					three.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
+					four.base->rotate(glm::vec3 (0.0f, 1.0, 0.0f));
 				break;
 				//Forward
 				case 3:
 					switch (AI.compassPosition){
 						//North
 						case 1:
-							AI.base->translate(glm::vec3 (0.0f, 0.0, 5.0f));
+							one.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							two.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							three.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							four.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
 						break;
 						//West
 						case 2:
-							AI.base->translate(glm::vec3 (+5.0f, 0.0, .0f));
+							one.base->translate(glm::vec3 (+25.0f, 0.0, .0f));
+							two.base->translate(glm::vec3 (+25.0f, 0.0, .0f));
+							three.base->translate(glm::vec3 (+25.0f, 0.0, .0f));
+							four.base->translate(glm::vec3 (+25.0f, 0.0, .0f));
 						break;
 						//South
 						case 3:
-							AI.base->translate(glm::vec3 (0.0f, 0.0, -5.0f));
+							one.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							two.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							three.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							four.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
 						break;
 						//East
 						case 4:
-							AI.base->translate(glm::vec3 (-5.0f, 0.0, 0.0f));
+							one.base->translate(glm::vec3 (-25.0f, 0.0, 0.0f));
+							two.base->translate(glm::vec3 (-25.0f, 0.0, 0.0f));
+							three.base->translate(glm::vec3 (-25.0f, 0.0, 0.0f));
+							four.base->translate(glm::vec3 (-25.0f, 0.0, 0.0f));
 						break;
 					}
 				break;
@@ -150,19 +184,31 @@ void TankAI::Update(unsigned int dt, Tank& AI, glm::vec4 user, int position, btD
 					switch (AI.compassPosition){
 						//North
 						case 1:
-							AI.base->translate(glm::vec3 (0.0f, 0.0, -1.0f));
+							one.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							two.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							three.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
+							four.base->translate(glm::vec3 (0.0f, 0.0, -25.0f));
 						break;
 						//West
 						case 2:
-							AI.base->translate(glm::vec3 (-1.0f, 0.0, .0f));
+							one.base->translate(glm::vec3 (-25.0f, 0.0, .0f));
+							two.base->translate(glm::vec3 (-25.0f, 0.0, .0f));
+							three.base->translate(glm::vec3 (-25.0f, 0.0, .0f));
+							four.base->translate(glm::vec3 (-25.0f, 0.0, .0f));
 						break;
 						//South
 						case 3:
-							AI.base->translate(glm::vec3 (0.0f, 0.0, 1.0f));
+							one.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							two.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							three.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
+							four.base->translate(glm::vec3 (0.0f, 0.0, 25.0f));
 						break;
 						//East
 						case 4:
-							AI.base->translate(glm::vec3 (1.0f, 0.0, 0.0f));
+							one.base->translate(glm::vec3 (25.0f, 0.0, 0.0f));
+							two.base->translate(glm::vec3 (25.0f, 0.0, 0.0f));
+							three.base->translate(glm::vec3 (25.0f, 0.0, 0.0f));
+							four.base->translate(glm::vec3 (25.0f, 0.0, 0.0f));
 						break;
 					}
 				break; 

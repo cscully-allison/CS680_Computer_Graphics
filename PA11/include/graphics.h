@@ -26,9 +26,12 @@ class Graphics
     int getScore();
     void highScore(int score);
     GLint GetModelMatrix ();
+    unsigned int getTime();
+    void increaseTime();
 
   private:
     std::string ErrorString(GLenum error);
+    unsigned int gameTime;
 
     Camera *m_camera;
     Shader *gouraund_shader;

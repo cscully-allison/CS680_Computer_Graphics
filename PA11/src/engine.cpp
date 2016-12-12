@@ -68,7 +68,7 @@ void Engine::Run()
     m_DT += getDT();
 
     //allows game to run for 1 minute
-    if (m_DT > 60000)
+    if (m_DT > m_graphics->getTime())
     {
       m_running = false;
     }
